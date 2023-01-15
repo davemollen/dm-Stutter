@@ -4,7 +4,7 @@
 if [[ -z $1 || -z $2 ]]; then
     echo "Generates a macOS bundle from a compiled dylib file"
     echo "Example:"
-    echo -e "\t$0 Plugin target/release/plugin.dylib"
+    echo -e "\t$0 Plugin ../target/release/plugin.dylib"
     echo -e "\tCreates a Plugin.vst bundle"
 else
     # Make the bundle folder

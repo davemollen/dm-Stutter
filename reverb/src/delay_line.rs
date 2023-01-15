@@ -1,5 +1,6 @@
 use std::f32;
 
+#[derive(Clone)]
 pub struct DelayLine {
   buffer: Vec<f32>,
   write_pointer: usize,

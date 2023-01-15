@@ -1,5 +1,5 @@
 [package]
-name = "dm_graindelay"
+name = "dm_reverb"
 version = "0.1.0"
 authors = ["Dave Mollen <davemollen@gmail.com>"]
 edition = "2021"
@@ -8,7 +8,7 @@ edition = "2021"
 
 [dependencies]
 vst = "0.2.1"
-grain_delay = { path = "../grain_delay" }
+reverb = { path = "../reverb" }
 
 [lib]
 crate-type = ["cdylib"]
