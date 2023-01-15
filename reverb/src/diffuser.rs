@@ -6,7 +6,7 @@ pub struct Diffuser {
 }
 
 impl Diffuser {
-  pub fn new(sample_rate: f64, time: f32) -> Self {
+  pub fn new(sample_rate: f32, time: f32) -> Self {
     Self {
       allpass_filter: AllpassFilter::new(sample_rate),
       time,

@@ -10,7 +10,7 @@ pub struct Reverb {
 }
 
 impl Reverb {
-  pub fn new(sample_rate: f64) -> Self {
+  pub fn new(sample_rate: f32) -> Self {
     Self {
       taps: vec![
         Tap::new(TapInitializer {

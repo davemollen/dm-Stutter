@@ -26,19 +26,8 @@ impl Default for DmReverb {
 }
 
 impl Plugin for DmReverb {
-  fn new(host: HostCallback) -> Self {
-    fn get_sample_rate(info: TimeInfo) -> f64 {
-      info.sample_rate
-    }
-    let sample_rate = host.get_time_info(0).map(get_sample_rate).unwrap();
-    Self {
-      params: Arc::new(ReverbParameters::default()),
-      reverb: Reverb::new(sample_rate),
-    }
-  }
-
   fn set_sample_rate(&mut self, sample_rate: f32) {
-    self.reverb = Reverb::new(f64::from(sample_rate));
+    self.reverb = Reverb::new(sample_rate);
   }
 
   fn get_info(&self) -> Info {

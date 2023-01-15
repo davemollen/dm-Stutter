@@ -1,7 +1,7 @@
 use super::{delay_line::DelayLine, diffuser::Diffuser, one_pole_filter::OnePoleFilter};
 
 pub struct TapInitializer {
-  pub sample_rate: f64,
+  pub sample_rate: f32,
   pub time: f32,
   pub feedback_matrix: [f32; 4],
   pub diffuser_time: f32,
