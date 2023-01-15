@@ -8,7 +8,7 @@ use vst::{
   api::TimeInfo,
   buffer::AudioBuffer,
   host::Host,
-  plugin::{HostCallback, Info, Plugin, PluginParameters},
+  plugin::{Category, HostCallback, Info, Plugin, PluginParameters},
 };
 
 struct DmReverb {
@@ -44,11 +44,14 @@ impl Plugin for DmReverb {
   fn get_info(&self) -> Info {
     Info {
       name: "dm-Reverb".to_string(),
+      vendor: "DM".to_string(),
+      version: 1,
       inputs: 1,
       outputs: 1,
       parameters: 5,
       unique_id: 1358,
       f64_precision: true,
+      category: Category::Effect,
       ..Default::default()
     }
   }

@@ -4,7 +4,7 @@ pub struct TapInitializer {
   pub sample_rate: f64,
   pub time: f32,
   pub feedback_matrix: [f32; 4],
-  pub diffuser_times: [f32; 4],
+  pub diffuser_time: f32,
 }
 
 pub struct Tap {
@@ -21,12 +21,12 @@ impl Tap {
       sample_rate,
       time,
       feedback_matrix,
-      diffuser_times,
+      diffuser_time,
     } = tap_initializer;
     Self {
       time,
       delay_line: DelayLine::new((sample_rate * 1.5) as usize, sample_rate),
-      diffuser: Diffuser::new(sample_rate, diffuser_times),
+      diffuser: Diffuser::new(sample_rate, diffuser_time),
       feedback_matrix,
       one_pole_filter: OnePoleFilter::new(sample_rate),
     }
