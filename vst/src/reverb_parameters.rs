@@ -25,8 +25,8 @@ impl PluginParameters for ReverbParameters {
     match index {
       0 => ((self.size.get() - 1.) / 499.).powf(0.333333),
       1 => self.diffuse.get(),
-      2 => self.absorb.get().powf(2.),
-      3 => self.decay.get().powf(2.),
+      2 => self.absorb.get(),
+      3 => self.decay.get(),
       4 => self.mix.get(),
       _ => 0.0,
     }
@@ -59,8 +59,8 @@ impl PluginParameters for ReverbParameters {
     match index {
       0 => self.size.set(val.powf(3.) * 499. + 1.),
       1 => self.diffuse.set(val),
-      2 => self.absorb.set(val.powf(0.5)),
-      3 => self.decay.set(val.powf(0.5)),
+      2 => self.absorb.set(val),
+      3 => self.decay.set(val),
       4 => self.mix.set(val),
       _ => (),
     }

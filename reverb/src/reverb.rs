@@ -85,6 +85,8 @@ impl Reverb {
     mix: f32,
   ) -> (f32, f32) {
     let size = self.smooth_size.run(size, 3., "hertz");
+    let decay = decay.powf(0.3333333);
+    let absorb = absorb.powf(0.3333333);
     let read_outputs = self.read_from_delay_taps(size);
     self.write_to_delay_taps(input, &read_outputs, diffuse * 0.8, absorb, decay);
     let reverb = self.get_reverb_output();
