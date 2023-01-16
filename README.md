@@ -25,22 +25,24 @@ For Mod Duo, follow the [lv2 instructions](#LV2-installation) first. Then finish
 - Enter Mod password
 - Reboot Mod
 
-## LV2 installation
+## LV2 installation (for Mod)
 
 In order to build the binaries you need to have Docker installed. If so, proceed with the following steps:
 
-- Run `./build-lv2.sh` in the root directory.
-- Copy/paste the binary of the target platform from the `./lv2/out` directory into `./lv2/dm-Reverb.lv2`
+- Run `./scripts/build-lv2-for-mod.sh` in the root directory.
+- Copy/paste the binary of the target platform from the `./lv2/out` directory into `./lv2/<plugin name>.lv2`
 
 ## VST installation
 
-First go to the [vst scripts folder](./vst/scripts).
-
 Windows:
 
-1. Run `./build.sh`
-2. Copy libdm_Reverb.dll in /target/release to your vst plugin folder
+1. Run `./scripts/build-vst.sh`
+2. Copy dll file in /target/release to your vst plugin folder
 
-Mac
+Intel Mac:
 
-Run `./build-for-mac.sh`
+- Run `./scripts/build-vst-for-mac.sh`.
+
+M1 Mac:
+
+- Run `./scripts/build-vst-for-mac-m1.sh`.
