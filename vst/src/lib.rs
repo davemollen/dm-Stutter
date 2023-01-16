@@ -5,10 +5,8 @@ use reverb::Reverb;
 use reverb_parameters::ReverbParameters;
 use std::sync::Arc;
 use vst::{
-  api::TimeInfo,
   buffer::AudioBuffer,
-  host::Host,
-  plugin::{Category, HostCallback, Info, Plugin, PluginParameters},
+  plugin::{Category, Info, Plugin, PluginParameters},
 };
 
 struct DmReverb {
