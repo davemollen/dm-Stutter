@@ -34,7 +34,7 @@ impl Plugin for DmReverb {
       vendor: "DM".to_string(),
       version: 1,
       inputs: 1,
-      outputs: 1,
+      outputs: 2,
       parameters: 5,
       unique_id: 1358,
       f64_precision: true,
@@ -50,14 +50,26 @@ impl Plugin for DmReverb {
     let decay = self.params.decay.get();
     let mix = self.params.mix.get();
 
-    for (input_buffer, output_buffer) in buffer.zip() {
-      for (input_sample, output_sample) in input_buffer.iter().zip(output_buffer) {
-        let reverb_output = self
-          .reverb
-          .run(*input_sample, size, diffuse, absorb, decay, mix);
-        *output_sample = reverb_output.0;
-      }
+    let (inputs, mut outputs) = buffer.split();
+    let input = inputs.get(0);
+    let zipped_outputs = outputs
+      .get_mut(0)
+      .iter_mut()
+      .zip(outputs.get_mut(1).iter_mut());
+    for (input, (output_left, output_right)) in input.iter().zip(zipped_outputs) {
+      let (reverb_left, reverb_right) = self.reverb.run(*input, size, diffuse, absorb, decay, mix);
+      *output_left = reverb_left;
+      *output_right = reverb_right;
     }
+
+    // for (input_buffer, output_buffer) in buffer.zip() {
+    //   for (input_sample, output_sample) in input_buffer.iter().zip(output_buffer) {
+    //     let reverb_output = self
+    //       .reverb
+    //       .run(*input_sample, size, diffuse, absorb, decay, mix);
+    //     *output_sample = reverb_output.0;
+    //   }
+    // }
   }
 
   fn get_parameter_object(&mut self) -> Arc<dyn PluginParameters> {
