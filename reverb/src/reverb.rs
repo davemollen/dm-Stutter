@@ -1,3 +1,5 @@
+use crate::delay_line::DelayLine;
+
 use super::{
   mix::Mix,
   one_pole_filter::OnePoleFilter,
@@ -6,6 +8,7 @@ use super::{
 };
 
 pub struct Reverb {
+  predelay_tap: DelayLine,
   taps: Vec<Tap>,
   smooth_predelay: OnePoleFilter,
   smooth_size: OnePoleFilter,
@@ -17,6 +20,7 @@ pub struct Reverb {
 impl Reverb {
   pub fn new(sample_rate: f32) -> Self {
     Self {
+      predelay_tap: DelayLine::new((sample_rate * 0.5) as usize, sample_rate),
       taps: vec![
         Tap::new(TapInitializer {
           sample_rate,
@@ -105,8 +109,10 @@ impl Reverb {
     let diffuse = (absorb * 3.).min(1.) * 0.8;
     let absorb = ((absorb - 0.3333333).max(0.) * 1.5).powf(0.3333333);
     
+    let predelay_output = self.predelay_tap.read(predelay, "linear");
+    self.predelay_tap.write(input);
     let read_outputs = self.read_from_delay_taps(size, speed, depth);
-    self.write_to_delay_taps(input, &read_outputs, diffuse, absorb, decay);
+    self.write_to_delay_taps(predelay_output, &read_outputs, diffuse, absorb, decay);
     let reverb = self.get_reverb_output(read_outputs);
     Mix::run(input, reverb, mix)
   }
