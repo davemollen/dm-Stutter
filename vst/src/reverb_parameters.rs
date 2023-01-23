@@ -16,7 +16,7 @@ impl Default for ReverbParameters {
       predelay: AtomicFloat::new(7.),
       size: AtomicFloat::new(40.),
       speed: AtomicFloat::new(2.),
-      depth: AtomicFloat::new(0.5),
+      depth: AtomicFloat::new(0.25),
       absorb: AtomicFloat::new(0.5),
       decay: AtomicFloat::new(0.9),
       mix: AtomicFloat::new(0.5),

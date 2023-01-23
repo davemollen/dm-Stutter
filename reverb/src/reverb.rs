@@ -1,13 +1,16 @@
-use crate::{phasor::Phasor};
 use super::{
   mix::Mix,
   one_pole_filter::OnePoleFilter,
   tap::{Tap, TapInitializer},
+  phasor::Phasor
 };
 
 pub struct Reverb {
   taps: Vec<Tap>,
+  smooth_predelay: OnePoleFilter,
   smooth_size: OnePoleFilter,
+  smooth_depth: OnePoleFilter,
+  smooth_absorb: OnePoleFilter,
   lfo_phasor: Phasor
 }
 
@@ -45,7 +48,10 @@ impl Reverb {
         }),
       ],
       lfo_phasor: Phasor::new(sample_rate),
+      smooth_predelay: OnePoleFilter::new(sample_rate),
       smooth_size: OnePoleFilter::new(sample_rate),
+      smooth_depth: OnePoleFilter::new(sample_rate),
+      smooth_absorb: OnePoleFilter::new(sample_rate),
     }
   }
 
@@ -54,7 +60,7 @@ impl Reverb {
     self.taps
       .iter_mut()
       .map(|tap,| -> f32 { 
-        let lfo = tap.lfo.run(master_phase, tap.lfo_phase_offset) * depth * 2.;
+        let lfo = tap.lfo.run(master_phase, tap.lfo_phase_offset) * depth;
         tap.delay_line.read(tap.time * size + lfo, "linear") })
       .collect()
   }
@@ -76,8 +82,8 @@ impl Reverb {
     })
   }
 
-  fn get_reverb_output(&self, read_outputs: Vec<f32>) -> (f32, f32) {
-    (read_outputs[0] + read_outputs[3], read_outputs[1] + read_outputs[4])
+  fn get_reverb_output(&mut self, read_outputs: Vec<f32>) -> (f32, f32) {
+    (read_outputs[0] + read_outputs[2], read_outputs[1] + read_outputs[3])
   }
 
   pub fn run(
@@ -91,10 +97,13 @@ impl Reverb {
     decay: f32,
     mix: f32,
   ) -> (f32, f32) {
-    let size = self.smooth_size.run(size, 3., "hertz");
+    let predelay = self.smooth_predelay.run(predelay, 12., "hertz");
+    let size = self.smooth_size.run(size, 12., "hertz");
+    let depth = self.smooth_depth.run(depth.powf(4.) * 4., 12., "hertz");
+    let absorb = self.smooth_absorb.run(absorb, 12., "hertz");
     let decay = decay.powf(0.3333333);
-    let absorb = ((absorb - 0.3333333).max(0.) * 1.5).powf(0.3333333);
     let diffuse = (absorb * 3.).min(1.) * 0.8;
+    let absorb = ((absorb - 0.3333333).max(0.) * 1.5).powf(0.3333333);
     
     let read_outputs = self.read_from_delay_taps(size, speed, depth);
     self.write_to_delay_taps(input, &read_outputs, diffuse, absorb, decay);
