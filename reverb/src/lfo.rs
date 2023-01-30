@@ -1,5 +1,4 @@
 use crate::{SINE, TABLE_SIZE};
-use std::f32;
 
 #[derive(Default)]
 pub struct Lfo {}

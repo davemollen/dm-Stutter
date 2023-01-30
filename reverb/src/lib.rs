@@ -8,5 +8,6 @@ mod reverb;
 mod tap;
 mod lfo;
 mod phasor;
+mod taps;
 
 pub use self::reverb::Reverb;

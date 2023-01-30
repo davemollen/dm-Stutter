@@ -3,91 +3,28 @@ use crate::delay_line::DelayLine;
 use super::{
   mix::Mix,
   one_pole_filter::OnePoleFilter,
-  tap::{Tap, TapInitializer},
-  phasor::Phasor
+  taps::Taps,
 };
 
 pub struct Reverb {
   predelay_tap: DelayLine,
-  taps: Vec<Tap>,
+  taps: Taps,
   smooth_predelay: OnePoleFilter,
   smooth_size: OnePoleFilter,
   smooth_depth: OnePoleFilter,
   smooth_absorb: OnePoleFilter,
-  lfo_phasor: Phasor
 }
 
 impl Reverb {
   pub fn new(sample_rate: f32) -> Self {
     Self {
       predelay_tap: DelayLine::new((sample_rate * 0.5) as usize, sample_rate),
-      taps: vec![
-        Tap::new(TapInitializer {
-          sample_rate,
-          time: 0.68,
-          feedback_matrix: [1.0, 1.0, 1.0, 1.0],
-          diffuser_time: 5.,
-          lfo_phase_offset: 0.,
-        }),
-        Tap::new(TapInitializer {
-          sample_rate,
-          time: 0.77,
-          feedback_matrix: [1.0, -1.0, 1.0, -1.0],
-          diffuser_time: 7.,
-          lfo_phase_offset: 0.25,
-        }),
-        Tap::new(TapInitializer {
-          sample_rate,
-          time: 0.90,
-          feedback_matrix: [1.0, 1.0, -1.0, -1.0],
-          diffuser_time: 11.,
-          lfo_phase_offset: 0.5,
-        }),
-        Tap::new(TapInitializer {
-          sample_rate,
-          time: 0.99,
-          feedback_matrix: [1.0, -1.0, -1.0, 1.0],
-          diffuser_time: 13.,
-          lfo_phase_offset: 0.75,
-        }),
-      ],
-      lfo_phasor: Phasor::new(sample_rate),
+      taps: Taps::new(sample_rate),
       smooth_predelay: OnePoleFilter::new(sample_rate),
       smooth_size: OnePoleFilter::new(sample_rate),
       smooth_depth: OnePoleFilter::new(sample_rate),
       smooth_absorb: OnePoleFilter::new(sample_rate),
     }
-  }
-
-  fn read_from_delay_taps(&mut self, size: f32, speed: f32, depth: f32) -> Vec<f32> {
-    let master_phase = self.lfo_phasor.run(speed);
-    self.taps
-      .iter_mut()
-      .map(|tap,| -> f32 { 
-        let lfo = tap.lfo.run(master_phase, tap.lfo_phase_offset) * depth;
-        tap.delay_line.read(tap.time * size + lfo, "linear") })
-      .collect()
-  }
-
-  fn write_to_delay_taps(
-    &mut self,
-    input: f32,
-    read_outputs: &Vec<f32>,
-    diffuse: f32,
-    absorb: f32,
-    decay: f32,
-  ) {
-    self.taps.iter_mut().enumerate().for_each(|(i, tap)| {
-      let dry_signal = if i < 2 { input } else { 0. };
-      let processed_outputs: f32 = tap.process_delay_tap(read_outputs, diffuse, absorb);
-      tap
-        .delay_line
-        .write(dry_signal + processed_outputs * decay * 0.5)
-    })
-  }
-
-  fn get_reverb_output(&mut self, read_outputs: Vec<f32>) -> (f32, f32) {
-    (read_outputs[0] + read_outputs[2], read_outputs[1] + read_outputs[3])
   }
 
   pub fn run(
@@ -111,9 +48,7 @@ impl Reverb {
     
     let predelay_output = self.predelay_tap.read(predelay, "linear");
     self.predelay_tap.write(input);
-    let read_outputs = self.read_from_delay_taps(size, speed, depth);
-    self.write_to_delay_taps(predelay_output, &read_outputs, diffuse, absorb, decay);
-    let reverb = self.get_reverb_output(read_outputs);
+    let reverb = self.taps.run(predelay_output, size, speed, depth, diffuse, absorb, decay);
     Mix::run(input, reverb, mix)
   }
 }
