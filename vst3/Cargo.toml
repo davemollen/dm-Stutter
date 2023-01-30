@@ -1,0 +1,15 @@
+[package]
+name = "dm_reverb"
+version = "0.1.0"
+authors = ["Dave Mollen <davemollen@gmail.com>"]
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+nih_plug = { git = "https://github.com/robbert-vdh/nih-plug", branch = "master", features = ["assert_process_allocs"] }
+reverb = { path = "../reverb" }
+
+[workspace]
+members = ["xtask"]

@@ -59,7 +59,9 @@ impl Plugin for DmReverb {
       .iter_mut()
       .zip(output_channels.get_mut(1).iter_mut());
     for (input, (output_left, output_right)) in input.iter().zip(zipped_output_channels) {
-      let (reverb_left, reverb_right) = self.reverb.run(*input, size, speed, depth, predelay, absorb, decay, mix);
+      let (reverb_left, reverb_right) = self
+        .reverb
+        .run(*input, size, speed, depth, predelay, absorb, decay, mix);
       *output_left = reverb_left;
       *output_right = reverb_right;
     }

@@ -46,3 +46,9 @@ Intel Mac:
 M1 Mac:
 
 - Run `./scripts/build-vst-for-mac-m1.sh`.
+
+## VST3 installation
+
+Mac:
+
+- Run: `./scripts/build-vst3-for-mac.sh`
