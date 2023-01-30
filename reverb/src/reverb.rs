@@ -1,10 +1,6 @@
 use crate::delay_line::DelayLine;
 
-use super::{
-  mix::Mix,
-  one_pole_filter::OnePoleFilter,
-  taps::Taps,
-};
+use super::{mix::Mix, one_pole_filter::OnePoleFilter, taps::Taps};
 
 pub struct Reverb {
   predelay_tap: DelayLine,
@@ -45,10 +41,13 @@ impl Reverb {
     let decay = decay.powf(0.3333333);
     let diffuse = (absorb * 3.).min(1.) * 0.8;
     let absorb = ((absorb - 0.3333333).max(0.) * 1.5).powf(0.3333333);
-    
+
     let predelay_output = self.predelay_tap.read(predelay, "linear");
     self.predelay_tap.write(input);
-    let reverb = self.taps.run(predelay_output, size, speed, depth, diffuse, absorb, decay);
+    let reverb = self
+      .taps
+      .run(predelay_output, size, speed, depth, diffuse, absorb, decay);
+    // TODO: add early reflections
     Mix::run(input, reverb, mix)
   }
 }

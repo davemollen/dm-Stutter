@@ -23,52 +23,46 @@ impl Taps {
     self
       .taps
       .iter_mut()
-      .map(|tap| -> f32 { tap.read(size, phase, depth) })
+      .map(move |tap| -> f32 { tap.read(size, phase, depth) })
       .collect()
   }
 
-  fn apply_matrix(&self, inputs: &Vec<f32>, decay: f32) -> Vec<f32> {
+  fn apply_matrix<'a>(&self, inputs: &'a Vec<f32>, decay: f32) -> impl Iterator<Item = f32> + 'a {
     let decay = decay * 0.5;
-    let feedback_matrix = [
+    [
       [1.0, 1.0, 1.0, 1.0],
       [1.0, -1.0, 1.0, -1.0],
       [1.0, 1.0, -1.0, -1.0],
       [1.0, -1.0, -1.0, 1.0],
-    ];
-    feedback_matrix
-      .iter()
-      .map(|feedback_values| {
-        inputs
-          .iter()
-          .zip(feedback_values.iter())
-          .map(|(input, feedback)| input * feedback * decay)
-          .sum()
-      })
-      .collect()
-
-    // let a = inputs[0] - inputs[1];
-    // let b = inputs[0] + inputs[1];
-    // let c = inputs[2] - inputs[3];
-    // let d = inputs[2] + inputs[3];
-    // vec![(a-c) * decay, (a+c) * decay, (b-d) * decay, (b+d) * decay]
-  }
-
-  fn apply_diffuse_and_absorb(&mut self, inputs: Vec<f32>, diffuse: f32, absorb: f32) -> Vec<f32> {
-    inputs
-      .iter()
-      .zip(self.taps.iter_mut())
-      .map(|(input, tap)| {
-        let absorb_output = tap.apply_absorb(*input, absorb);
-        tap.apply_diffuse(absorb_output, diffuse)
-      })
-      .collect()
-  }
-
-  fn write_to_delay_taps(&mut self, dry_signal: f32, feedback_inputs: Vec<f32>) {
-    self.taps.iter_mut().enumerate().for_each(|(i, tap)| {
-      let dry_signal = if i < 2 { dry_signal } else { 0. };
-      tap.write(dry_signal + feedback_inputs[i]);
+    ]
+    .iter()
+    .map(move |feedback_values| -> f32 {
+      feedback_values
+        .iter()
+        .zip(inputs.iter())
+        .map(|(feedback, input)| input * feedback * decay)
+        .sum()
     })
+  }
+
+  fn process_and_write_taps<'a>(
+    &'a mut self,
+    input: f32,
+    matrix_outputs: impl Iterator<Item = f32> + 'a,
+    diffuse: f32,
+    absorb: f32,
+  ) {
+    self
+      .taps
+      .iter_mut()
+      .zip(matrix_outputs)
+      .enumerate()
+      .for_each(move |(i, (tap, matrix_output))| {
+        let dry_signal = if i < 2 { input } else { 0. };
+        let absorb_output = tap.apply_absorb(matrix_output + dry_signal, absorb);
+        let diffuse_output = tap.apply_diffuse(absorb_output, diffuse);
+        tap.write(diffuse_output);
+      })
   }
 
   fn get_taps_output(&self, inputs: Vec<f32>) -> (f32, f32) {
@@ -87,9 +81,7 @@ impl Taps {
   ) -> (f32, f32) {
     let read_outputs = self.read_from_delay_taps(size, speed, depth);
     let matrix_outputs = self.apply_matrix(&read_outputs, decay);
-    let diffused_and_absorbed_outputs =
-      self.apply_diffuse_and_absorb(matrix_outputs, diffuse, absorb);
-    self.write_to_delay_taps(input, diffused_and_absorbed_outputs);
+    self.process_and_write_taps(input, matrix_outputs, diffuse, absorb);
     self.get_taps_output(read_outputs)
   }
 }
