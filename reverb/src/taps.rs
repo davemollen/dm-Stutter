@@ -55,11 +55,10 @@ impl Taps {
     self
       .taps
       .iter_mut()
+      .zip([input, input, 0., 0.].iter())
       .zip(matrix_outputs)
-      .enumerate()
-      .for_each(move |(i, (tap, matrix_output))| {
-        let dry_signal = if i < 2 { input } else { 0. };
-        let absorb_output = tap.apply_absorb(matrix_output + dry_signal, absorb);
+      .for_each(move |((tap, dry_signal), matrix_output)| {
+        let absorb_output = tap.apply_absorb(dry_signal + matrix_output, absorb);
         let diffuse_output = tap.apply_diffuse(absorb_output, diffuse);
         tap.write(diffuse_output);
       })
