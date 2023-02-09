@@ -14,6 +14,10 @@ impl OnePoleFilter {
     }
   }
 
+  fn convert_linear_input_to_coefficient(&mut self, r: f32) -> f32 {
+    (1. - r) / 44100. * self.sample_rate
+  }
+
   fn convert_hertz_to_coefficient(&mut self, freq: f32) -> f32 {
     let coef = (freq * 2. * f32::consts::PI / self.sample_rate).sin();
     Clip::run(coef, 0., 1.)
@@ -25,7 +29,7 @@ impl OnePoleFilter {
 
   pub fn run(&mut self, input: f32, cutoff_freq: f32, mode: &str) -> f32 {
     let coefficient = match mode {
-      "linear" => 1. - cutoff_freq,
+      "linear" => self.convert_linear_input_to_coefficient(cutoff_freq),
       "Hz" => self.convert_hertz_to_coefficient(cutoff_freq),
       _ => self.convert_hertz_to_coefficient(cutoff_freq),
     };

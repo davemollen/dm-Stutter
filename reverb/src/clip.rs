@@ -11,3 +11,14 @@ impl Clip {
     }
   }
 }
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  #[test]
+  fn clip() {
+    assert_eq!(Clip::run(1.2, 0., 1.), 1.);
+    assert_eq!(Clip::run(-0.2, 0., 1.), 0.)
+  }
+}

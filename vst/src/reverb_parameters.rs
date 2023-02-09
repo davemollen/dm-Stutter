@@ -28,11 +28,11 @@ impl PluginParameters for ReverbParameters {
   fn get_parameter(&self, index: i32) -> f32 {
     match index {
       0 => ((self.predelay.get() - 7.) / 493.).powf(0.333333),
-      1 => ((self.size.get() - 1.) / 499.).powf(0.333333),
+      1 => ((self.size.get() - 1.) / 499.).powf(0.5),
       2 => ((self.speed.get() - 0.01) / 49.99).powf(0.333333),
       3 => self.depth.get(),
       4 => self.absorb.get(),
-      5 => self.decay.get(),
+      5 => self.decay.get() / 1.2,
       6 => self.mix.get(),
       _ => 0.0,
     }
@@ -68,11 +68,11 @@ impl PluginParameters for ReverbParameters {
   fn set_parameter(&self, index: i32, val: f32) {
     match index {
       0 => self.predelay.set(val.powf(3.) * 493. + 7.),
-      1 => self.size.set(val.powf(3.) * 499. + 1.),
+      1 => self.size.set(val.powf(2.) * 499. + 1.),
       2 => self.speed.set(val.powf(3.) * 49.99 + 0.01),
       3 => self.depth.set(val),
       4 => self.absorb.set(val),
-      5 => self.decay.set(val),
+      5 => self.decay.set(val * 1.2),
       6 => self.mix.set(val),
       _ => (),
     }

@@ -18,16 +18,21 @@ impl Taps {
     }
   }
 
+  // TODO: add early reflections
   fn read_from_delay_taps(&mut self, size: f32, speed: f32, depth: f32) -> Vec<f32> {
     let phase = self.lfo_phasor.run(speed);
     self
       .taps
       .iter_mut()
-      .map(move |tap| -> f32 { tap.read(size, phase, depth) })
+      .map(|tap| -> f32 { tap.read(size, phase, depth) })
       .collect()
   }
 
-  fn apply_matrix<'a>(&self, inputs: &'a Vec<f32>, decay: f32) -> impl Iterator<Item = f32> + 'a {
+  fn apply_feedback_matrix<'a>(
+    &self,
+    inputs: &'a Vec<f32>,
+    decay: f32,
+  ) -> impl Iterator<Item = f32> + 'a {
     let decay = decay * 0.5;
     [
       [1.0, 1.0, 1.0, 1.0],
@@ -48,24 +53,28 @@ impl Taps {
   fn process_and_write_taps<'a>(
     &'a mut self,
     input: f32,
-    matrix_outputs: impl Iterator<Item = f32> + 'a,
+    feedback_matrix_outputs: impl Iterator<Item = f32> + 'a,
     diffuse: f32,
     absorb: f32,
+    decay: f32,
   ) {
     self
       .taps
       .iter_mut()
       .zip([input, input, 0., 0.].iter())
-      .zip(matrix_outputs)
-      .for_each(move |((tap, dry_signal), matrix_output)| {
-        let absorb_output = tap.apply_absorb(dry_signal + matrix_output, absorb);
+      .zip(feedback_matrix_outputs)
+      .for_each(|((tap, dry_signal), feedback_matrix_output)| {
+        let saturation_output = tap.apply_saturation(feedback_matrix_output, decay);
+        let absorb_output = tap.apply_absorb(dry_signal + saturation_output, absorb);
         let diffuse_output = tap.apply_diffuse(absorb_output, diffuse);
         tap.write(diffuse_output);
-      })
+      });
   }
 
-  fn get_taps_output(&self, inputs: Vec<f32>) -> (f32, f32) {
-    (inputs[0] + inputs[2], inputs[1] + inputs[3])
+  fn get_output(&mut self, inputs: Vec<f32>) -> (f32, f32) {
+    let left_out = (inputs[0] + inputs[2]) * 0.7071;
+    let right_out = (inputs[1] + inputs[3]) * 0.7071;
+    (left_out, right_out)
   }
 
   pub fn run(
@@ -79,8 +88,8 @@ impl Taps {
     decay: f32,
   ) -> (f32, f32) {
     let read_outputs = self.read_from_delay_taps(size, speed, depth);
-    let matrix_outputs = self.apply_matrix(&read_outputs, decay);
-    self.process_and_write_taps(input, matrix_outputs, diffuse, absorb);
-    self.get_taps_output(read_outputs)
+    let feedback_matrix_outputs = self.apply_feedback_matrix(&read_outputs, decay);
+    self.process_and_write_taps(input, feedback_matrix_outputs, diffuse, absorb, decay);
+    self.get_output(read_outputs)
   }
 }

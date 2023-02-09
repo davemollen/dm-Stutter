@@ -36,7 +36,7 @@ impl Default for ReverbParameters {
         FloatRange::Skewed {
           min: 7.,
           max: 500.,
-          factor: 0.333333,
+          factor: 0.5,
         },
       )
       .with_unit("ms"),
@@ -68,7 +68,7 @@ impl Default for ReverbParameters {
         .with_unit("%")
         .with_value_to_string(formatters::v2s_f32_percentage(2))
         .with_string_to_value(formatters::s2v_f32_percentage()),
-      decay: FloatParam::new("Decay", 0.9, FloatRange::Linear { min: 0., max: 1. })
+      decay: FloatParam::new("Decay", 0.9, FloatRange::Linear { min: 0., max: 1.2 })
         .with_unit("%")
         .with_value_to_string(formatters::v2s_f32_percentage(2))
         .with_string_to_value(formatters::s2v_f32_percentage()),

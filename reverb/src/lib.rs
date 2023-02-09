@@ -1,13 +1,16 @@
 include!(concat!(env!("OUT_DIR"), "/wave_table.rs"));
 mod allpass_filter;
 mod clip;
+mod dc_block;
 mod delay_line;
+mod early_reflections;
+mod lfo;
 mod mix;
 mod one_pole_filter;
+mod phasor;
 mod reverb;
 mod tap;
-mod lfo;
-mod phasor;
 mod taps;
+mod wave_table;
 
 pub use self::reverb::Reverb;
