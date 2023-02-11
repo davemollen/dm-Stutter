@@ -54,14 +54,11 @@ impl Plugin for DmReverb {
     let mix = self.params.mix.get();
 
     let (input_channels, mut output_channels) = buffer.split();
-    let zipped_input_channels = input_channels
-      .get(0)
-      .iter()
-      .zip(input_channels.get(1).iter());
+    let zipped_input_channels = input_channels.get(0).iter().zip(input_channels.get(1));
     let zipped_output_channels = output_channels
       .get_mut(0)
       .iter_mut()
-      .zip(output_channels.get_mut(1).iter_mut());
+      .zip(output_channels.get_mut(1));
     for ((input_left, input_right), (output_left, output_right)) in
       zipped_input_channels.zip(zipped_output_channels)
     {

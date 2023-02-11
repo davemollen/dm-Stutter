@@ -39,7 +39,7 @@ impl Taps {
     .map(move |feedback_values| -> f32 {
       feedback_values
         .iter()
-        .zip(inputs.iter())
+        .zip(inputs)
         .map(|(feedback, input)| input * feedback)
         .sum()
     })
@@ -69,7 +69,7 @@ impl Taps {
     self
       .taps
       .iter_mut()
-      .zip([input, input, 0., 0.].iter())
+      .zip([input, input, 0., 0.])
       .zip(feedback_matrix_outputs)
       .for_each(|((tap, dry_signal), feedback_matrix_output)| {
         let saturation_output = tap.apply_saturation(feedback_matrix_output, decay);
