@@ -33,7 +33,7 @@ impl Plugin for DmReverb {
       name: "dm-Reverb".to_string(),
       vendor: "DM".to_string(),
       version: 1,
-      inputs: 1,
+      inputs: 2,
       outputs: 2,
       parameters: 8,
       unique_id: 1358,
@@ -54,14 +54,27 @@ impl Plugin for DmReverb {
     let mix = self.params.mix.get();
 
     let (input_channels, mut output_channels) = buffer.split();
-    let input = input_channels.get(0);
+    let zipped_input_channels = input_channels
+      .get(0)
+      .iter()
+      .zip(input_channels.get(1).iter());
     let zipped_output_channels = output_channels
       .get_mut(0)
       .iter_mut()
       .zip(output_channels.get_mut(1).iter_mut());
-    for (input, (output_left, output_right)) in input.iter().zip(zipped_output_channels) {
+    for ((input_left, input_right), (output_left, output_right)) in
+      zipped_input_channels.zip(zipped_output_channels)
+    {
       let (reverb_left, reverb_right) = self.reverb.run(
-        *input, size, speed, depth, predelay, absorb, decay, tilt, mix,
+        (*input_left, *input_right),
+        size,
+        speed,
+        depth,
+        predelay,
+        absorb,
+        decay,
+        tilt,
+        mix,
       );
       *output_left = reverb_left;
       *output_right = reverb_right;

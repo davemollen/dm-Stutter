@@ -73,14 +73,27 @@ impl Plugin for DmReverb {
     let mix = self.params.mix.value();
 
     for mut channel_samples in buffer.iter_samples() {
-      let channel1 = channel_samples.get_mut(0).unwrap();
+      let left_channel = channel_samples.get_mut(0).unwrap();
+      let input_left = *left_channel;
+      let right_channel = channel_samples.get_mut(1).unwrap();
+      let input_right = *right_channel;
+
       let (reverb_left, reverb_right) = self.reverb.run(
-        *channel1, size, speed, depth, predelay, absorb, decay, tilt, mix,
+        (input_left, input_right),
+        size,
+        speed,
+        depth,
+        predelay,
+        absorb,
+        decay,
+        tilt,
+        mix,
       );
 
-      *channel1 = reverb_left;
-      let channel2 = channel_samples.get_mut(1).unwrap();
-      *channel2 = reverb_right;
+      let left_channel_out = channel_samples.get_mut(0).unwrap();
+      *left_channel_out = reverb_left;
+      let right_channel_out = channel_samples.get_mut(1).unwrap();
+      *right_channel_out = reverb_right;
     }
     ProcessStatus::Normal
   }

@@ -30,7 +30,7 @@ impl Reverb {
 
   pub fn run(
     &mut self,
-    input: f32,
+    input: (f32, f32),
     size: f32,
     speed: f32,
     depth: f32,
@@ -50,13 +50,13 @@ impl Reverb {
     let absorb = ((absorb - 0.3333333).max(0.) * 1.5).powf(0.3333333);
 
     let predelay_output = self.predelay_tap.read(predelay, "linear");
-    self.predelay_tap.write(input);
+    self.predelay_tap.write((input.0 + input.1) * 0.7071);
     let taps_output = self
       .taps
       .run(predelay_output, size, speed, depth, diffuse, absorb, decay);
     let reverb_output = self
       .tilt_filter
       .run(taps_output, 520., 6000., 3.981072, 15.848932, tilt);
-    Mix::run((input, input), reverb_output, mix)
+    Mix::run(input, reverb_output, mix)
   }
 }
