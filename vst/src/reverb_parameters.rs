@@ -20,7 +20,7 @@ impl Default for ReverbParameters {
       depth: AtomicFloat::new(0.25),
       absorb: AtomicFloat::new(0.5),
       decay: AtomicFloat::new(0.9),
-      tilt: AtomicFloat::new(0.),
+      tilt: AtomicFloat::new(0.5),
       mix: AtomicFloat::new(0.5),
     }
   }
@@ -35,7 +35,7 @@ impl PluginParameters for ReverbParameters {
       3 => self.depth.get(),
       4 => self.absorb.get(),
       5 => self.decay.get() / 1.2,
-      6 => self.tilt.get() * 0.5 - 0.5,
+      6 => self.tilt.get(),
       7 => self.mix.get(),
       _ => 0.0,
     }
@@ -49,7 +49,7 @@ impl PluginParameters for ReverbParameters {
       3 => format!("{:.2}%", self.depth.get() * 100.),
       4 => format!("{:.2}%", self.absorb.get() * 100.),
       5 => format!("{:.2}%", self.decay.get() * 100.),
-      6 => format!("{:.2}%", self.tilt.get() * 100.),
+      6 => format!("{:.2}%", self.tilt.get() * 200. - 100.),
       7 => format!("{:.2}%", self.mix.get() * 100.),
       _ => "".to_string(),
     }
@@ -78,7 +78,7 @@ impl PluginParameters for ReverbParameters {
       3 => self.depth.set(val),
       4 => self.absorb.set(val),
       5 => self.decay.set(val * 1.2),
-      6 => self.tilt.set(val * 2. - 1.),
+      6 => self.tilt.set(val),
       7 => self.mix.set(val),
       _ => (),
     }

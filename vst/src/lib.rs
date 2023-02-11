@@ -50,7 +50,7 @@ impl Plugin for DmReverb {
     let depth = self.params.depth.get();
     let absorb = self.params.absorb.get();
     let decay = self.params.decay.get();
-    let tilt = self.params.tilt.get();
+    let tilt = self.params.tilt.get() * 2. - 1.;
     let mix = self.params.mix.get();
 
     let (input_channels, mut output_channels) = buffer.split();
