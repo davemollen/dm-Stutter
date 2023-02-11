@@ -56,15 +56,17 @@ impl Tap {
   }
 
   pub fn apply_saturation(&mut self, input: f32, decay: f32) -> f32 {
-    if decay < 0.495 {
+    let output = if decay < 0.99 {
       input
     } else {
-      let drive = Clip::run(decay - 0.495 * 200., 0., 1.);
-      // let saturation_output = self
-      //   .dc_block
-      //   .run(self.wave_table.read_from_wavetable(input, "TANH"));
-      let saturation_output = self.dc_block.run(input.tanh());
-      input * (1. - drive) + saturation_output * drive
-    }
+      let interp = ((decay - 0.99) * 100.).clip(0., 1.);
+      let saturation_output = self.dc_block.run(
+        self
+          .wave_table
+          .read_from_wavetable(input * 0.25 + 0.5, "TANH"),
+      );
+      input * (1. - interp) + saturation_output * interp
+    };
+    output * decay * 0.5
   }
 }

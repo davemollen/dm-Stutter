@@ -1,4 +1,4 @@
-use std::{env, f32, fs, path::Path};
+use std::{env, f32::consts::PI, fs, path::Path};
 
 const TABLE_SIZE: usize = 1024;
 
@@ -12,7 +12,7 @@ fn generate_wave_vector(function: fn(f32) -> f32) -> Vec<f32> {
 }
 
 fn sine(phase: f32) -> f32 {
-  (f32::consts::PI * 2. * phase).sin() * 0.5 + 0.5
+  (PI * 2. * phase).sin() * 0.5 + 0.5
 }
 
 fn tanh(phase: f32) -> f32 {

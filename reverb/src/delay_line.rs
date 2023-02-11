@@ -1,4 +1,4 @@
-use std::f32;
+use std::f32::consts::PI;
 
 #[derive(Clone)]
 pub struct DelayLine {
@@ -40,7 +40,7 @@ impl DelayLine {
   }
 
   fn cosine_interp(&self, index: usize, mix: f32) -> f32 {
-    let cosine_mix = (1. - (mix * f32::consts::PI).cos()) / 2.;
+    let cosine_mix = (1. - (mix * PI).cos()) / 2.;
     let x = self.buffer[self.wrap(index)];
     let y = self.buffer[self.wrap(index + 1)];
     x * (1. - cosine_mix) + y * cosine_mix

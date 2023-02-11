@@ -1,5 +1,5 @@
 use super::clip::Clip;
-use std::f32;
+use std::f32::consts::PI;
 
 pub struct OnePoleFilter {
   sample_rate: f32,
@@ -19,8 +19,8 @@ impl OnePoleFilter {
   }
 
   fn convert_hertz_to_coefficient(&mut self, freq: f32) -> f32 {
-    let coef = (freq * 2. * f32::consts::PI / self.sample_rate).sin();
-    Clip::run(coef, 0., 1.)
+    let coef = (freq * 2. * PI / self.sample_rate).sin();
+    coef.clip(0., 1.)
   }
 
   fn mix(&mut self, a: f32, b: f32, interp: f32) -> f32 {

@@ -69,13 +69,14 @@ impl Plugin for DmReverb {
     let depth = self.params.depth.value();
     let absorb = self.params.absorb.value();
     let decay = self.params.decay.value();
+    let tilt = self.params.tilt.value();
     let mix = self.params.mix.value();
 
     for mut channel_samples in buffer.iter_samples() {
       let channel1 = channel_samples.get_mut(0).unwrap();
-      let (reverb_left, reverb_right) = self
-        .reverb
-        .run(*channel1, size, speed, depth, predelay, absorb, decay, mix);
+      let (reverb_left, reverb_right) = self.reverb.run(
+        *channel1, size, speed, depth, predelay, absorb, decay, tilt, mix,
+      );
 
       *channel1 = reverb_left;
       let channel2 = channel_samples.get_mut(1).unwrap();

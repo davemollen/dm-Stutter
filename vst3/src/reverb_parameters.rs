@@ -23,6 +23,9 @@ pub struct ReverbParameters {
   #[id = "decay"]
   pub decay: FloatParam,
 
+  #[id = "tilt"]
+  pub tilt: FloatParam,
+
   #[id = "mix"]
   pub mix: FloatParam,
 }
@@ -69,6 +72,10 @@ impl Default for ReverbParameters {
         .with_value_to_string(formatters::v2s_f32_percentage(2))
         .with_string_to_value(formatters::s2v_f32_percentage()),
       decay: FloatParam::new("Decay", 0.9, FloatRange::Linear { min: 0., max: 1.2 })
+        .with_unit("%")
+        .with_value_to_string(formatters::v2s_f32_percentage(2))
+        .with_string_to_value(formatters::s2v_f32_percentage()),
+      tilt: FloatParam::new("Tilt", 0., FloatRange::Linear { min: -1., max: 1. })
         .with_unit("%")
         .with_value_to_string(formatters::v2s_f32_percentage(2))
         .with_string_to_value(formatters::s2v_f32_percentage()),

@@ -1,4 +1,4 @@
-use crate::{SINE, TABLE_SIZE, TANH};
+use crate::{clip::Clip, SINE, TABLE_SIZE, TANH};
 
 #[derive(Default)]
 pub struct WaveTable;
@@ -13,7 +13,7 @@ impl WaveTable {
   }
 
   fn clip_index(&self, index: usize) -> usize {
-    index.max(0).min(TABLE_SIZE - 2)
+    index.clip(0, TABLE_SIZE - 2)
   }
 
   fn linear_interp(
@@ -50,10 +50,11 @@ impl WaveTable {
 
 #[cfg(test)]
 mod tests {
-  use super::*;
+  use crate::wave_table::WaveTable;
+  use std::f32::consts::PI;
 
   fn sine(phase: f32) -> f32 {
-    (std::f32::consts::PI * 2. * phase).sin() * 0.5 + 0.5
+    (PI * 2. * phase).sin() * 0.5 + 0.5
   }
 
   fn assert_approximately_eq(left: f32, right: f32) {
@@ -67,20 +68,27 @@ mod tests {
   fn tanh_lookup() {
     let wave_table = WaveTable::default();
 
-    let mut input: f32 = 1.;
+    let mut input: f32 = 0.;
     assert_approximately_eq(
       input.tanh(),
-      wave_table.read_from_wavetable(input * 0.5 + 0.5, "TANH"),
+      wave_table.read_from_wavetable(input * 0.25 + 0.5, "TANH"),
     );
     input = 0.5;
     assert_approximately_eq(
       input.tanh(),
-      wave_table.read_from_wavetable(input * 0.5 + 0.5, "TANH"),
+      wave_table.read_from_wavetable(input * 0.25 + 0.5, "TANH"),
     );
     input = 2.;
     assert_approximately_eq(
       input.tanh(),
-      wave_table.read_from_wavetable(input * 0.5 + 0.5, "TANH"),
+      wave_table.read_from_wavetable(input * 0.25 + 0.5, "TANH"),
+    );
+    input = 8.;
+    assert!(wave_table.read_from_wavetable(input * 0.25 + 0.5, "TANH") < 1.);
+    input = -1.;
+    assert_approximately_eq(
+      input.tanh(),
+      wave_table.read_from_wavetable(input * 0.25 + 0.5, "TANH"),
     );
   }
 

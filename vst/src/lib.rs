@@ -35,7 +35,7 @@ impl Plugin for DmReverb {
       version: 1,
       inputs: 1,
       outputs: 2,
-      parameters: 7,
+      parameters: 8,
       unique_id: 1358,
       f64_precision: true,
       category: Category::Effect,
@@ -50,6 +50,7 @@ impl Plugin for DmReverb {
     let depth = self.params.depth.get();
     let absorb = self.params.absorb.get();
     let decay = self.params.decay.get();
+    let tilt = self.params.tilt.get();
     let mix = self.params.mix.get();
 
     let (input_channels, mut output_channels) = buffer.split();
@@ -59,9 +60,9 @@ impl Plugin for DmReverb {
       .iter_mut()
       .zip(output_channels.get_mut(1).iter_mut());
     for (input, (output_left, output_right)) in input.iter().zip(zipped_output_channels) {
-      let (reverb_left, reverb_right) = self
-        .reverb
-        .run(*input, size, speed, depth, predelay, absorb, decay, mix);
+      let (reverb_left, reverb_right) = self.reverb.run(
+        *input, size, speed, depth, predelay, absorb, decay, tilt, mix,
+      );
       *output_left = reverb_left;
       *output_right = reverb_right;
     }
