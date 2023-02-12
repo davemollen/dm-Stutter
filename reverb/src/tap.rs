@@ -1,7 +1,8 @@
 use crate::{
   allpass_filter::AllpassFilter, clip::Clip, dc_block::DcBlock, delay_line::DelayLine, lfo::Lfo,
-  one_pole_filter::OnePoleFilter, wave_table::WaveTable,
+  one_pole_filter::OnePoleFilter,
 };
+use std::f32::consts::PI;
 
 pub struct Tap {
   time_fraction: f32,
@@ -11,7 +12,6 @@ pub struct Tap {
   diffuser_time: f32,
   lfo: Lfo,
   lfo_phase_offset: f32,
-  wave_table: WaveTable,
   dc_block: DcBlock,
 }
 
@@ -31,7 +31,6 @@ impl Tap {
       one_pole_filter: OnePoleFilter::new(sample_rate),
       lfo: Lfo::default(),
       lfo_phase_offset,
-      wave_table: WaveTable::default(),
       dc_block: DcBlock::new(sample_rate),
     }
   }
@@ -60,11 +59,8 @@ impl Tap {
       input
     } else {
       let interp = ((decay - 0.99) * 100.).clip(0., 1.);
-      let saturation_output = self.dc_block.run(
-        self
-          .wave_table
-          .read_from_wavetable(input * 0.25 + 0.5, "TANH"),
-      );
+      // TODO: add tanh approximation
+      let saturation_output = self.dc_block.run(input.atan());
       input * (1. - interp) + saturation_output * interp
     };
     output * decay * 0.5
