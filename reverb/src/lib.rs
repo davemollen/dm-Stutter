@@ -1,11 +1,10 @@
 include!(concat!(env!("OUT_DIR"), "/wave_table.rs"));
 mod allpass_filter;
-mod atan_approximation;
 mod biquad_filter;
-mod clip;
 mod dc_block;
 mod delay_line;
 mod early_reflections;
+mod float_extensions;
 mod lfo;
 mod mix;
 mod one_pole_filter;

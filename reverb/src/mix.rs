@@ -18,7 +18,7 @@ impl Mix {
 
 #[cfg(test)]
 mod tests {
-  use super::*;
+  use crate::mix::Mix;
 
   #[test]
   fn mix() {

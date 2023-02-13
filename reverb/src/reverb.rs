@@ -1,3 +1,5 @@
+use std::f32::consts::FRAC_1_SQRT_2;
+
 use crate::{
   delay_line::DelayLine, mix::Mix, one_pole_filter::OnePoleFilter, taps::Taps,
   tilt_filter::TiltFilter,
@@ -50,7 +52,7 @@ impl Reverb {
     let absorb = ((absorb - 0.3333333).max(0.) * 1.5).powf(0.3333333);
 
     let predelay_output = self.predelay_tap.read(predelay, "linear");
-    self.predelay_tap.write((input.0 + input.1) * 0.7071);
+    self.predelay_tap.write((input.0 + input.1) * FRAC_1_SQRT_2);
     let taps_output = self
       .taps
       .run(predelay_output, size, speed, depth, diffuse, absorb, decay);

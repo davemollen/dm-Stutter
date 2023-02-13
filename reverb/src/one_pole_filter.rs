@@ -1,4 +1,4 @@
-use super::clip::Clip;
+use crate::float_extensions::FloatExtensions;
 use std::f32::consts::PI;
 
 pub struct OnePoleFilter {
@@ -8,10 +8,7 @@ pub struct OnePoleFilter {
 
 impl OnePoleFilter {
   pub fn new(sample_rate: f32) -> Self {
-    Self {
-      sample_rate: sample_rate as f32,
-      z: 0.,
-    }
+    Self { sample_rate, z: 0. }
   }
 
   fn convert_linear_input_to_coefficient(&mut self, r: f32) -> f32 {

@@ -1,3 +1,5 @@
+use std::f32::consts::FRAC_1_SQRT_2;
+
 use crate::{phasor::Phasor, tap::Tap};
 
 pub struct Taps {
@@ -80,8 +82,8 @@ impl Taps {
   }
 
   fn get_stereo_output(&mut self, inputs: Vec<f32>) -> (f32, f32) {
-    let left_out = (inputs[0] + inputs[2]) * 0.7071;
-    let right_out = (inputs[1] + inputs[3]) * 0.7071;
+    let left_out = (inputs[0] + inputs[2]) * FRAC_1_SQRT_2;
+    let right_out = (inputs[1] + inputs[3]) * FRAC_1_SQRT_2;
     (left_out, right_out)
   }
 

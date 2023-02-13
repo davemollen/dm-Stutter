@@ -17,7 +17,7 @@ impl DelayLine {
   }
 
   fn mstosamps(&self, time: f32) -> f32 {
-    time * 0.001 * self.sample_rate as f32
+    time * 0.001 * self.sample_rate
   }
 
   fn wrap(&self, index: usize) -> usize {

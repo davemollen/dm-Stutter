@@ -38,8 +38,8 @@ mod tests {
 
   fn assert_approximately_eq(left: f32, right: f32) {
     assert_eq!(
-      (left / 1000.).floor() * 1000.,
-      (right / 1000.).floor() * 1000.
+      (left * 1000.).floor() / 1000.,
+      (right * 1000.).floor() / 1000.
     )
   }
 

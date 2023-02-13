@@ -1,6 +1,6 @@
 use crate::{
-  allpass_filter::AllpassFilter, atan_approximation::AtanApproximation, clip::Clip,
-  dc_block::DcBlock, delay_line::DelayLine, lfo::Lfo, one_pole_filter::OnePoleFilter,
+  allpass_filter::AllpassFilter, dc_block::DcBlock, delay_line::DelayLine,
+  float_extensions::FloatExtensions, lfo::Lfo, one_pole_filter::OnePoleFilter,
 };
 
 pub struct Tap {
@@ -58,7 +58,7 @@ impl Tap {
       input
     } else {
       let interp = ((decay - 0.99) * 100.).clip(0., 1.);
-      let saturation_output = self.dc_block.run((input).atan_approximation());
+      let saturation_output = self.dc_block.run((input).fast_atan1());
       input * (1. - interp) + saturation_output * interp
     };
     output * decay * 0.5
