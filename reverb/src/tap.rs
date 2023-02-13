@@ -1,8 +1,7 @@
 use crate::{
-  allpass_filter::AllpassFilter, clip::Clip, dc_block::DcBlock, delay_line::DelayLine, lfo::Lfo,
-  one_pole_filter::OnePoleFilter,
+  allpass_filter::AllpassFilter, atan_approximation::AtanApproximation, clip::Clip,
+  dc_block::DcBlock, delay_line::DelayLine, lfo::Lfo, one_pole_filter::OnePoleFilter,
 };
-use std::f32::consts::PI;
 
 pub struct Tap {
   time_fraction: f32,
@@ -59,8 +58,7 @@ impl Tap {
       input
     } else {
       let interp = ((decay - 0.99) * 100.).clip(0., 1.);
-      // TODO: add tanh approximation
-      let saturation_output = self.dc_block.run(input.atan());
+      let saturation_output = self.dc_block.run((input).atan_approximation());
       input * (1. - interp) + saturation_output * interp
     };
     output * decay * 0.5

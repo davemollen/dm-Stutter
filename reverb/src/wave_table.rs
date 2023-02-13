@@ -29,7 +29,7 @@ impl WaveTable {
 
 #[cfg(test)]
 mod tests {
-  use crate::sine_table::WaveTable;
+  use crate::wave_table::WaveTable;
   use std::f32::consts::PI;
 
   fn sine(phase: f32) -> f32 {
