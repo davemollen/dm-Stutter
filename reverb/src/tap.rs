@@ -54,12 +54,13 @@ impl Tap {
   }
 
   pub fn apply_saturation(&mut self, input: f32, decay: f32) -> f32 {
-    let output = if decay < 0.99 {
+    let output = if decay < 1. {
       input
     } else {
-      let interp = ((decay - 0.99) * 100.).clip(0., 1.);
-      let saturation_output = self.dc_block.run((input).fast_atan1());
-      input * (1. - interp) + saturation_output * interp
+      let saturation_output = input.fast_atan1();
+      let mix_factor = ((decay - 1.) * 100.).clip(0., 1.);
+      let mixed_output = input * (1. - mix_factor) + saturation_output * mix_factor;
+      self.dc_block.run(mixed_output)
     };
     output * decay * 0.5
   }
