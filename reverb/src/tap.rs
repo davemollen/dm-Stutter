@@ -1,6 +1,6 @@
 use crate::{
-  allpass_filter::AllpassFilter, dc_block::DcBlock, delay_line::DelayLine,
-  float_extensions::FloatExtensions, lfo::Lfo, one_pole_filter::OnePoleFilter, MAX_DEPTH, MAX_SIZE,
+  allpass_filter::AllpassFilter, dc_block::DcBlock, delay_line::DelayLine, float_ext::FloatExt,
+  lfo::Lfo, one_pole_filter::OnePoleFilter, MAX_DEPTH, MAX_SIZE,
 };
 
 pub struct Tap {

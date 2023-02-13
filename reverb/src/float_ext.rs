@@ -1,6 +1,6 @@
 use std::f32::consts::{FRAC_PI_2, PI};
 
-pub trait FloatExtensions {
+pub trait FloatExt {
   fn clip(self, min: Self, max: Self) -> Self;
   fn fast_atan1(&self) -> Self;
   fn fast_atan2(&self) -> Self;
@@ -14,7 +14,7 @@ pub trait FloatExtensions {
   fn fast_pow(&self, exponent: Self) -> Self;
 }
 
-impl FloatExtensions for f32 {
+impl FloatExt for f32 {
   /// Clips the input value between specified min and max.  
   fn clip(self, min: Self, max: Self) -> Self {
     self.max(min).min(max)
@@ -113,7 +113,7 @@ impl FloatExtensions for f32 {
 
 #[cfg(test)]
 mod tests {
-  use crate::float_extensions::FloatExtensions;
+  use crate::float_ext::FloatExt;
   use std::f32::consts::{FRAC_1_SQRT_2, PI};
 
   fn assert_approximately_eq(left: f32, right: f32) {

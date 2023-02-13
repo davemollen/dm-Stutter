@@ -4,7 +4,7 @@ mod biquad_filter;
 mod dc_block;
 mod delay_line;
 mod early_reflections;
-mod float_extensions;
+mod float_ext;
 mod lfo;
 mod mix;
 mod one_pole_filter;

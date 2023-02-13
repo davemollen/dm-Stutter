@@ -1,4 +1,4 @@
-use crate::float_extensions::FloatExtensions;
+use crate::float_ext::FloatExt;
 use std::f32::consts::PI;
 
 pub struct OnePoleFilter {

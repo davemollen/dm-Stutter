@@ -1,6 +1,5 @@
-use std::f32::consts::FRAC_1_SQRT_2;
-
 use crate::{phasor::Phasor, tap::Tap};
+use std::f32::consts::FRAC_1_SQRT_2;
 
 pub struct Taps {
   taps: Vec<Tap>,
