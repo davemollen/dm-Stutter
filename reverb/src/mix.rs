@@ -20,16 +20,23 @@ impl Mix {
 mod tests {
   use crate::mix::Mix;
 
+  fn assert_approximately_eq(left: f32, right: f32) {
+    assert_eq!(
+      (left * 1000.).floor() / 1000.,
+      (right * 1000.).floor() / 1000.
+    )
+  }
+
   #[test]
   fn mix() {
     let first = Mix::run((0., 0.), (1., 1.), 0.);
     let second = Mix::run((0., 0.), (1., 1.), 0.5);
     let third = Mix::run((0., 0.), (1., 1.), 1.);
-    assert_eq!((first.0 * 1000.).floor() / 1000., 0.);
-    assert_eq!((first.1 * 1000.).floor() / 1000., 0.);
-    assert_eq!((second.0 * 1000.).floor() / 1000., 0.707);
-    assert_eq!((second.1 * 1000.).floor() / 1000., 0.707);
-    assert_eq!((third.0 * 1000.).floor() / 1000., 1.);
-    assert_eq!((third.1 * 1000.).floor() / 1000., 1.);
+    assert_approximately_eq(first.0, 0.);
+    assert_approximately_eq(first.1, 0.);
+    assert_approximately_eq(second.0, 0.707);
+    assert_approximately_eq(second.1, 0.707);
+    assert_approximately_eq(third.0, 1.);
+    assert_approximately_eq(third.1, 1.);
   }
 }

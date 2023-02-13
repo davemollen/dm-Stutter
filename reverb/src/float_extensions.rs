@@ -1,4 +1,4 @@
-use std::f32::consts::{FRAC_2_PI, FRAC_PI_2, PI};
+use std::f32::consts::{FRAC_PI_2, PI};
 
 pub trait FloatExtensions {
   fn clip(self, min: Self, max: Self) -> Self;
@@ -9,8 +9,9 @@ pub trait FloatExtensions {
   fn fast_tanh3(&self) -> Self;
   fn fast_sin(&self) -> Self;
   fn fast_cos(&self) -> Self;
-  fn sin_bhaskara(&self) -> Self;
-  fn cos_bhaskara(&self) -> Self;
+  fn fast_sin_bhaskara(&self) -> Self;
+  fn fast_cos_bhaskara(&self) -> Self;
+  fn fast_pow(&self, exponent: Self) -> Self;
 }
 
 impl FloatExtensions for f32 {
@@ -68,37 +69,28 @@ impl FloatExtensions for f32 {
 
   /// This is a sine approximation. Use this to safe processing power.
   fn fast_sin(&self) -> Self {
-    const FOUROVERPI: f32 = 1.2732395447351627;
-    const FOUROVERPISQ: f32 = 0.40528473456935109;
-    const Q: f32 = 0.77633023248007499;
-
-    let mut p = 0.22308510060189463_f32.to_bits();
-    let mut v = self.to_bits();
-
-    let sign: u32 = v & 0x80000000;
-    v &= 0x7FFFFFFF;
-
-    let qpprox = FOUROVERPI * self - FOUROVERPISQ * self * Self::from_bits(v);
-
-    p |= sign;
-
-    qpprox * (Q + Self::from_bits(p) * qpprox)
+    const TWOPI: f32 = 6.2831853071795865;
+    const INVTWOPI: f32 = 0.15915494309189534;
+    let k: u32 = (self * INVTWOPI) as u32;
+    let half = if self < &0_f32 { -0.5_f32 } else { 0.5_f32 };
+    let x = (half + (k as f32)) * TWOPI - self;
+    sin_approx(x)
   }
 
   /// This is a cosine approximation. Use this to safe processing power.
   fn fast_cos(&self) -> Self {
-    const P: f32 = 0.54641335845679634;
-
-    let v = self.to_bits() & 0x7FFFFFFF;
-
-    let qpprox = 1.0_f32 - FRAC_2_PI * Self::from_bits(v);
-
-    qpprox + P * qpprox * (1.0_f32 - qpprox * qpprox)
+    const TWOPI: f32 = 6.2831853071795865;
+    const INVTWOPI: f32 = 0.15915494309189534;
+    let x = self + FRAC_PI_2;
+    let k: u32 = (x * INVTWOPI) as u32;
+    let half = if x < 0_f32 { -0.5_f32 } else { 0.5_f32 };
+    let x_new = (half + (k as f32)) * TWOPI - x;
+    sin_approx(x_new)
   }
 
   /// This is the Bhaskara sine approximation. It returns a sine from 0 to 180 degrees.
   /// This function expects values between 0. and 1.
-  fn sin_bhaskara(&self) -> Self {
+  fn fast_sin_bhaskara(&self) -> Self {
     let x = self * FRAC_PI_2;
     let pi_squared = 9.869604401089358;
     let a = x * (PI - x);
@@ -107,11 +99,15 @@ impl FloatExtensions for f32 {
 
   /// This is the Bhaskara cosine approximation. It returns a sine from 0 to 180 degrees.
   /// This function expects values between 0. and 1.
-  fn cos_bhaskara(&self) -> Self {
+  fn fast_cos_bhaskara(&self) -> Self {
     let x = self * FRAC_PI_2;
     let x_squared = x * x;
     let pi_squared = 9.869604401089358;
     (pi_squared - 4. * x_squared) / (pi_squared + x_squared)
+  }
+
+  fn fast_pow(&self, exponent: Self) -> Self {
+    pow2(exponent * log2(*self))
   }
 }
 
@@ -179,27 +175,56 @@ mod tests {
 
   #[test]
   fn fast_sin() {
-    assert_approximately_eq((0.).fast_sin(), (0f32).sin());
-    assert_approximately_eq((PI).fast_sin(), (PI).sin());
-    // assert_approximately_eq((PI * 2.).fast_sin(), (PI * 2.).sin());
+    assert_approximately_eq((0.1).fast_sin(), (0.1f32).sin());
+    assert_approximately_eq((PI * 1.5).fast_sin(), (PI * 1.5).sin());
+    assert_approximately_eq((PI * -1.9).fast_sin(), (PI * -1.9).sin());
   }
 
   #[test]
   fn fast_cos() {
-    assert_approximately_eq((0.).fast_cos(), (0f32).cos());
-    assert_approximately_eq((PI).fast_cos(), (PI).cos());
-    // assert_approximately_eq((PI * 2.).fast_cos(), (PI * 2.).cos());
-    assert_approximately_eq((PI * 0.25).fast_cos(), FRAC_1_SQRT_2);
+    assert_approximately_eq((0.1).fast_cos(), (0.1f32).cos());
+    assert_approximately_eq((PI * 1.5).fast_cos(), (PI * 1.5).cos());
+    assert_approximately_eq((PI * 1.9).fast_cos(), (PI * 1.9).cos());
   }
 
   #[test]
-  fn bhaskara() {
-    assert_approximately_eq((0.).sin_bhaskara(), 0.);
-    assert_approximately_eq((0.5).sin_bhaskara(), FRAC_1_SQRT_2);
-    assert_approximately_eq((1.).sin_bhaskara(), 1.);
-    assert_approximately_eq((0.).cos_bhaskara(), 1.);
-    assert_approximately_eq((0.5).cos_bhaskara(), FRAC_1_SQRT_2);
-    assert_approximately_eq((0.5).cos_bhaskara(), (0.5).sin_bhaskara());
-    assert_approximately_eq((0.).cos_bhaskara(), (1.).sin_bhaskara());
+  fn fast_bhaskara() {
+    assert_approximately_eq((0.).fast_sin_bhaskara(), 0.);
+    assert_approximately_eq((0.5).fast_sin_bhaskara(), FRAC_1_SQRT_2);
+    assert_approximately_eq((1.).fast_sin_bhaskara(), 1.);
+    assert_approximately_eq((0.).fast_cos_bhaskara(), 1.);
+    assert_approximately_eq((0.5).fast_cos_bhaskara(), FRAC_1_SQRT_2);
+    assert_approximately_eq((0.5).fast_cos_bhaskara(), (0.5).fast_sin_bhaskara());
+    assert_approximately_eq((0.).fast_cos_bhaskara(), (1.).fast_sin_bhaskara());
   }
+}
+
+fn log2(x: f32) -> f32 {
+  let mut y = x.to_bits() as f32;
+  y *= 1.1920928955078125e-7_f32;
+  y - 126.94269504_f32
+}
+
+fn pow2(p: f32) -> f32 {
+  let clipp = if p < -126.0 { -126.0_f32 } else { p };
+  let v = ((1 << 23) as f32 * (clipp + 126.94269504_f32)) as u32;
+  f32::from_bits(v)
+}
+
+fn sin_approx(x: f32) -> f32 {
+  const FOUROVERPI: f32 = 1.2732395447351627;
+  const FOUROVERPISQ: f32 = 0.40528473456935109;
+  const Q: f32 = 0.77633023248007499;
+
+  let mut p = 0.22308510060189463_f32.to_bits();
+  let mut v = x.to_bits();
+
+  let sign: u32 = v & 0x80000000;
+  v &= 0x7FFFFFFF;
+
+  let qpprox = FOUROVERPI * x - FOUROVERPISQ * x * f32::from_bits(v);
+
+  p |= sign;
+
+  qpprox * (Q + f32::from_bits(p) * qpprox)
 }
