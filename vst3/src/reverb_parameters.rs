@@ -2,6 +2,7 @@ use nih_plug::{
   formatters,
   prelude::{FloatParam, FloatRange, Params},
 };
+use reverb::MAX_SIZE;
 
 #[derive(Params)]
 pub struct ReverbParameters {
@@ -48,7 +49,7 @@ impl Default for ReverbParameters {
         40.,
         FloatRange::Skewed {
           min: 1.,
-          max: 500.,
+          max: MAX_SIZE,
           factor: 0.333333,
         },
       )

@@ -1,9 +1,8 @@
-use std::f32::consts::FRAC_1_SQRT_2;
-
 use crate::{
   delay_line::DelayLine, mix::Mix, one_pole_filter::OnePoleFilter, taps::Taps,
-  tilt_filter::TiltFilter,
+  tilt_filter::TiltFilter, MAX_DEPTH,
 };
+use std::f32::consts::FRAC_1_SQRT_2;
 
 pub struct Reverb {
   predelay_tap: DelayLine,
@@ -44,7 +43,9 @@ impl Reverb {
   ) -> (f32, f32) {
     let predelay = self.smooth_predelay.run(predelay, 12., "hertz");
     let size = self.smooth_size.run(size, 12., "hertz");
-    let depth = self.smooth_depth.run(depth.powf(4.) * 4., 12., "hertz");
+    let depth = self
+      .smooth_depth
+      .run(depth.powf(4.) * MAX_DEPTH, 12., "hertz");
     let absorb = self.smooth_absorb.run(absorb, 12., "hertz");
     let tilt = self.smooth_tilt.run(tilt, 12., "hertz");
     let decay = decay.powf(0.3333333);

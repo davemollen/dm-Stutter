@@ -1,6 +1,6 @@
 use crate::{
   allpass_filter::AllpassFilter, dc_block::DcBlock, delay_line::DelayLine,
-  float_extensions::FloatExtensions, lfo::Lfo, one_pole_filter::OnePoleFilter,
+  float_extensions::FloatExtensions, lfo::Lfo, one_pole_filter::OnePoleFilter, MAX_DEPTH, MAX_SIZE,
 };
 
 pub struct Tap {
@@ -23,8 +23,10 @@ impl Tap {
   ) -> Self {
     Self {
       time_fraction,
-      // TODO: calculate max length
-      delay_line: DelayLine::new((sample_rate * 1.5) as usize, sample_rate),
+      delay_line: DelayLine::new(
+        (sample_rate * (MAX_SIZE * 0.001 * time_fraction + MAX_DEPTH)) as usize,
+        sample_rate,
+      ),
       all_pass_filter: AllpassFilter::new(sample_rate),
       diffuser_time,
       one_pole_filter: OnePoleFilter::new(sample_rate),
