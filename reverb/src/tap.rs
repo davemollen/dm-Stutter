@@ -1,11 +1,18 @@
 use crate::{
   allpass_filter::AllpassFilter, dc_block::DcBlock, delay_line::DelayLine, float_ext::FloatExt,
-  lfo::Lfo, one_pole_filter::OnePoleFilter, MAX_DEPTH, MAX_SIZE,
+  lfo::Lfo, one_pole_filter::OnePoleFilter, pan::Pan, MAX_DEPTH, MAX_SIZE,
 };
+
+struct EarlyReflection {
+  time_fraction: f32,
+  gain: f32,
+  pan: f32,
+}
 
 pub struct Tap {
   time_fraction: f32,
   delay_line: DelayLine,
+  early_reflections: Vec<EarlyReflection>,
   all_pass_filter: AllpassFilter,
   one_pole_filter: OnePoleFilter,
   diffuser_time: f32,
@@ -15,9 +22,11 @@ pub struct Tap {
 }
 
 impl Tap {
+  /// early_reflections expects a vector of (time_fraction, gain, pan)
   pub fn new(
     sample_rate: f32,
     time_fraction: f32,
+    early_reflections: Vec<(f32, f32, f32)>,
     diffuser_time: f32,
     lfo_phase_offset: f32,
   ) -> Self {
@@ -27,6 +36,14 @@ impl Tap {
         (sample_rate * (MAX_SIZE * 0.001 * time_fraction + MAX_DEPTH)) as usize,
         sample_rate,
       ),
+      early_reflections: early_reflections
+        .iter()
+        .map(|x| EarlyReflection {
+          time_fraction: x.0,
+          gain: x.1,
+          pan: x.2,
+        })
+        .collect(),
       all_pass_filter: AllpassFilter::new(sample_rate),
       diffuser_time,
       one_pole_filter: OnePoleFilter::new(sample_rate),
@@ -41,6 +58,28 @@ impl Tap {
     self
       .delay_line
       .read(self.time_fraction * size + lfo, "linear")
+  }
+
+  pub fn read_early_reflections(&mut self, size: f32) -> (f32, f32) {
+    let Tap {
+      early_reflections,
+      delay_line,
+      ..
+    } = self;
+
+    early_reflections
+      .iter()
+      .fold((0., 0.), |sum, early_reflection| {
+        let interp = if early_reflection.time_fraction == 0. {
+          "step"
+        } else {
+          "linear"
+        };
+        let early_reflection_out =
+          delay_line.read(early_reflection.time_fraction * size, interp) * early_reflection.gain;
+        let (left_out, right_out) = early_reflection_out.pan(early_reflection.pan);
+        (sum.0 + left_out, sum.1 + right_out)
+      })
   }
 
   pub fn write(&mut self, input: f32) {
