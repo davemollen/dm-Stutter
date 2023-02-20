@@ -1,4 +1,4 @@
-use reverb::MAX_SIZE;
+use reverb::{MAX_SIZE, MIN_SIZE};
 use vst::{plugin::PluginParameters, util::AtomicFloat};
 
 pub struct ReverbParameters {
@@ -31,7 +31,7 @@ impl PluginParameters for ReverbParameters {
   fn get_parameter(&self, index: i32) -> f32 {
     match index {
       0 => ((self.predelay.get() - 7.) / 493.).powf(0.333333),
-      1 => ((self.size.get() - 1.) / (MAX_SIZE - 1.)).powf(0.333333),
+      1 => ((self.size.get() - MIN_SIZE) / (MAX_SIZE - MIN_SIZE)).powf(0.333333),
       2 => ((self.speed.get() - 0.01) / 49.99).powf(0.333333),
       3 => self.depth.get(),
       4 => self.absorb.get(),
@@ -74,7 +74,9 @@ impl PluginParameters for ReverbParameters {
   fn set_parameter(&self, index: i32, val: f32) {
     match index {
       0 => self.predelay.set(val.powf(3.) * 493. + 7.),
-      1 => self.size.set(val.powf(2.) * (MAX_SIZE - 1.) + 1.),
+      1 => self
+        .size
+        .set(val.powf(2.) * (MAX_SIZE - MIN_SIZE) + MIN_SIZE),
       2 => self.speed.set(val.powf(3.) * 49.99 + 0.01),
       3 => self.depth.set(val),
       4 => self.absorb.set(val),

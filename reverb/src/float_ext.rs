@@ -2,16 +2,18 @@ use std::f32::consts::{FRAC_PI_2, PI};
 
 pub trait FloatExt {
   fn clip(self, min: Self, max: Self) -> Self;
-  fn fast_atan1(&self) -> Self;
-  fn fast_atan2(&self) -> Self;
-  fn fast_tanh1(&self) -> Self;
-  fn fast_tanh2(&self) -> Self;
-  fn fast_tanh3(&self) -> Self;
-  fn fast_sin(&self) -> Self;
-  fn fast_cos(&self) -> Self;
-  fn fast_sin_bhaskara(&self) -> Self;
-  fn fast_cos_bhaskara(&self) -> Self;
-  fn fast_pow(&self, exponent: Self) -> Self;
+  fn dbtoa(self) -> Self;
+  fn scale(self, in_low: Self, in_high: Self, out_low: Self, out_high: Self) -> Self;
+  fn fast_atan1(self) -> Self;
+  fn fast_atan2(self) -> Self;
+  fn fast_tanh1(self) -> Self;
+  fn fast_tanh2(self) -> Self;
+  fn fast_tanh3(self) -> Self;
+  fn fast_sin(self) -> Self;
+  fn fast_cos(self) -> Self;
+  fn fast_sin_bhaskara(self) -> Self;
+  fn fast_cos_bhaskara(self) -> Self;
+  fn fast_pow(self, exponent: Self) -> Self;
 }
 
 impl FloatExt for f32 {
@@ -20,8 +22,20 @@ impl FloatExt for f32 {
     self.max(min).min(max)
   }
 
+  /// Converts decibels to a linear amplitude value
+  fn dbtoa(self) -> Self {
+    (10_f32).powf(self * 0.05)
+  }
+
+  fn scale(self, in_low: Self, in_high: Self, out_low: Self, out_high: Self) -> Self {
+    let in_scale = 1. / (in_high - in_low);
+    let out_range = out_high - out_low;
+    let normalized_value = (self - in_low) * in_scale;
+    normalized_value * out_range + out_low
+  }
+
   /// This is an atan approximation
-  fn fast_atan1(&self) -> Self {
+  fn fast_atan1(self) -> Self {
     let a1 = 0.99997726;
     let a3 = -0.33262347;
     let a5 = 0.19354346;
@@ -38,14 +52,14 @@ impl FloatExt for f32 {
 
   /// This is an atan approximation, not atan2. This variant only amplifies the first harmonic instead of multiple.
   /// https://www.dsprelated.com/showarticle/1052.php
-  fn fast_atan2(&self) -> Self {
+  fn fast_atan2(self) -> Self {
     let n1 = 0.97239411;
     let n2 = -0.19194795;
     (n1 + n2 * self * self) * self
   }
 
   /// This is a tanh approximation.
-  fn fast_tanh1(&self) -> Self {
+  fn fast_tanh1(self) -> Self {
     let squared_self = self * self;
     let a = self * (135135. + squared_self * (17325. + squared_self * (378. + squared_self)));
     let b = 135135. + squared_self * (62370. + squared_self * (3150. + squared_self * 28.));
@@ -53,7 +67,7 @@ impl FloatExt for f32 {
   }
 
   /// This is a tanh approximation. It's cheaper than fast_tanh1, but looses accuracy for higher input values (< -1 and > 1).
-  fn fast_tanh2(&self) -> Self {
+  fn fast_tanh2(self) -> Self {
     let x2 = self * self;
     let x3 = x2 * self;
     let x4 = x3 * self;
@@ -61,24 +75,24 @@ impl FloatExt for f32 {
   }
 
   /// This is a tanh approximation. For more accuracy (less aliasing) choose fast_tanh1 or fast_tanh2.
-  fn fast_tanh3(&self) -> Self {
+  fn fast_tanh3(self) -> Self {
     let a = self.abs();
     let b = 1.26175667589988239 + a * (-0.54699348440059470 + a * (2.66559097474027817));
     (b * self) / (b * a + 1.)
   }
 
   /// This is a sine approximation. Use this to safe processing power.
-  fn fast_sin(&self) -> Self {
+  fn fast_sin(self) -> Self {
     const TWOPI: f32 = 6.2831853071795865;
     const INVTWOPI: f32 = 0.15915494309189534;
     let k: u32 = (self * INVTWOPI) as u32;
-    let half = if self < &0_f32 { -0.5_f32 } else { 0.5_f32 };
+    let half = if self < 0_f32 { -0.5_f32 } else { 0.5_f32 };
     let x = (half + (k as f32)) * TWOPI - self;
     sin_approx(x)
   }
 
   /// This is a cosine approximation. Use this to safe processing power.
-  fn fast_cos(&self) -> Self {
+  fn fast_cos(self) -> Self {
     const TWOPI: f32 = 6.2831853071795865;
     const INVTWOPI: f32 = 0.15915494309189534;
     let x = self + FRAC_PI_2;
@@ -90,7 +104,7 @@ impl FloatExt for f32 {
 
   /// This is the Bhaskara sine approximation. It returns a sine from 0 to 180 degrees.
   /// This function expects values between 0. and 1.
-  fn fast_sin_bhaskara(&self) -> Self {
+  fn fast_sin_bhaskara(self) -> Self {
     let x = self * FRAC_PI_2;
     let pi_squared = 9.869604401089358;
     let a = x * (PI - x);
@@ -99,15 +113,15 @@ impl FloatExt for f32 {
 
   /// This is the Bhaskara cosine approximation. It returns a sine from 0 to 180 degrees.
   /// This function expects values between 0. and 1.
-  fn fast_cos_bhaskara(&self) -> Self {
+  fn fast_cos_bhaskara(self) -> Self {
     let x = self * FRAC_PI_2;
     let x_squared = x * x;
     let pi_squared = 9.869604401089358;
     (pi_squared - 4. * x_squared) / (pi_squared + x_squared)
   }
 
-  fn fast_pow(&self, exponent: Self) -> Self {
-    pow2(exponent * log2(*self))
+  fn fast_pow(self, exponent: Self) -> Self {
+    pow2(exponent * log2(self))
   }
 }
 
@@ -125,6 +139,20 @@ mod tests {
     assert_eq!((1.2).clip(0., 1.), 1.);
     assert_eq!((-0.2).clip(0., 1.), 0.);
     assert_eq!((-2.2).clip(-1., 1.), -1.);
+  }
+
+  #[test]
+  fn dbtoa() {
+    assert_eq!((-3f32).dbtoa(), 0.70794576);
+    assert_eq!((-6f32).dbtoa(), 0.5011872);
+    assert_eq!((-12f32).dbtoa(), 0.25118864);
+  }
+
+  #[test]
+  fn scale() {
+    assert_eq!((1f32).scale(1., 500., -6., -15.), -6.);
+    assert_eq!((250f32).scale(1., 500., -6., -15.), -10.490982);
+    assert_eq!((500f32).scale(1., 500., -6., -15.), -15.);
   }
 
   #[test]

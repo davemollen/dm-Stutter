@@ -15,6 +15,7 @@ mod taps;
 mod tilt_filter;
 mod wave_table;
 
+pub const MIN_SIZE: f32 = 1.;
 pub const MAX_SIZE: f32 = 500.;
 pub const MAX_DEPTH: f32 = 4.;
 pub use self::reverb::Reverb;

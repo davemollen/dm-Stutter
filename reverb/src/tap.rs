@@ -1,6 +1,6 @@
 use crate::{
   allpass_filter::AllpassFilter, dc_block::DcBlock, delay_line::DelayLine, float_ext::FloatExt,
-  lfo::Lfo, one_pole_filter::OnePoleFilter, pan::Pan, MAX_DEPTH, MAX_SIZE,
+  lfo::Lfo, one_pole_filter::OnePoleFilter, pan::Pan, MAX_DEPTH, MAX_SIZE, MIN_SIZE,
 };
 
 struct EarlyReflection {
@@ -66,6 +66,7 @@ impl Tap {
       delay_line,
       ..
     } = self;
+    let size_gain = size.scale(MIN_SIZE, MAX_SIZE, -5., -15.).dbtoa();
 
     early_reflections
       .iter()
@@ -75,8 +76,9 @@ impl Tap {
         } else {
           "linear"
         };
-        let early_reflection_out =
-          delay_line.read(early_reflection.time_fraction * size, interp) * early_reflection.gain;
+        let early_reflection_out = delay_line.read(early_reflection.time_fraction * size, interp)
+          * early_reflection.gain
+          * size_gain;
         let (left_out, right_out) = early_reflection_out.pan(early_reflection.pan);
         (sum.0 + left_out, sum.1 + right_out)
       })
