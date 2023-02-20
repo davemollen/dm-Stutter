@@ -1,29 +1,40 @@
 #[macro_use]
 extern crate vst;
+mod editor;
+use editor::ReverbEditor;
 mod reverb_parameters;
+mod ui;
 use reverb::Reverb;
 use reverb_parameters::ReverbParameters;
 use std::sync::Arc;
 use vst::{
   buffer::AudioBuffer,
+  editor::Editor,
   plugin::{Category, Info, Plugin, PluginParameters},
+  prelude::HostCallback,
 };
 
 struct DmReverb {
   params: Arc<ReverbParameters>,
   reverb: Reverb,
-}
-
-impl Default for DmReverb {
-  fn default() -> Self {
-    Self {
-      params: Arc::new(ReverbParameters::default()),
-      reverb: Reverb::new(44100.),
-    }
-  }
+  editor: Option<ReverbEditor>,
 }
 
 impl Plugin for DmReverb {
+  fn new(host: HostCallback) -> Self {
+    let params = Arc::new(ReverbParameters::default());
+
+    Self {
+      params: params.clone(),
+      reverb: Reverb::new(44100.),
+      editor: Some(ReverbEditor {
+        params: params.clone(),
+        is_open: false,
+        host: Some(host),
+      }),
+    }
+  }
+
   fn set_sample_rate(&mut self, sample_rate: f32) {
     self.reverb = Reverb::new(sample_rate);
   }
@@ -80,6 +91,14 @@ impl Plugin for DmReverb {
 
   fn get_parameter_object(&mut self) -> Arc<dyn PluginParameters> {
     Arc::clone(&self.params) as Arc<dyn PluginParameters>
+  }
+
+  fn get_editor(&mut self) -> Option<Box<dyn Editor>> {
+    if let Some(editor) = self.editor.take() {
+      Some(Box::new(editor) as Box<dyn Editor>)
+    } else {
+      None
+    }
   }
 }
 

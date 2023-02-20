@@ -31,7 +31,7 @@ impl PluginParameters for ReverbParameters {
   fn get_parameter(&self, index: i32) -> f32 {
     match index {
       0 => ((self.predelay.get() - 7.) / 493.).powf(0.333333),
-      1 => ((self.size.get() - MIN_SIZE) / (MAX_SIZE - MIN_SIZE)).powf(0.333333),
+      1 => ((self.size.get() - MIN_SIZE) / (MAX_SIZE - MIN_SIZE)).powf(0.5),
       2 => ((self.speed.get() - 0.01) / 49.99).powf(0.333333),
       3 => self.depth.get(),
       4 => self.absorb.get(),

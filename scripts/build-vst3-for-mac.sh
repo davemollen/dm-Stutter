@@ -12,6 +12,6 @@ if [ -d "$MOVE_TO" ]; then
     sudo rm -r "$MOVE_TO"
 fi
 
-if mv "$MOVE_FROM" "$MOVE_TO"; then
+if sudo mv "$MOVE_FROM" "$MOVE_TO"; then
     echo "Copied VST3 bundle to $MOVE_TO"
 fi

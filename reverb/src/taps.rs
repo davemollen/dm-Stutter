@@ -1,5 +1,4 @@
 use crate::{phasor::Phasor, tap::Tap};
-use std::f32::consts::FRAC_1_SQRT_2;
 
 pub struct Taps {
   taps: [Tap; 4],
@@ -108,8 +107,8 @@ impl Taps {
     inputs: Vec<f32>,
     early_reflections_output: (f32, f32),
   ) -> (f32, f32) {
-    let left_out = (inputs[0] + inputs[2] + early_reflections_output.0) * FRAC_1_SQRT_2;
-    let right_out = (inputs[1] + inputs[3] + early_reflections_output.1) * FRAC_1_SQRT_2;
+    let left_out = (inputs[0] + inputs[2] + early_reflections_output.0) * 0.5;
+    let right_out = (inputs[1] + inputs[3] + early_reflections_output.1) * 0.5;
     (left_out, right_out)
   }
 

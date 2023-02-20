@@ -3,6 +3,8 @@ use nih_plug::{
   prelude::{FloatParam, FloatRange, Params},
 };
 use reverb::{MAX_SIZE, MIN_SIZE};
+mod custom_formatters;
+use custom_formatters::{s2v_f32_digits, v2s_f32_digits};
 
 #[derive(Params)]
 pub struct ReverbParameters {
@@ -43,7 +45,9 @@ impl Default for ReverbParameters {
           factor: 0.5,
         },
       )
-      .with_unit("ms"),
+      .with_unit("ms")
+      .with_value_to_string(v2s_f32_digits(2))
+      .with_string_to_value(s2v_f32_digits()),
       size: FloatParam::new(
         "Size",
         40.,
@@ -53,7 +57,9 @@ impl Default for ReverbParameters {
           factor: 0.333333,
         },
       )
-      .with_unit("m2"),
+      .with_unit("m2")
+      .with_value_to_string(v2s_f32_digits(2))
+      .with_string_to_value(s2v_f32_digits()),
       speed: FloatParam::new(
         "Speed",
         2.,
@@ -63,7 +69,9 @@ impl Default for ReverbParameters {
           factor: 0.333333,
         },
       )
-      .with_unit("Hz"),
+      .with_unit("Hz")
+      .with_value_to_string(v2s_f32_digits(2))
+      .with_string_to_value(s2v_f32_digits()),
       depth: FloatParam::new("Depth", 0.25, FloatRange::Linear { min: 0., max: 1. })
         .with_unit("%")
         .with_value_to_string(formatters::v2s_f32_percentage(2))

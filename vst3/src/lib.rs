@@ -2,7 +2,10 @@ use nih_plug::prelude::*;
 use reverb::Reverb;
 mod reverb_parameters;
 use reverb_parameters::ReverbParameters;
-use std::sync::Arc;
+use std::sync::{atomic::AtomicBool, Arc};
+mod editor;
+use editor::ReverbEditor;
+mod ui;
 
 struct DmReverb {
   params: Arc<ReverbParameters>,
@@ -11,8 +14,9 @@ struct DmReverb {
 
 impl Default for DmReverb {
   fn default() -> Self {
+    let params = Arc::new(ReverbParameters::default());
     Self {
-      params: Arc::new(ReverbParameters::default()),
+      params: params.clone(),
       reverb: Reverb::new(44100.),
     }
   }
@@ -45,6 +49,13 @@ impl Plugin for DmReverb {
   fn accepts_bus_config(&self, config: &BusConfig) -> bool {
     // This works with any symmetrical IO layout
     config.num_input_channels == config.num_output_channels && config.num_input_channels > 0
+  }
+
+  fn editor(&self, _async_executor: AsyncExecutor<Self>) -> Option<Box<dyn Editor>> {
+    Some(Box::new(ReverbEditor {
+      params: self.params.clone(),
+      emit_parameters_changed_event: Arc::new(AtomicBool::new(false)),
+    }))
   }
 
   fn initialize(
