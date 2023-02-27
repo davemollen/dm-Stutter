@@ -15,24 +15,24 @@ use param_knob::ParamKnob;
 
 const STYLE: &str = include_str!("./ui/style.css");
 
+pub enum ParamChangeEvent {
+  SetParam(ParamPtr, f32),
+}
+
 #[derive(Lens)]
 pub struct UiData {
   params: Arc<ReverbParameters>,
   gui_context: Arc<dyn GuiContext>,
 }
 
-pub enum ParamChangeEvent {
-  SetParam(ParamPtr, f32),
-}
-
 impl Model for UiData {
   fn event(&mut self, _: &mut EventContext, event: &mut Event) {
     event.map(|app_event, _| match app_event {
-      ParamChangeEvent::SetParam(param_ptr, new_value) => {
+      ParamChangeEvent::SetParam(param_ptr, value) => {
         unsafe {
           self
             .gui_context
-            .raw_set_parameter_normalized(*param_ptr, *new_value)
+            .raw_set_parameter_normalized(*param_ptr, *value)
         };
       }
     });

@@ -1,4 +1,4 @@
-use crate::ReverbParameters;
+use crate::reverb_parameters::{ReverbParameters, WrappedParameter};
 use reverb::{MAX_SIZE, MIN_SIZE};
 use std::sync::Arc;
 use vizia::{
@@ -11,13 +11,10 @@ use vizia::{
   views::{HStack, Knob, Label, VStack},
 };
 use vst::{host::Host, prelude::HostCallback};
+mod param_knob;
+use param_knob::ParamKnob;
 
 const STYLE: &str = include_str!("./ui/style.css");
-
-#[derive(Lens)]
-pub struct UiData {
-  params: Arc<ReverbParameters>,
-}
 
 pub enum ParamChangeEvent {
   SetPredelay(f32),
@@ -30,12 +27,16 @@ pub enum ParamChangeEvent {
   SetMix(f32),
 }
 
+#[derive(Lens)]
+pub struct UiData {
+  params: Arc<ReverbParameters>,
+}
+
 impl Model for UiData {
   fn event(&mut self, _: &mut EventContext, event: &mut Event) {
     event.map(|app_event, _| match app_event {
       ParamChangeEvent::SetPredelay(value) => {
-        let predelay = value.powf(3.) * 493. + 7.;
-        self.params.predelay.set(predelay);
+        self.params.predelay.set_plain_value(*value);
       }
       ParamChangeEvent::SetSize(value) => {
         let size = value.powf(2.) * (MAX_SIZE - MIN_SIZE) + MIN_SIZE;
@@ -86,20 +87,32 @@ pub fn plugin_gui(cx: &mut Context, params: Arc<ReverbParameters>, host: Option<
 
   HStack::new(cx, |cx| {
     VStack::new(cx, |cx| {
-      Label::new(cx, "Predelay");
-      Binding::new(cx, UiData::params, move |cx, params| {
-        Knob::new(
-          cx,
-          0.,
-          params.map(move |params| ((params.predelay.get() - 7.) / 493.).powf(0.333333)),
-          false,
-        )
-        .on_changing(move |cx, val| {
-          cx.emit(ParamChangeEvent::SetPredelay(val));
-          notify_host_parameter_changed(val, 0, host);
-        });
-        Label::new(cx, params.map(move |params| params.predelay.get()));
-      });
+      ParamKnob::new(
+        cx,
+        &params.predelay,
+        |params| &params.predelay,
+        |val| {
+          ParamChangeEvent::SetPredelay(val);
+        },
+        host,
+      );
+      // Label::new(cx, "Predelay");
+      // Binding::new(cx, UiData::params, move |cx, params| {
+      //   Knob::new(
+      //     cx,
+      //     params.map(move |params| params.predelay.get_default_normalized_value()),
+      //     params.map(move |params| params.predelay.get_normalized_value()),
+      //     false,
+      //   )
+      //   .on_changing(move |cx, val| {
+      //     cx.emit(ParamChangeEvent::SetPredelay(val));
+      //     notify_host_parameter_changed(val, 0, host);
+      //   });
+      //   Label::new(
+      //     cx,
+      //     params.map(move |params| params.predelay.get_display_value()),
+      //   );
+      // });
 
       Label::new(cx, "Size");
       Binding::new(cx, UiData::params, move |cx, params| {

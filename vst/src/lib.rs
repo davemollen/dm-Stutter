@@ -55,7 +55,7 @@ impl Plugin for DmReverb {
   }
 
   fn process(&mut self, buffer: &mut AudioBuffer<f32>) {
-    let predelay = self.params.predelay.get();
+    let predelay = self.params.predelay.get_plain_value();
     let size = self.params.size.get();
     let speed = self.params.speed.get();
     let depth = self.params.depth.get();

@@ -19,10 +19,11 @@ impl ParamKnob {
     F: 'static + Fn(&Arc<ReverbParameters>) -> &P + Copy,
   {
     Label::new(cx, unsafe { param_ptr.name() });
+
     Binding::new(cx, UiData::params, move |cx, params| {
       Knob::new(
         cx,
-        0.,
+        unsafe { param_ptr.default_normalized_value() },
         params.map(move |params| {
           params_to_param(params)
             .preview_normalized(params_to_param(params).modulated_plain_value())
