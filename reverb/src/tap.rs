@@ -101,7 +101,7 @@ impl Tap {
       input
     } else {
       let saturation_output = input.fast_atan1();
-      let mix_factor = ((decay - 1.) * 100.).clip(0., 1.);
+      let mix_factor = ((decay - 1.) * 100.).clamp(0., 1.);
       let mixed_output = input * (1. - mix_factor) + saturation_output * mix_factor;
       self.dc_block.run(mixed_output)
     };

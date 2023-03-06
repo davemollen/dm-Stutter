@@ -1,7 +1,6 @@
 use std::f32::consts::{FRAC_PI_2, PI};
 
 pub trait FloatExt {
-  fn clip(self, min: Self, max: Self) -> Self;
   fn dbtoa(self) -> Self;
   fn scale(self, in_low: Self, in_high: Self, out_low: Self, out_high: Self) -> Self;
   fn fast_atan1(self) -> Self;
@@ -17,11 +16,6 @@ pub trait FloatExt {
 }
 
 impl FloatExt for f32 {
-  /// Clips the input value between specified min and max.  
-  fn clip(self, min: Self, max: Self) -> Self {
-    self.max(min).min(max)
-  }
-
   /// Converts decibels to a linear amplitude value
   fn dbtoa(self) -> Self {
     (10_f32).powf(self * 0.05)
@@ -132,13 +126,6 @@ mod tests {
 
   fn assert_approximately_eq(left: f32, right: f32) {
     assert_eq!((left * 100.).floor() / 100., (right * 100.).floor() / 100.)
-  }
-
-  #[test]
-  fn clip() {
-    assert_eq!((1.2).clip(0., 1.), 1.);
-    assert_eq!((-0.2).clip(0., 1.), 0.);
-    assert_eq!((-2.2).clip(-1., 1.), -1.);
   }
 
   #[test]
