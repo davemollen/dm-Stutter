@@ -55,14 +55,14 @@ impl Plugin for DmReverb {
   }
 
   fn process(&mut self, buffer: &mut AudioBuffer<f32>) {
-    let predelay = self.params.predelay.get_plain_value();
-    let size = self.params.size.get();
-    let speed = self.params.speed.get();
-    let depth = self.params.depth.get();
-    let absorb = self.params.absorb.get();
-    let decay = self.params.decay.get();
-    let tilt = self.params.tilt.get() * 2. - 1.;
-    let mix = self.params.mix.get();
+    let predelay = self.params.predelay.get_value();
+    let size = self.params.size.get_value();
+    let speed = self.params.speed.get_value();
+    let depth = self.params.depth.get_value();
+    let absorb = self.params.absorb.get_value();
+    let decay = self.params.decay.get_value();
+    let tilt = self.params.tilt.get_value() * 2. - 1.;
+    let mix = self.params.mix.get_value();
 
     let (input_channels, mut output_channels) = buffer.split();
     let zipped_input_channels = input_channels.get(0).iter().zip(input_channels.get(1));

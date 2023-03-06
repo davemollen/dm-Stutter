@@ -1,5 +1,5 @@
 use super::UiData;
-use crate::reverb_parameters::{ReverbParameters, WrappedParameter};
+use crate::reverb_parameters::{FloatParam, ReverbParameters};
 use std::sync::Arc;
 use vizia::{
   prelude::{Context, EmitContext, LensExt},
@@ -24,12 +24,12 @@ pub struct ParamKnob {}
 impl ParamKnob {
   pub fn new<F, C>(
     cx: &mut Context,
-    param: &WrappedParameter,
+    param: &FloatParam,
     params_to_param: F,
     change_event: C,
     host: Option<HostCallback>,
   ) where
-    F: 'static + Fn(&Arc<ReverbParameters>) -> &WrappedParameter + Copy,
+    F: 'static + Fn(&Arc<ReverbParameters>) -> &FloatParam + Copy,
     C: 'static + Fn(f32) + Copy,
   {
     let index = param.index;
@@ -44,12 +44,12 @@ impl ParamKnob {
       )
       .on_changing(move |cx, val| {
         cx.emit(change_event(val));
-        // notify_host_parameter_changed(val, index, host);
+        notify_host_parameter_changed(val, index, host);
       });
 
       Label::new(
         cx,
-        params.map(move |params| params_to_param(params).get_display_value()),
+        params.map(move |params| params_to_param(params).get_display_value(true)),
       );
     })
   }
