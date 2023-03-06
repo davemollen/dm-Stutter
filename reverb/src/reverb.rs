@@ -49,7 +49,7 @@ impl Reverb {
     let tilt = self.smooth_tilt.run(tilt, 12., "hertz");
     let decay = decay.powf(0.3333333);
     let diffuse = (absorb * 3.).min(1.) * 0.8;
-    let absorb = ((absorb - 0.3333333).max(0.) * 1.5).powf(0.3333333);
+    let absorb = (absorb - 0.3333333).max(0.) * 1.5;
 
     (
       size, speed, depth, predelay, absorb, diffuse, decay, tilt, mix,
