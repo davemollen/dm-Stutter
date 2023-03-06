@@ -1,8 +1,14 @@
-use crate::ui::plugin_gui;
+mod ui;
 use crate::ReverbParameters;
 use std::sync::Arc;
+pub use ui::plugin_gui;
 use vizia::{prelude::WindowSize, Application, ParentWindow};
 use vst::{editor::Editor, prelude::HostCallback};
+
+const WINDOW_SIZE: WindowSize = WindowSize {
+  width: 520,
+  height: 260,
+};
 
 pub struct ReverbEditor {
   pub params: Arc<ReverbParameters>,
@@ -16,7 +22,7 @@ impl Editor for ReverbEditor {
   }
 
   fn size(&self) -> (i32, i32) {
-    (520, 260)
+    (WINDOW_SIZE.width as i32, WINDOW_SIZE.height as i32)
   }
 
   fn open(&mut self, parent: *mut ::std::ffi::c_void) -> bool {
@@ -31,10 +37,7 @@ impl Editor for ReverbEditor {
 
     Application::new(move |cx| plugin_gui(cx, Arc::clone(&params), host))
       .title("Dm-Reverb")
-      .inner_size(WindowSize {
-        width: 520,
-        height: 260,
-      })
+      .inner_size(WINDOW_SIZE)
       .open_parented(&ParentWindow(parent));
 
     true

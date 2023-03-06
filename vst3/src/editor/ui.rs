@@ -1,43 +1,21 @@
 use crate::ReverbParameters;
-use nih_plug::prelude::{GuiContext, Param, ParamPtr};
+use nih_plug::prelude::{GuiContext, Param};
 use std::sync::Arc;
 use vizia::{
   prelude::{
-    Context, Event, EventContext, LayoutModifiers, Lens, StyleModifiers,
+    Context, LayoutModifiers, StyleModifiers,
     Units::{Pixels, Stretch},
   },
-  state::{Model, Wrapper},
+  state::Model,
   style::Color,
   views::{HStack, VStack},
 };
 mod param_knob;
 use param_knob::ParamKnob;
+mod ui_data;
+pub use ui_data::{ParamChangeEvent, UiData};
 
 const STYLE: &str = include_str!("./ui/style.css");
-
-pub enum ParamChangeEvent {
-  SetParam(ParamPtr, f32),
-}
-
-#[derive(Lens)]
-pub struct UiData {
-  params: Arc<ReverbParameters>,
-  gui_context: Arc<dyn GuiContext>,
-}
-
-impl Model for UiData {
-  fn event(&mut self, _: &mut EventContext, event: &mut Event) {
-    event.map(|app_event, _| match app_event {
-      ParamChangeEvent::SetParam(param_ptr, value) => {
-        unsafe {
-          self
-            .gui_context
-            .raw_set_parameter_normalized(*param_ptr, *value)
-        };
-      }
-    });
-  }
-}
 
 pub fn plugin_gui(
   cx: &mut Context,

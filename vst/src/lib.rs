@@ -3,7 +3,6 @@ extern crate vst;
 mod editor;
 use editor::ReverbEditor;
 mod reverb_parameters;
-mod ui;
 use reverb::Reverb;
 use reverb_parameters::ReverbParameters;
 use std::sync::Arc;

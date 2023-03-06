@@ -5,7 +5,6 @@ use reverb_parameters::ReverbParameters;
 use std::sync::{atomic::AtomicBool, Arc};
 mod editor;
 use editor::ReverbEditor;
-mod ui;
 
 struct DmReverb {
   params: Arc<ReverbParameters>,

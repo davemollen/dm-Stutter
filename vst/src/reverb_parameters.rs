@@ -1,97 +1,10 @@
 use reverb::{MAX_SIZE, MIN_SIZE};
 use std::sync::Arc;
-use vst::{plugin::PluginParameters, util::AtomicFloat};
+use vst::plugin::PluginParameters;
 mod formatters;
 use formatters::v2s_f32_digits;
-
-pub enum FloatRange {
-  Linear { min: f32, max: f32 },
-  Skewed { min: f32, max: f32, factor: f32 },
-}
-
-impl FloatRange {
-  pub fn normalize(&self, value: f32) -> f32 {
-    match self {
-      FloatRange::Linear { min, max } => (value.clamp(*min, *max) - min) / (max - min),
-      FloatRange::Skewed { min, max, factor } => {
-        ((value.clamp(*min, *max) - min) / (max - min)).powf(*factor)
-      }
-    }
-  }
-
-  pub fn unnormalize(&self, normalized: f32) -> f32 {
-    match self {
-      FloatRange::Linear { min, max } => (normalized * (max - min)) + min,
-      FloatRange::Skewed { min, max, factor } => {
-        (normalized.powf(factor.recip()) * (max - min)) + min
-      }
-    }
-  }
-}
-
-pub struct FloatParam {
-  pub name: &'static str,
-  pub value: AtomicFloat,
-  pub default: f32,
-  pub index: i32,
-  pub range: FloatRange,
-  pub unit: &'static str,
-  pub value_to_string: Option<Arc<dyn Fn(f32) -> String + Send + Sync>>,
-}
-
-impl FloatParam {
-  pub fn new(name: &'static str, default: f32, index: i32, range: FloatRange) -> Self {
-    Self {
-      name,
-      value: AtomicFloat::new(default),
-      default,
-      index,
-      range,
-      unit: "",
-      value_to_string: None,
-    }
-  }
-
-  pub fn get_value(&self) -> f32 {
-    self.value.get()
-  }
-
-  pub fn get_normalized_value(&self) -> f32 {
-    self.range.normalize(self.get_value())
-  }
-
-  pub fn set_plain_value(&self, value: f32) {
-    let plain_value = self.range.unnormalize(value);
-    self.value.set(plain_value);
-  }
-
-  pub fn get_display_value(&self, include_unit: bool) -> String {
-    let value = self.get_value();
-    match (&self.value_to_string, include_unit) {
-      (Some(f), true) => format!("{}{}", f(value), self.unit),
-      (Some(f), false) => f(value),
-      (None, true) => format!("{}{}", value, self.unit),
-      (None, false) => value.to_string(),
-    }
-  }
-
-  pub fn get_default_normalized_value(&self) -> f32 {
-    self.range.normalize(self.default)
-  }
-
-  pub fn with_unit(mut self, unit: &'static str) -> Self {
-    self.unit = unit;
-    self
-  }
-
-  pub fn with_value_to_string(
-    mut self,
-    callback: Arc<dyn Fn(f32) -> String + Send + Sync>,
-  ) -> Self {
-    self.value_to_string = Some(callback);
-    self
-  }
-}
+mod float_param;
+pub use float_param::{FloatParam, FloatRange};
 
 pub struct ReverbParameters {
   pub predelay: FloatParam,
