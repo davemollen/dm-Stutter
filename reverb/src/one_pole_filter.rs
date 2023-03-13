@@ -1,5 +1,11 @@
 use std::f32::consts::PI;
 
+#[allow(dead_code)]
+pub enum Mode {
+  Linear,
+  Hertz,
+}
+
 pub struct OnePoleFilter {
   sample_rate: f32,
   z: f32,
@@ -23,11 +29,10 @@ impl OnePoleFilter {
     a * (1. - interp) + b * interp
   }
 
-  pub fn run(&mut self, input: f32, cutoff_freq: f32, mode: &str) -> f32 {
+  pub fn run(&mut self, input: f32, cutoff_freq: f32, mode: Mode) -> f32 {
     let coefficient = match mode {
-      "linear" => self.convert_linear_input_to_coefficient(cutoff_freq),
-      "Hz" => self.convert_hertz_to_coefficient(cutoff_freq),
-      _ => self.convert_hertz_to_coefficient(cutoff_freq),
+      Mode::Linear => self.convert_linear_input_to_coefficient(cutoff_freq),
+      Mode::Hertz => self.convert_hertz_to_coefficient(cutoff_freq),
     };
     let output = self.mix(self.z, input, coefficient);
     self.z = output;

@@ -1,4 +1,4 @@
-use crate::delay_line::DelayLine;
+use crate::delay_line::{DelayLine, Interpolation};
 
 #[derive(Clone)]
 pub struct AllpassFilter {
@@ -13,7 +13,7 @@ impl AllpassFilter {
   }
 
   pub fn run(&mut self, input: f32, time: f32, gain: f32) -> f32 {
-    let read_output = self.delay_line.read(time, "linear");
+    let read_output = self.delay_line.read(time, Interpolation::Linear);
     let feedback = read_output * gain * 0.5;
     let allpass_input = input + feedback;
     let feedforward = allpass_input * gain * -0.5;

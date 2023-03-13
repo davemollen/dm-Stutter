@@ -1,6 +1,12 @@
 use crate::{
-  allpass_filter::AllpassFilter, dc_block::DcBlock, delay_line::DelayLine, float_ext::FloatExt,
-  lfo::Lfo, one_pole_filter::OnePoleFilter, pan::Pan, MAX_DEPTH, MAX_SIZE, MIN_SIZE,
+  allpass_filter::AllpassFilter,
+  dc_block::DcBlock,
+  delay_line::{DelayLine, Interpolation},
+  float_ext::FloatExt,
+  lfo::Lfo,
+  one_pole_filter::{Mode, OnePoleFilter},
+  pan::Pan,
+  MAX_DEPTH, MAX_SIZE, MIN_SIZE,
 };
 
 struct EarlyReflection {
@@ -57,7 +63,7 @@ impl Tap {
     let lfo = self.lfo.run(lfo_phase, self.lfo_phase_offset) * lfo_depth;
     self
       .delay_line
-      .read(self.time_fraction * size + lfo, "linear")
+      .read(self.time_fraction * size + lfo, Interpolation::Linear)
   }
 
   pub fn read_early_reflections(&mut self, size: f32) -> (f32, f32) {
@@ -72,9 +78,9 @@ impl Tap {
       .iter()
       .fold((0., 0.), |sum, early_reflection| {
         let interp = if early_reflection.time_fraction == 0. {
-          "step"
+          Interpolation::Step
         } else {
-          "linear"
+          Interpolation::Linear
         };
         let early_reflection_out = delay_line.read(early_reflection.time_fraction * size, interp)
           * early_reflection.gain
@@ -89,7 +95,7 @@ impl Tap {
   }
 
   pub fn apply_absorb(&mut self, input: f32, absorb: f32) -> f32 {
-    self.one_pole_filter.run(input, absorb, "linear")
+    self.one_pole_filter.run(input, absorb, Mode::Linear)
   }
 
   pub fn apply_diffuse(&mut self, input: f32, diffuse: f32) -> f32 {

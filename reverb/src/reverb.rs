@@ -1,6 +1,10 @@
 use crate::{
-  delay_line::DelayLine, mix::Mix, one_pole_filter::OnePoleFilter, taps::Taps,
-  tilt_filter::TiltFilter, MAX_DEPTH,
+  delay_line::{DelayLine, Interpolation},
+  mix::Mix,
+  one_pole_filter::{Mode, OnePoleFilter},
+  taps::Taps,
+  tilt_filter::TiltFilter,
+  MAX_DEPTH,
 };
 use std::f32::consts::FRAC_1_SQRT_2;
 
@@ -40,13 +44,13 @@ impl Reverb {
     tilt: f32,
     mix: f32,
   ) -> (f32, f32, f32, f32, f32, f32, f32, f32, f32) {
-    let predelay = self.smooth_predelay.run(predelay, 12., "hertz");
-    let size = self.smooth_size.run(size, 12., "hertz");
+    let predelay = self.smooth_predelay.run(predelay, 12., Mode::Hertz);
+    let size = self.smooth_size.run(size, 12., Mode::Hertz);
     let depth = self
       .smooth_depth
-      .run(depth.powf(4.) * MAX_DEPTH, 12., "hertz");
-    let absorb = self.smooth_absorb.run(absorb, 12., "hertz");
-    let tilt = self.smooth_tilt.run(tilt, 12., "hertz");
+      .run(depth.powf(4.) * MAX_DEPTH, 12., Mode::Hertz);
+    let absorb = self.smooth_absorb.run(absorb, 12., Mode::Hertz);
+    let tilt = self.smooth_tilt.run(tilt, 12., Mode::Hertz);
     let decay = decay.powf(0.3333333);
     let diffuse = (absorb * 3.).min(1.) * 0.8;
     let absorb = (absorb - 0.3333333).max(0.) * 1.5;
@@ -57,7 +61,7 @@ impl Reverb {
   }
 
   fn get_predelay_output(&mut self, input: (f32, f32), predelay: f32) -> f32 {
-    let predelay_output = self.predelay_tap.read(predelay, "linear");
+    let predelay_output = self.predelay_tap.read(predelay, Interpolation::Linear);
     self.predelay_tap.write((input.0 + input.1) * FRAC_1_SQRT_2);
     predelay_output
   }
