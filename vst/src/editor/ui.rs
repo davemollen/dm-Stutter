@@ -31,9 +31,7 @@ pub fn plugin_gui(cx: &mut Context, params: Arc<ReverbParameters>, host: Option<
         cx,
         &params.predelay,
         |params| &params.predelay,
-        |val| {
-          ParamChangeEvent::SetPredelay(val);
-        },
+        |val| ParamChangeEvent::SetPredelay(val),
         host,
       );
 
@@ -41,9 +39,7 @@ pub fn plugin_gui(cx: &mut Context, params: Arc<ReverbParameters>, host: Option<
         cx,
         &params.size,
         |params| &params.size,
-        |val| {
-          ParamChangeEvent::SetSize(val);
-        },
+        |val| ParamChangeEvent::SetSize(val),
         host,
       );
     })
@@ -55,9 +51,7 @@ pub fn plugin_gui(cx: &mut Context, params: Arc<ReverbParameters>, host: Option<
         cx,
         &params.speed,
         |params| &params.speed,
-        |val| {
-          ParamChangeEvent::SetSpeed(val);
-        },
+        |val| ParamChangeEvent::SetSpeed(val),
         host,
       );
 
@@ -65,9 +59,7 @@ pub fn plugin_gui(cx: &mut Context, params: Arc<ReverbParameters>, host: Option<
         cx,
         &params.depth,
         |params| &params.depth,
-        |val| {
-          ParamChangeEvent::SetDepth(val);
-        },
+        |val| ParamChangeEvent::SetDepth(val),
         host,
       );
     })
@@ -79,9 +71,7 @@ pub fn plugin_gui(cx: &mut Context, params: Arc<ReverbParameters>, host: Option<
         cx,
         &params.absorb,
         |params| &params.absorb,
-        |val| {
-          ParamChangeEvent::SetAbsorb(val);
-        },
+        |val| ParamChangeEvent::SetAbsorb(val),
         host,
       );
 
@@ -89,9 +79,7 @@ pub fn plugin_gui(cx: &mut Context, params: Arc<ReverbParameters>, host: Option<
         cx,
         &params.decay,
         |params| &params.decay,
-        |val| {
-          ParamChangeEvent::SetDecay(val);
-        },
+        |val| ParamChangeEvent::SetDecay(val),
         host,
       );
     })
@@ -103,9 +91,7 @@ pub fn plugin_gui(cx: &mut Context, params: Arc<ReverbParameters>, host: Option<
         cx,
         &params.tilt,
         |params| &params.tilt,
-        |val| {
-          ParamChangeEvent::SetTilt(val);
-        },
+        |val| ParamChangeEvent::SetTilt(val),
         host,
       );
 
@@ -113,9 +99,7 @@ pub fn plugin_gui(cx: &mut Context, params: Arc<ReverbParameters>, host: Option<
         cx,
         &params.mix,
         |params| &params.mix,
-        |val| {
-          ParamChangeEvent::SetMix(val);
-        },
+        |val| ParamChangeEvent::SetMix(val),
         host,
       );
     })

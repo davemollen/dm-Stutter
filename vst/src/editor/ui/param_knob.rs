@@ -1,4 +1,4 @@
-use super::UiData;
+use super::{ParamChangeEvent, UiData};
 use crate::reverb_parameters::{FloatParam, ReverbParameters};
 use std::sync::Arc;
 use vizia::{
@@ -30,7 +30,7 @@ impl ParamKnob {
     host: Option<HostCallback>,
   ) where
     F: 'static + Fn(&Arc<ReverbParameters>) -> &FloatParam + Copy,
-    C: 'static + Fn(f32) + Copy,
+    C: 'static + Fn(f32) -> ParamChangeEvent + Copy,
   {
     let index = param.index;
     Label::new(cx, param.name);
