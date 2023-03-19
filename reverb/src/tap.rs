@@ -72,7 +72,7 @@ impl Tap {
       delay_line,
       ..
     } = self;
-    let size_gain = size.scale(MIN_SIZE, MAX_SIZE, -5., -15.).dbtoa();
+    let size_gain = size.scale(MIN_SIZE, MAX_SIZE, -3., -12.).dbtoa();
 
     early_reflections
       .iter()
