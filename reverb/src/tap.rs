@@ -3,6 +3,7 @@ use crate::{
   dc_block::DcBlock,
   delay_line::{DelayLine, Interpolation},
   float_ext::FloatExt,
+  grains::Grains,
   lfo::Lfo,
   one_pole_filter::{Mode, OnePoleFilter},
   pan::Pan,
@@ -25,6 +26,7 @@ pub struct Tap {
   lfo: Lfo,
   lfo_phase_offset: f32,
   dc_block: DcBlock,
+  grains: Grains,
 }
 
 impl Tap {
@@ -56,14 +58,20 @@ impl Tap {
       lfo: Lfo::default(),
       lfo_phase_offset,
       dc_block: DcBlock::new(sample_rate),
+      grains: Grains::new(),
     }
   }
 
   pub fn read(&mut self, size: f32, lfo_phase: f32, lfo_depth: f32) -> f32 {
-    let lfo = self.lfo.run(lfo_phase, self.lfo_phase_offset) * lfo_depth;
-    self
-      .delay_line
-      .read(self.time_fraction * size + lfo, Interpolation::Linear)
+    if lfo_depth == 0. {
+      self
+        .delay_line
+        .read(self.time_fraction * size, Interpolation::Linear)
+    } else if lfo_depth < 0. {
+      self.vibrato_read(size, lfo_phase, lfo_depth)
+    } else {
+      self.grain_read(size, lfo_phase, lfo_depth)
+    }
   }
 
   pub fn read_early_reflections(&mut self, size: f32) -> (f32, f32) {
@@ -112,5 +120,22 @@ impl Tap {
       self.dc_block.run(mixed_output)
     };
     output * decay * 0.5
+  }
+
+  fn vibrato_read(&mut self, size: f32, lfo_phase: f32, lfo_depth: f32) -> f32 {
+    let lfo = self.lfo.run(lfo_phase, self.lfo_phase_offset) * lfo_depth.abs();
+    self
+      .delay_line
+      .read(self.time_fraction * size + lfo, Interpolation::Linear)
+  }
+
+  fn grain_read(&mut self, size: f32, lfo_phase: f32, lfo_depth: f32) -> f32 {
+    self.grains.run(
+      &mut self.delay_line,
+      lfo_phase,
+      lfo_depth,
+      self.time_fraction,
+      size,
+    )
   }
 }

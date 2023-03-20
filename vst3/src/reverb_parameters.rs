@@ -47,6 +47,7 @@ impl Default for ReverbParameters {
       )
       .with_unit("ms")
       .with_value_to_string(v2s_f32_digits(2)),
+
       size: FloatParam::new(
         "Size",
         40.,
@@ -58,29 +59,35 @@ impl Default for ReverbParameters {
       )
       .with_unit("m2")
       .with_value_to_string(v2s_f32_digits(2)),
+
       speed: FloatParam::new(
         "Speed",
         2.,
         FloatRange::Skewed {
-          min: 0.01,
+          min: 0.02,
           max: 50.,
           factor: 0.333333,
         },
       )
       .with_unit("Hz")
       .with_value_to_string(v2s_f32_digits(2)),
-      depth: FloatParam::new("Depth", 0.25, FloatRange::Linear { min: 0., max: 1. })
+
+      depth: FloatParam::new("Depth", -0.25, FloatRange::Linear { min: -1., max: 1. })
         .with_unit("%")
         .with_value_to_string(formatters::v2s_f32_percentage(2)),
+
       absorb: FloatParam::new("Absorb", 0.5, FloatRange::Linear { min: 0., max: 1. })
         .with_unit("%")
         .with_value_to_string(formatters::v2s_f32_percentage(2)),
+
       decay: FloatParam::new("Decay", 0.9, FloatRange::Linear { min: 0., max: 1.2 })
         .with_unit("%")
         .with_value_to_string(formatters::v2s_f32_percentage(2)),
+
       tilt: FloatParam::new("Tilt", 0., FloatRange::Linear { min: -1., max: 1. })
         .with_unit("%")
         .with_value_to_string(formatters::v2s_f32_percentage(2)),
+
       mix: FloatParam::new("Mix", 0.5, FloatRange::Linear { min: 0., max: 1. })
         .with_unit("%")
         .with_value_to_string(formatters::v2s_f32_percentage(2)),
