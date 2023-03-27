@@ -6,7 +6,6 @@ use crate::{
   tilt_filter::TiltFilter,
   MAX_DEPTH,
 };
-use std::f32::consts::FRAC_1_SQRT_2;
 
 pub struct Reverb {
   predelay_tap: DelayLine,
@@ -64,7 +63,7 @@ impl Reverb {
 
   fn get_predelay_output(&mut self, input: (f32, f32), predelay: f32) -> f32 {
     let predelay_output = self.predelay_tap.read(predelay, Interpolation::Linear);
-    self.predelay_tap.write((input.0 + input.1) * FRAC_1_SQRT_2);
+    self.predelay_tap.write((input.0 + input.1) * 0.5);
     predelay_output
   }
 

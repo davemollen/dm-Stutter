@@ -58,7 +58,7 @@ impl Tap {
       lfo: Lfo::default(),
       lfo_phase_offset,
       dc_block: DcBlock::new(sample_rate),
-      grains: Grains::new(sample_rate),
+      grains: Grains::new(),
     }
   }
 

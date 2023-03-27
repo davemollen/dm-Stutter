@@ -1,3 +1,5 @@
+use std::f32::consts::FRAC_PI_2;
+
 use crate::{float_ext::FloatExt, phasor::Phasor, tap::Tap, MAX_SIZE, MIN_SIZE};
 
 pub struct Taps {
@@ -116,8 +118,8 @@ impl Taps {
     inputs: Vec<f32>,
     early_reflections_output: (f32, f32),
   ) -> (f32, f32) {
-    let left_out = (inputs[0] + inputs[2] + early_reflections_output.0) * 0.5;
-    let right_out = (inputs[1] + inputs[3] + early_reflections_output.1) * 0.5;
+    let left_out = (inputs[0] + inputs[2] + early_reflections_output.0) * FRAC_PI_2;
+    let right_out = (inputs[1] + inputs[3] + early_reflections_output.1) * FRAC_PI_2;
     (left_out, right_out)
   }
 
