@@ -1,4 +1,4 @@
-use crate::{phasor::Phasor, tap::Tap};
+use crate::{float_ext::FloatExt, phasor::Phasor, tap::Tap, MAX_SIZE, MIN_SIZE};
 
 pub struct Taps {
   taps: [Tap; 4],
@@ -43,10 +43,13 @@ impl Taps {
   }
 
   fn read_early_reflections(&mut self, size: f32) -> (f32, f32) {
-    self.taps.iter_mut().fold((0., 0.), |sum, tap| {
+    let early_reflections = self.taps.iter_mut().fold((0., 0.), |sum, tap| {
       let early_reflections = tap.read_early_reflections(size);
       (sum.0 + early_reflections.0, sum.1 + early_reflections.1)
-    })
+    });
+    let gain = size.scale(MIN_SIZE, MAX_SIZE, -6., -15.).dbtoa();
+
+    (early_reflections.0 * gain, early_reflections.1 * gain)
   }
   fn read_from_delay_network(&mut self, size: f32, speed: f32, depth: f32) -> Vec<f32> {
     let phase = self.lfo_phasor.run(speed);

@@ -7,7 +7,7 @@ use crate::{
   lfo::Lfo,
   one_pole_filter::{Mode, OnePoleFilter},
   pan::Pan,
-  MAX_DEPTH, MAX_SIZE, MIN_SIZE,
+  MAX_DEPTH, MAX_SIZE,
 };
 
 struct EarlyReflection {
@@ -58,7 +58,7 @@ impl Tap {
       lfo: Lfo::default(),
       lfo_phase_offset,
       dc_block: DcBlock::new(sample_rate),
-      grains: Grains::new(),
+      grains: Grains::new(sample_rate),
     }
   }
 
@@ -80,7 +80,6 @@ impl Tap {
       delay_line,
       ..
     } = self;
-    let size_gain = size.scale(MIN_SIZE, MAX_SIZE, -3., -12.).dbtoa();
 
     early_reflections
       .iter()
@@ -90,9 +89,8 @@ impl Tap {
         } else {
           Interpolation::Linear
         };
-        let early_reflection_out = delay_line.read(early_reflection.time_fraction * size, interp)
-          * early_reflection.gain
-          * size_gain;
+        let early_reflection_out =
+          delay_line.read(early_reflection.time_fraction * size, interp) * early_reflection.gain;
         let (left_out, right_out) = early_reflection_out.pan(early_reflection.pan);
         (sum.0 + left_out, sum.1 + right_out)
       })
@@ -114,12 +112,12 @@ impl Tap {
     let output = if decay < 1. {
       input
     } else {
+      // TODO: check if atan doesn't explode
       let saturation_output = input.fast_atan1();
       let mix_factor = ((decay - 1.) * 100.).clamp(0., 1.);
-      let mixed_output = input * (1. - mix_factor) + saturation_output * mix_factor;
-      self.dc_block.run(mixed_output)
+      input * (1. - mix_factor) + saturation_output * mix_factor
     };
-    output * decay * 0.5
+    self.dc_block.run(output * decay * 0.5)
   }
 
   fn vibrato_read(&mut self, size: f32, lfo_phase: f32, lfo_depth: f32) -> f32 {

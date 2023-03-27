@@ -1,13 +1,11 @@
-use std::f32::consts::PI;
+use std::f32::consts::FRAC_PI_2;
 
 pub struct Mix;
 
 impl Mix {
   pub fn run(dry: (f32, f32), wet: (f32, f32), mix: f32) -> (f32, f32) {
-    let twopi = PI * 2.;
-    let phase = mix * 0.25;
-    let dry_gain = (phase * twopi).cos();
-    let wet_gain = ((phase + 0.75) * twopi).cos();
+    let dry_gain = (mix * FRAC_PI_2).cos();
+    let wet_gain = (mix * FRAC_PI_2).sin();
     let dry_left = dry.0 * dry_gain;
     let dry_right = dry.1 * dry_gain;
     let wet_left = wet.0 * wet_gain;

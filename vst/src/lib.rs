@@ -57,7 +57,7 @@ impl Plugin for DmReverb {
     let predelay = self.params.predelay.get_value();
     let size = self.params.size.get_value();
     let speed = self.params.speed.get_value();
-    let depth = self.params.depth.get_value();
+    let depth = self.params.depth.get_value() * 2. - 1.;
     let absorb = self.params.absorb.get_value();
     let decay = self.params.decay.get_value();
     let tilt = self.params.tilt.get_value() * 2. - 1.;

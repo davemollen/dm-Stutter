@@ -11,7 +11,6 @@ mod mix;
 mod one_pole_filter;
 mod pan;
 mod phasor;
-mod ramp;
 mod reverb;
 mod tap;
 mod taps;
@@ -20,5 +19,5 @@ mod wave_table;
 
 pub const MIN_SIZE: f32 = 1.;
 pub const MAX_SIZE: f32 = 500.;
-pub const MAX_DEPTH: f32 = 5.;
+pub const MAX_DEPTH: f32 = 4.;
 pub use self::reverb::Reverb;
