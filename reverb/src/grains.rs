@@ -5,9 +5,11 @@ use crate::{
   MAX_DEPTH,
 };
 use rand::random;
-use std::f32::consts::{FRAC_PI_2, PI};
+use std::f32::consts::PI;
 
+const FADE_THRESHOLD_FACTOR: f32 = 0.05;
 const SHIMMER_THRESHOLD_FACTOR: f32 = 0.6;
+const FADE_THRESHOLD: f32 = MAX_DEPTH * FADE_THRESHOLD_FACTOR;
 const SHIMMER_THRESHOLD: f32 = MAX_DEPTH * SHIMMER_THRESHOLD_FACTOR;
 
 #[derive(Clone, Copy)]
@@ -45,12 +47,69 @@ impl Grains {
   pub fn run(
     &mut self,
     delay_line: &mut DelayLine,
+    size: f32,
+    time_fraction: f32,
     lfo_phase: f32,
     lfo_depth: f32,
-    time_fraction: f32,
-    size: f32,
   ) -> f32 {
-    let grains_out = self
+    let apply_grains_out = self.apply_grains(delay_line, size, time_fraction, lfo_phase, lfo_depth);
+    let grains_out = if lfo_depth < FADE_THRESHOLD {
+      self.mix(
+        delay_line.read(size * time_fraction, Interpolation::Linear),
+        apply_grains_out,
+        lfo_depth,
+        FADE_THRESHOLD_FACTOR,
+        false,
+      )
+    } else {
+      apply_grains_out
+    };
+
+    self.shimmer.delay_line.write(grains_out);
+
+    if lfo_depth > SHIMMER_THRESHOLD {
+      let shimmer_out = self.apply_shimmer();
+      self.mix(
+        grains_out,
+        shimmer_out,
+        lfo_depth,
+        SHIMMER_THRESHOLD_FACTOR,
+        true,
+      )
+    } else {
+      grains_out
+    }
+  }
+
+  fn get_mix_factor(&self, lfo_depth: f32, threshold: f32, should_be_above_threshold: bool) -> f32 {
+    if should_be_above_threshold {
+      (lfo_depth / MAX_DEPTH - threshold) * (1. - threshold).recip()
+    } else {
+      lfo_depth / MAX_DEPTH * threshold.recip()
+    }
+  }
+
+  fn mix(
+    &self,
+    a: f32,
+    b: f32,
+    lfo_depth: f32,
+    threshold: f32,
+    should_be_above_threshold: bool,
+  ) -> f32 {
+    let factor = self.get_mix_factor(lfo_depth, threshold, should_be_above_threshold);
+    a * (1. - factor) + b * factor
+  }
+
+  fn apply_grains(
+    &mut self,
+    delay_line: &mut DelayLine,
+    size: f32,
+    time_fraction: f32,
+    lfo_phase: f32,
+    lfo_depth: f32,
+  ) -> f32 {
+    self
       .grains
       .iter_mut()
       .enumerate()
@@ -65,25 +124,7 @@ impl Grains {
 
         delay_line.read(time, Interpolation::Linear) * window * window
       })
-      .sum();
-
-    self.shimmer.delay_line.write(grains_out);
-
-    if lfo_depth > SHIMMER_THRESHOLD {
-      let shimmer_out = self.apply_shimmer();
-      self.mix(grains_out, shimmer_out, lfo_depth)
-    } else {
-      grains_out
-    }
-  }
-
-  fn get_mix_factor(&self, lfo_depth: f32) -> f32 {
-    lfo_depth / MAX_DEPTH - SHIMMER_THRESHOLD_FACTOR * (1. - SHIMMER_THRESHOLD_FACTOR).recip()
-  }
-
-  fn mix(&self, grains_out: f32, shimmer_out: f32, lfo_depth: f32) -> f32 {
-    let factor = self.get_mix_factor(lfo_depth);
-    grains_out * (factor * FRAC_PI_2).sin() + shimmer_out * (factor * FRAC_PI_2).cos()
+      .sum()
   }
 
   fn apply_shimmer(&mut self) -> f32 {
@@ -105,23 +146,32 @@ impl Grains {
   }
 }
 
-// #[cfg(test)]
-// mod tests {
-//   use super::Grains;
+#[cfg(test)]
+mod tests {
+  use crate::grains::{Grains, FADE_THRESHOLD_FACTOR, SHIMMER_THRESHOLD_FACTOR};
 
-//   fn assert_approximately_eq(left: f32, right: f32) {
-//     assert_eq!(
-//       (left * 1000.).floor() / 1000.,
-//       (right * 1000.).floor() / 1000.
-//     )
-//   }
+  #[test]
+  fn mix_factor() {
+    let grains = Grains::new(44100.);
 
-//   #[test]
-//   fn mix() {
-//     let grains = Grains::new(44100.);
+    assert_eq!(
+      grains.get_mix_factor(2.4, SHIMMER_THRESHOLD_FACTOR, true),
+      0.
+    );
+    assert_eq!(
+      grains.get_mix_factor(3.2, SHIMMER_THRESHOLD_FACTOR, true),
+      0.5
+    );
+    assert_eq!(
+      grains.get_mix_factor(4., SHIMMER_THRESHOLD_FACTOR, true),
+      1.
+    );
 
-//     assert_eq!(grains.get_mix_factor(3.), 0.);
-//     assert_eq!(grains.get_mix_factor(4.), 0.5);
-//     assert_eq!(grains.get_mix_factor(5.), 1.);
-//   }
-// }
+    assert_eq!(grains.get_mix_factor(0., FADE_THRESHOLD_FACTOR, false), 0.);
+    assert_eq!(
+      grains.get_mix_factor(0.1, FADE_THRESHOLD_FACTOR, false),
+      0.5
+    );
+    assert_eq!(grains.get_mix_factor(0.2, FADE_THRESHOLD_FACTOR, false), 1.);
+  }
+}

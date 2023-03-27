@@ -112,7 +112,7 @@ impl Tap {
     let output = if decay < 1. {
       input
     } else {
-      // TODO: check if atan doesn't explode
+      // TODO: fix signal build up that causes the reverb to explode
       let saturation_output = input.fast_atan1();
       let mix_factor = ((decay - 1.) * 100.).clamp(0., 1.);
       input * (1. - mix_factor) + saturation_output * mix_factor
@@ -130,10 +130,10 @@ impl Tap {
   fn grain_read(&mut self, size: f32, lfo_phase: f32, lfo_depth: f32) -> f32 {
     self.grains.run(
       &mut self.delay_line,
+      size,
+      self.time_fraction,
       lfo_phase,
       lfo_depth,
-      self.time_fraction,
-      size,
     )
   }
 }
