@@ -52,7 +52,7 @@ impl Default for ReverbParameters {
         2,
         FloatRange::Skewed {
           min: 0.02,
-          max: 50.,
+          max: 150.,
           factor: 0.333333,
         },
       )
