@@ -14,9 +14,9 @@ impl AllpassFilter {
 
   pub fn run(&mut self, input: f32, time: f32, gain: f32) -> f32 {
     let read_output = self.delay_line.read(time, Interpolation::Linear);
-    let feedback = read_output * gain * 0.5;
+    let feedback = read_output * gain;
     let allpass_input = input + feedback;
-    let feedforward = allpass_input * gain * -0.5;
+    let feedforward = allpass_input * -gain;
     let allpass_output = read_output + feedforward;
     self.delay_line.write(input + feedback);
     allpass_output
