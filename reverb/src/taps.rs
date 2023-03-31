@@ -1,6 +1,5 @@
-use std::f32::consts::FRAC_PI_2;
-
 use crate::{float_ext::FloatExt, phasor::Phasor, tap::Tap, MAX_SIZE, MIN_SIZE};
+use std::f32::consts::FRAC_PI_2;
 
 pub struct Taps {
   taps: [Tap; 4],
@@ -15,28 +14,28 @@ impl Taps {
           sample_rate,
           0.34306569343065696,
           vec![(0., 1., 0.), (0.226, 0.917, -8.)],
-          13.61538461538461,
+          5.75,
           0.,
         ),
         Tap::new(
           sample_rate,
           0.48905109489051096,
           vec![(0.453, 0.891, 8.)],
-          15.,
+          9.416666666666668,
           0.25,
         ),
         Tap::new(
           sample_rate,
           0.7372262773722628,
           vec![(0., 0.841, 16.), (0.113, 0.794, -16.)],
-          10.846153846153847,
+          13.083333333333332,
           0.5,
         ),
         Tap::new(
           sample_rate,
           1.,
           vec![(0., 0.75, -32.), (0.155, 0.7071, 32.)],
-          9.461538461538462,
+          14.916666666666666,
           0.75,
         ),
       ],

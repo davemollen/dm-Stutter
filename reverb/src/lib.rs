@@ -1,3 +1,10 @@
+/*
+    TODO's:
+    - implement non linear wave table with envelope follower
+    - implement pitchshift on taps_output
+    - implement reverse on predelay
+*/
+
 include!(concat!(env!("OUT_DIR"), "/wave_table.rs"));
 mod allpass_filter;
 mod biquad_filter;
