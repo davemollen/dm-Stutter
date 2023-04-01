@@ -1,9 +1,17 @@
-use crate::{float_ext::FloatExt, phasor::Phasor, tap::Tap, MAX_SIZE, MIN_SIZE};
-use std::f32::consts::FRAC_PI_2;
+use crate::{
+  envelope_follower::EnvelopeFollower,
+  float_ext::FloatExt,
+  one_pole_filter::{Mode, OnePoleFilter},
+  phasor::Phasor,
+  tap::Tap,
+  MAX_SIZE, MIN_SIZE,
+};
 
 pub struct Taps {
   taps: [Tap; 4],
   lfo_phasor: Phasor,
+  envelope_follower: EnvelopeFollower,
+  smooth_saturation_gain: OnePoleFilter,
 }
 
 impl Taps {
@@ -40,6 +48,8 @@ impl Taps {
         ),
       ],
       lfo_phasor: Phasor::new(sample_rate),
+      envelope_follower: EnvelopeFollower::new(sample_rate),
+      smooth_saturation_gain: OnePoleFilter::new(sample_rate),
     }
   }
 
@@ -52,6 +62,7 @@ impl Taps {
 
     (early_reflections.0 * gain, early_reflections.1 * gain)
   }
+
   fn read_from_delay_network(&mut self, size: f32, speed: f32, depth: f32) -> Vec<f32> {
     let phase = self.lfo_phasor.run(speed);
     self
@@ -99,17 +110,32 @@ impl Taps {
     absorb: f32,
     decay: f32,
   ) {
+    let saturation_gain = self.get_saturation_gain();
+
     self
       .taps
       .iter_mut()
       .zip([input, input, 0., 0.])
       .zip(feedback_matrix_outputs)
       .for_each(|((tap, dry_signal), feedback_matrix_output)| {
-        let saturation_output = tap.apply_saturation(feedback_matrix_output, decay);
+        let saturation_output =
+          tap.apply_saturation(feedback_matrix_output, decay, saturation_gain);
         let absorb_output = tap.apply_absorb(dry_signal + saturation_output, absorb);
         let diffuse_output = tap.apply_diffuse(absorb_output, diffuse);
         tap.write(diffuse_output);
       });
+  }
+
+  fn get_saturation_gain(&mut self) -> f32 {
+    let saturation_gain = if self.envelope_follower.get_value() > 0.5 {
+      1.
+    } else {
+      0.
+    };
+
+    self
+      .smooth_saturation_gain
+      .run(saturation_gain, 7., Mode::Hertz)
   }
 
   fn get_stereo_output(
@@ -117,8 +143,14 @@ impl Taps {
     inputs: Vec<f32>,
     early_reflections_output: (f32, f32),
   ) -> (f32, f32) {
-    let left_out = (inputs[0] + inputs[2] + early_reflections_output.0) * FRAC_PI_2;
-    let right_out = (inputs[1] + inputs[3] + early_reflections_output.1) * FRAC_PI_2;
+    let left_delay_network_out = inputs[0] + inputs[2];
+    let right_delay_network_out = inputs[1] + inputs[3];
+    self
+      .envelope_follower
+      .run(left_delay_network_out + right_delay_network_out);
+
+    let left_out = (left_delay_network_out + early_reflections_output.0) * 0.5;
+    let right_out = (right_delay_network_out + early_reflections_output.1) * 0.5;
     (left_out, right_out)
   }
 

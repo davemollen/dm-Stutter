@@ -1,6 +1,5 @@
 /*
     TODO's:
-    - implement non linear wave table with envelope follower
     - implement pitchshift on taps_output
     - implement reverse on predelay
 */
@@ -8,9 +7,9 @@
 include!(concat!(env!("OUT_DIR"), "/wave_table.rs"));
 mod allpass_filter;
 mod biquad_filter;
-mod dc_block;
 mod delay_line;
 mod delta;
+mod envelope_follower;
 mod float_ext;
 mod grains;
 mod lfo;
@@ -19,6 +18,7 @@ mod one_pole_filter;
 mod pan;
 mod phasor;
 mod reverb;
+mod slide;
 mod tap;
 mod taps;
 mod tilt_filter;
