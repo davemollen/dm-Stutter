@@ -34,15 +34,16 @@ impl Reverb {
 
   fn map_reverb_parameters(
     &mut self,
+    predelay: f32,
     size: f32,
     speed: f32,
     depth: f32,
-    predelay: f32,
+    shimmer: f32,
     absorb: f32,
     decay: f32,
     tilt: f32,
     mix: f32,
-  ) -> (f32, f32, f32, f32, f32, f32, f32, f32, f32) {
+  ) -> (f32, f32, f32, f32, f32, f32, f32, f32, f32, f32) {
     let predelay = self.smooth_predelay.run(predelay, 12., Mode::Hertz);
     let size = self.smooth_size.run(size, 12., Mode::Hertz);
     let depth = self.smooth_depth.run(
@@ -57,7 +58,7 @@ impl Reverb {
     let absorb = (absorb - 0.3333333).max(0.) * 1.5;
 
     (
-      size, speed, depth, predelay, absorb, diffuse, decay, tilt, mix,
+      predelay, size, speed, depth, shimmer, absorb, diffuse, decay, tilt, mix,
     )
   }
 
@@ -73,13 +74,14 @@ impl Reverb {
     size: f32,
     speed: f32,
     depth: f32,
+    shimmer: f32,
     diffuse: f32,
     absorb: f32,
     decay: f32,
   ) -> (f32, f32) {
     self
       .taps
-      .run(input, size, speed, depth, diffuse, absorb, decay)
+      .run(input, size, speed, depth, shimmer, diffuse, absorb, decay)
   }
 
   fn apply_tilt_filter(&mut self, input: (f32, f32), tilt: f32) -> (f32, f32) {
@@ -91,21 +93,32 @@ impl Reverb {
   pub fn run(
     &mut self,
     input: (f32, f32),
+    predelay: f32,
     size: f32,
     speed: f32,
     depth: f32,
-    predelay: f32,
+    shimmer: f32,
     absorb: f32,
     decay: f32,
     tilt: f32,
     mix: f32,
   ) -> (f32, f32) {
-    let (size, speed, depth, predelay, absorb, diffuse, decay, tilt, mix) =
-      self.map_reverb_parameters(size, speed, depth, predelay, absorb, decay, tilt, mix);
+    let (predelay, size, speed, depth, shimmer, absorb, diffuse, decay, tilt, mix) = self
+      .map_reverb_parameters(
+        predelay, size, speed, depth, shimmer, absorb, decay, tilt, mix,
+      );
 
     let predelay_output = self.get_predelay_output(input, predelay);
-    let taps_output =
-      self.get_delay_taps_output(predelay_output, size, speed, depth, diffuse, absorb, decay);
+    let taps_output = self.get_delay_taps_output(
+      predelay_output,
+      size,
+      speed,
+      depth,
+      shimmer,
+      diffuse,
+      absorb,
+      decay,
+    );
     let tilt_filter_output = self.apply_tilt_filter(taps_output, tilt);
     Mix::run(input, tilt_filter_output, mix)
   }

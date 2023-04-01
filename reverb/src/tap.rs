@@ -1,5 +1,6 @@
 use crate::{
   allpass_filter::AllpassFilter,
+  dc_block::DcBlock,
   delay_line::{DelayLine, Interpolation},
   float_ext::FloatExt,
   grains::Grains,
@@ -25,6 +26,7 @@ pub struct Tap {
   lfo: Lfo,
   lfo_phase_offset: f32,
   grains: Grains,
+  dc_block: DcBlock,
 }
 
 impl Tap {
@@ -56,6 +58,7 @@ impl Tap {
       lfo: Lfo::default(),
       lfo_phase_offset,
       grains: Grains::new(),
+      dc_block: DcBlock::new(sample_rate),
     }
   }
 
@@ -108,7 +111,10 @@ impl Tap {
   pub fn apply_saturation(&mut self, input: f32, decay: f32, saturation_gain: f32) -> f32 {
     let clean_gain = 1. - saturation_gain;
     let saturation_out = input * clean_gain + input.fast_atan1() * saturation_gain;
-    (saturation_out * decay * 0.5).clamp(-1., 1.)
+    self
+      .dc_block
+      .run(saturation_out * decay * 0.5)
+      .clamp(-1., 1.)
   }
 
   fn vibrato_read(&mut self, size: f32, lfo_phase: f32, lfo_depth: f32) -> f32 {

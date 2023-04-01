@@ -77,6 +77,7 @@ impl Plugin for DmReverb {
     let size = self.params.size.value();
     let speed = self.params.speed.value();
     let depth = self.params.depth.value();
+    let shimmer = self.params.shimmer.value();
     let absorb = self.params.absorb.value();
     let decay = self.params.decay.value();
     let tilt = self.params.tilt.value();
@@ -90,10 +91,11 @@ impl Plugin for DmReverb {
 
       let (reverb_left, reverb_right) = self.reverb.run(
         (input_left, input_right),
+        predelay,
         size,
         speed,
         depth,
-        predelay,
+        shimmer,
         absorb,
         decay,
         tilt,

@@ -69,6 +69,18 @@ pub fn plugin_gui(cx: &mut Context, params: Arc<ReverbParameters>, host: Option<
     VStack::new(cx, |cx| {
       ParamKnob::new(
         cx,
+        &params.shimmer,
+        |params| &params.shimmer,
+        |val| ParamChangeEvent::SetShimmer(val),
+        host,
+      );
+    })
+    .child_space(Stretch(1.0))
+    .row_between(Pixels(10.0));
+
+    VStack::new(cx, |cx| {
+      ParamKnob::new(
+        cx,
         &params.absorb,
         |params| &params.absorb,
         |val| ParamChangeEvent::SetAbsorb(val),

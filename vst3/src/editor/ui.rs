@@ -46,6 +46,12 @@ pub fn plugin_gui(
     .row_between(Pixels(10.0));
 
     VStack::new(cx, |cx| {
+      ParamKnob::new(cx, params.shimmer.as_ptr(), |params| &params.shimmer);
+    })
+    .child_space(Stretch(1.0))
+    .row_between(Pixels(10.0));
+
+    VStack::new(cx, |cx| {
       ParamKnob::new(cx, params.absorb.as_ptr(), |params| &params.absorb);
       ParamKnob::new(cx, params.decay.as_ptr(), |params| &params.decay);
     })

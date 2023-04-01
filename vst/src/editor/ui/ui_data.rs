@@ -10,6 +10,7 @@ pub enum ParamChangeEvent {
   SetSize(f32),
   SetSpeed(f32),
   SetDepth(f32),
+  SetShimmer(f32),
   SetAbsorb(f32),
   SetDecay(f32),
   SetTilt(f32),
@@ -35,6 +36,9 @@ impl Model for UiData {
       }
       ParamChangeEvent::SetDepth(value) => {
         self.params.depth.set_plain_value(*value);
+      }
+      ParamChangeEvent::SetShimmer(value) => {
+        self.params.shimmer.set_plain_value(*value);
       }
       ParamChangeEvent::SetAbsorb(value) => {
         self.params.absorb.set_plain_value(*value);

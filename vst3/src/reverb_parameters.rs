@@ -20,6 +20,9 @@ pub struct ReverbParameters {
   #[id = "depth"]
   pub depth: FloatParam,
 
+  #[id = "shimmer"]
+  pub shimmer: FloatParam,
+
   #[id = "absorb"]
   pub absorb: FloatParam,
 
@@ -73,6 +76,10 @@ impl Default for ReverbParameters {
       .with_value_to_string(v2s_f32_digits(2)),
 
       depth: FloatParam::new("Depth", -0.25, FloatRange::Linear { min: -1., max: 1. })
+        .with_unit("%")
+        .with_value_to_string(formatters::v2s_f32_percentage(2)),
+
+      shimmer: FloatParam::new("Shimmer", 0., FloatRange::Linear { min: 0., max: 1. })
         .with_unit("%")
         .with_value_to_string(formatters::v2s_f32_percentage(2)),
 
