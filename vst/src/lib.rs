@@ -45,7 +45,7 @@ impl Plugin for DmReverb {
       version: 1,
       inputs: 2,
       outputs: 2,
-      parameters: 8,
+      parameters: 9,
       unique_id: 1358,
       f64_precision: true,
       category: Category::Effect,
