@@ -110,11 +110,8 @@ impl Tap {
 
   pub fn apply_saturation(&mut self, input: f32, decay: f32, saturation_gain: f32) -> f32 {
     let clean_gain = 1. - saturation_gain;
-    let saturation_out = input * clean_gain + input.fast_atan1() * saturation_gain;
-    self
-      .dc_block
-      .run(saturation_out * decay * 0.5)
-      .clamp(-1., 1.)
+    let saturation_out = input * clean_gain + input.atan() * saturation_gain;
+    self.dc_block.run(saturation_out * decay * 0.5)
   }
 
   fn vibrato_read(&mut self, size: f32, lfo_phase: f32, lfo_depth: f32) -> f32 {
