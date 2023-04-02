@@ -2,7 +2,6 @@ use crate::{
   allpass_filter::AllpassFilter,
   dc_block::DcBlock,
   delay_line::{DelayLine, Interpolation},
-  float_ext::FloatExt,
   grains::Grains,
   lfo::Lfo,
   one_pole_filter::{Mode, OnePoleFilter},

@@ -1,5 +1,5 @@
 use crate::{
-  envelope_follower::EnvelopeFollower,
+  average::Average,
   float_ext::FloatExt,
   one_pole_filter::{Mode, OnePoleFilter},
   phasor::Phasor,
@@ -10,7 +10,8 @@ use crate::{
 pub struct Taps {
   taps: [Tap; 4],
   lfo_phasor: Phasor,
-  envelope_follower: EnvelopeFollower,
+  average: Average,
+  average_result: f32,
   smooth_saturation_gain: OnePoleFilter,
 }
 
@@ -48,7 +49,8 @@ impl Taps {
         ),
       ],
       lfo_phasor: Phasor::new(sample_rate),
-      envelope_follower: EnvelopeFollower::new(sample_rate),
+      average: Average::new(1000),
+      average_result: 0.,
       smooth_saturation_gain: OnePoleFilter::new(sample_rate),
     }
   }
@@ -127,11 +129,7 @@ impl Taps {
   }
 
   fn get_saturation_gain(&mut self) -> f32 {
-    let saturation_gain = if self.envelope_follower.get_value() > 0.5 {
-      1.
-    } else {
-      0.
-    };
+    let saturation_gain = if self.average_result > 0.5 { 1. } else { 0. };
 
     self
       .smooth_saturation_gain
@@ -145,8 +143,8 @@ impl Taps {
   ) -> (f32, f32) {
     let left_delay_network_out = inputs[0] + inputs[2];
     let right_delay_network_out = inputs[1] + inputs[3];
-    self
-      .envelope_follower
+    self.average_result = self
+      .average
       .run(left_delay_network_out + right_delay_network_out);
 
     let left_out = (left_delay_network_out + early_reflections_output.0) * 0.5;

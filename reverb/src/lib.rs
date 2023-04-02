@@ -6,11 +6,11 @@
 
 include!(concat!(env!("OUT_DIR"), "/wave_table.rs"));
 mod allpass_filter;
+mod average;
 mod biquad_filter;
 mod dc_block;
 mod delay_line;
 mod delta;
-mod envelope_follower;
 mod float_ext;
 mod grains;
 mod lfo;
@@ -20,7 +20,6 @@ mod pan;
 mod phasor;
 mod reverb;
 mod shimmer;
-mod slide;
 mod tap;
 mod taps;
 mod tilt_filter;
