@@ -3,7 +3,6 @@ use crate::{
   float_ext::FloatExt,
   one_pole_filter::{Mode, OnePoleFilter},
   phasor::Phasor,
-  shimmer::Shimmer,
   tap::Tap,
   MAX_SIZE, MIN_SIZE,
 };
@@ -11,7 +10,6 @@ use crate::{
 pub struct Taps {
   taps: [Tap; 4],
   lfo_phasor: Phasor,
-  shimmer: Shimmer,
   envelope_follower: EnvelopeFollower,
   smooth_saturation_gain: OnePoleFilter,
 }
@@ -50,7 +48,6 @@ impl Taps {
         ),
       ],
       lfo_phasor: Phasor::new(sample_rate),
-      shimmer: Shimmer::new(sample_rate),
       envelope_follower: EnvelopeFollower::new(sample_rate),
       smooth_saturation_gain: OnePoleFilter::new(sample_rate),
     }
@@ -145,7 +142,6 @@ impl Taps {
     &mut self,
     inputs: Vec<f32>,
     early_reflections_output: (f32, f32),
-    shimmer: f32,
   ) -> (f32, f32) {
     let left_delay_network_out = inputs[0] + inputs[2];
     let right_delay_network_out = inputs[1] + inputs[3];
@@ -155,8 +151,7 @@ impl Taps {
 
     let left_out = (left_delay_network_out + early_reflections_output.0) * 0.5;
     let right_out = (right_delay_network_out + early_reflections_output.1) * 0.5;
-    let out = (left_out, right_out);
-    self.shimmer.run(out, shimmer)
+    (left_out, right_out)
   }
 
   pub fn run(
@@ -165,7 +160,6 @@ impl Taps {
     size: f32,
     speed: f32,
     depth: f32,
-    shimmer: f32,
     diffuse: f32,
     absorb: f32,
     decay: f32,
@@ -174,6 +168,6 @@ impl Taps {
     let early_reflections_outputs = self.read_early_reflections(size);
     let feedback_matrix_outputs = self.apply_feedback_matrix(&delay_network_outputs);
     self.process_and_write_taps(input, feedback_matrix_outputs, diffuse, absorb, decay);
-    self.get_stereo_output(delay_network_outputs, early_reflections_outputs, shimmer)
+    self.get_stereo_output(delay_network_outputs, early_reflections_outputs)
   }
 }

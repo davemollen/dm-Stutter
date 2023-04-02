@@ -21,7 +21,6 @@ mod phasor;
 mod reverb;
 mod shimmer;
 mod slide;
-mod stereo_delay_line;
 mod tap;
 mod taps;
 mod tilt_filter;

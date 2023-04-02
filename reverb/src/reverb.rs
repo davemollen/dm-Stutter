@@ -2,6 +2,7 @@ use crate::{
   delay_line::{DelayLine, Interpolation},
   mix::Mix,
   one_pole_filter::{Mode, OnePoleFilter},
+  shimmer::Shimmer,
   taps::Taps,
   tilt_filter::TiltFilter,
   MAX_DEPTH,
@@ -9,6 +10,7 @@ use crate::{
 
 pub struct Reverb {
   predelay_tap: DelayLine,
+  shimmer: Shimmer,
   taps: Taps,
   tilt_filter: TiltFilter,
   smooth_predelay: OnePoleFilter,
@@ -22,6 +24,7 @@ impl Reverb {
   pub fn new(sample_rate: f32) -> Self {
     Self {
       predelay_tap: DelayLine::new((sample_rate * 0.5) as usize, sample_rate),
+      shimmer: Shimmer::new(sample_rate),
       taps: Taps::new(sample_rate),
       tilt_filter: TiltFilter::new(sample_rate),
       smooth_predelay: OnePoleFilter::new(sample_rate),
@@ -68,20 +71,23 @@ impl Reverb {
     predelay_output
   }
 
+  fn get_shimmer_output(&mut self, input: f32, shimmer: f32) -> f32 {
+    self.shimmer.run(input, shimmer)
+  }
+
   fn get_delay_taps_output(
     &mut self,
     input: f32,
     size: f32,
     speed: f32,
     depth: f32,
-    shimmer: f32,
     diffuse: f32,
     absorb: f32,
     decay: f32,
   ) -> (f32, f32) {
     self
       .taps
-      .run(input, size, speed, depth, shimmer, diffuse, absorb, decay)
+      .run(input, size, speed, depth, diffuse, absorb, decay)
   }
 
   fn apply_tilt_filter(&mut self, input: (f32, f32), tilt: f32) -> (f32, f32) {
@@ -109,16 +115,9 @@ impl Reverb {
       );
 
     let predelay_output = self.get_predelay_output(input, predelay);
-    let taps_output = self.get_delay_taps_output(
-      predelay_output,
-      size,
-      speed,
-      depth,
-      shimmer,
-      diffuse,
-      absorb,
-      decay,
-    );
+    let shimmer_output = self.get_shimmer_output(predelay_output, shimmer);
+    let taps_output =
+      self.get_delay_taps_output(shimmer_output, size, speed, depth, diffuse, absorb, decay);
     let tilt_filter_output = self.apply_tilt_filter(taps_output, tilt);
     Mix::run(input, tilt_filter_output, mix)
   }
