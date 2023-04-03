@@ -78,10 +78,10 @@ impl Plugin for DmReverb {
     let size = self.params.size.value();
     let speed = self.params.speed.value();
     let depth = self.params.depth.value();
-    let shimmer = self.params.shimmer.value();
     let absorb = self.params.absorb.value();
     let decay = self.params.decay.value();
     let tilt = self.params.tilt.value();
+    let shimmer = self.params.shimmer.value();
     let mix = self.params.mix.value();
 
     for mut channel_samples in buffer.iter_samples() {
@@ -96,10 +96,10 @@ impl Plugin for DmReverb {
         size,
         speed,
         depth,
-        shimmer,
         absorb,
         decay,
         tilt,
+        shimmer,
         mix,
       );
 

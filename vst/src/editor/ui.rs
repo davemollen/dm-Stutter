@@ -33,35 +33,102 @@ pub fn plugin_gui(cx: &mut Context, params: Arc<ReverbParameters>, host: Option<
     .row_between(Pixels(10.0));
 
     VStack::new(cx, |cx| {
-      ParamKnob::new(cx, &params.predelay, |params| &params.predelay, host);
-      ParamKnob::new(cx, &params.size, |params| &params.size, host);
+      ParamKnob::new(
+        cx,
+        &params.predelay,
+        |params| &params.predelay,
+        |val| ParamChangeEvent::SetPredelay(val),
+        host,
+      );
+      ParamKnob::new(
+        cx,
+        &params.size,
+        |params| &params.size,
+        |val| ParamChangeEvent::SetSize(val),
+        host,
+      );
     })
     .child_space(Stretch(1.0))
     .row_between(Pixels(10.0));
 
     VStack::new(cx, |cx| {
-      ParamKnob::new(cx, &params.speed, |params| &params.speed, host);
-      ParamKnob::new(cx, &params.depth, |params| &params.depth, host);
+      ParamKnob::new(
+        cx,
+        &params.speed,
+        |params| &params.speed,
+        |val| ParamChangeEvent::SetSpeed(val),
+        host,
+      );
+      ParamKnob::new(
+        cx,
+        &params.depth,
+        |params| &params.depth,
+        |val| ParamChangeEvent::SetDepth(val),
+        host,
+      );
     })
     .child_space(Stretch(1.0))
     .row_between(Pixels(10.0));
 
     VStack::new(cx, |cx| {
-      ParamKnob::new(cx, &params.absorb, |params| &params.absorb, host);
-      ParamKnob::new(cx, &params.decay, |params| &params.decay, host);
+      ParamKnob::new(
+        cx,
+        &params.absorb,
+        |params| &params.absorb,
+        |val| ParamChangeEvent::SetAbsorb(val),
+        host,
+      );
+      ParamKnob::new(
+        cx,
+        &params.decay,
+        |params| &params.decay,
+        |val| ParamChangeEvent::SetDecay(val),
+        host,
+      );
     })
     .child_space(Stretch(1.0))
     .row_between(Pixels(10.0));
 
     VStack::new(cx, |cx| {
-      ParamKnob::new(cx, &params.tilt, |params| &params.tilt, host);
-      ParamKnob::new(cx, &params.mix, |params| &params.mix, host);
+      ParamKnob::new(
+        cx,
+        &params.tilt,
+        |params| &params.tilt,
+        |val| ParamChangeEvent::SetTilt(val),
+        host,
+      );
+      ParamKnob::new(
+        cx,
+        &params.shimmer,
+        |params| &params.shimmer,
+        |val| ParamChangeEvent::SetShimmer(val),
+        host,
+      );
     })
     .child_space(Stretch(1.0))
     .row_between(Pixels(10.0));
 
     VStack::new(cx, |cx| {
-      ParamKnob::new(cx, &params.shimmer, |params| &params.shimmer, host);
+      ParamKnob::new(
+        cx,
+        &params.mix,
+        |params| &params.mix,
+        |val| ParamChangeEvent::SetMix(val),
+        host,
+      );
+    })
+    .child_space(Stretch(1.0))
+    .child_top(Stretch(0.1))
+    .row_between(Pixels(10.0));
+
+    VStack::new(cx, |cx| {
+      ParamKnob::new(
+        cx,
+        &params.shimmer,
+        |params| &params.shimmer,
+        |val| ParamChangeEvent::SetSize(val),
+        host,
+      );
     })
     .child_top(Pixels(10.0))
     .row_between(Pixels(10.0));

@@ -12,10 +12,10 @@ pub struct ReverbParameters {
   pub size: FloatParam,
   pub speed: FloatParam,
   pub depth: FloatParam,
-  pub shimmer: FloatParam,
   pub absorb: FloatParam,
   pub decay: FloatParam,
   pub tilt: FloatParam,
+  pub shimmer: FloatParam,
   pub mix: FloatParam,
 }
 
@@ -92,35 +92,67 @@ impl Default for ReverbParameters {
 
 impl PluginParameters for ReverbParameters {
   fn get_parameter(&self, index: i32) -> f32 {
-    let param = self.get_param_by_index(index);
-    match param {
-      Some(param) => param.get_normalized_value(),
-      None => 0.,
+    match index {
+      0 => self.reverse.get_normalized_value(),
+      1 => self.predelay.get_normalized_value(),
+      2 => self.size.get_normalized_value(),
+      3 => self.speed.get_normalized_value(),
+      4 => self.depth.get_normalized_value(),
+      5 => self.absorb.get_normalized_value(),
+      6 => self.decay.get_normalized_value(),
+      7 => self.tilt.get_normalized_value(),
+      8 => self.shimmer.get_normalized_value(),
+      9 => self.mix.get_normalized_value(),
+      _ => 0.,
     }
   }
 
   fn get_parameter_text(&self, index: i32) -> String {
-    let param = self.get_param_by_index(index);
-    match param {
-      Some(param) => param.get_display_value(true),
-      None => "".to_string(),
+    match index {
+      0 => self.reverse.get_display_value(true),
+      1 => self.predelay.get_display_value(true),
+      2 => self.size.get_display_value(true),
+      3 => self.speed.get_display_value(true),
+      4 => self.depth.get_display_value(true),
+      5 => self.absorb.get_display_value(true),
+      6 => self.decay.get_display_value(true),
+      7 => self.tilt.get_display_value(true),
+      8 => self.shimmer.get_display_value(true),
+      9 => self.mix.get_display_value(true),
+      _ => "".to_string(),
     }
   }
 
   fn get_parameter_name(&self, index: i32) -> String {
-    let param = self.get_param_by_index(index);
-    match param {
-      Some(param) => param.get_name(),
-      None => "",
+    match index {
+      0 => self.reverse.name,
+      1 => self.predelay.name,
+      2 => self.size.name,
+      3 => self.speed.name,
+      4 => self.depth.name,
+      5 => self.absorb.name,
+      6 => self.decay.name,
+      7 => self.tilt.name,
+      8 => self.shimmer.name,
+      9 => self.mix.name,
+      _ => "",
     }
     .to_string()
   }
 
   fn set_parameter(&self, index: i32, val: f32) {
-    let param = self.get_param_by_index(index);
-    match param {
-      Some(param) => param.set_plain_value(val),
-      None => (),
+    match index {
+      0 => self.reverse.set_plain_value(val),
+      1 => self.predelay.set_plain_value(val),
+      2 => self.size.set_plain_value(val),
+      3 => self.speed.set_plain_value(val),
+      4 => self.depth.set_plain_value(val),
+      5 => self.absorb.set_plain_value(val),
+      6 => self.decay.set_plain_value(val),
+      7 => self.tilt.set_plain_value(val),
+      8 => self.shimmer.set_plain_value(val),
+      9 => self.mix.set_plain_value(val),
+      _ => (),
     }
   }
 }

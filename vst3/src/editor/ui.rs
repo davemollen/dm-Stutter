@@ -32,6 +32,12 @@ pub fn plugin_gui(
 
   HStack::new(cx, |cx| {
     VStack::new(cx, |cx| {
+      ParamKnob::new(cx, params.reverse.as_ptr(), |params| &params.reverse);
+    })
+    .child_space(Stretch(0.5))
+    .row_between(Pixels(10.0));
+
+    VStack::new(cx, |cx| {
       ParamKnob::new(cx, params.predelay.as_ptr(), |params| &params.predelay);
       ParamKnob::new(cx, params.size.as_ptr(), |params| &params.size);
     })
@@ -46,12 +52,6 @@ pub fn plugin_gui(
     .row_between(Pixels(10.0));
 
     VStack::new(cx, |cx| {
-      ParamKnob::new(cx, params.shimmer.as_ptr(), |params| &params.shimmer);
-    })
-    .child_space(Stretch(1.0))
-    .row_between(Pixels(10.0));
-
-    VStack::new(cx, |cx| {
       ParamKnob::new(cx, params.absorb.as_ptr(), |params| &params.absorb);
       ParamKnob::new(cx, params.decay.as_ptr(), |params| &params.decay);
     })
@@ -60,9 +60,16 @@ pub fn plugin_gui(
 
     VStack::new(cx, |cx| {
       ParamKnob::new(cx, params.tilt.as_ptr(), |params| &params.tilt);
+      ParamKnob::new(cx, params.shimmer.as_ptr(), |params| &params.shimmer);
+    })
+    .child_space(Stretch(1.0))
+    .row_between(Pixels(10.0));
+
+    VStack::new(cx, |cx| {
       ParamKnob::new(cx, params.mix.as_ptr(), |params| &params.mix);
     })
     .child_space(Stretch(1.0))
+    .child_top(Stretch(0.1))
     .row_between(Pixels(10.0));
   })
   .background_color(Color::rgb(80, 80, 80));

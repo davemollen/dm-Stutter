@@ -22,13 +22,15 @@ fn notify_host_parameter_changed(val: f32, index: i32, host: Option<HostCallback
 pub struct ParamKnob {}
 
 impl ParamKnob {
-  pub fn new<F>(
+  pub fn new<F, C>(
     cx: &mut Context,
     param: &FloatParam,
     params_to_param: F,
+    on_change: C,
     host: Option<HostCallback>,
   ) where
     F: 'static + Fn(&Arc<ReverbParameters>) -> &FloatParam + Copy,
+    C: 'static + Fn(f32) -> ParamChangeEvent + Copy,
   {
     let index = param.index;
     Label::new(cx, param.name);
@@ -41,7 +43,7 @@ impl ParamKnob {
         false,
       )
       .on_changing(move |cx, val| {
-        cx.emit(ParamChangeEvent::SetParam(index, val));
+        cx.emit(on_change(val));
         notify_host_parameter_changed(val, index, host);
       });
 

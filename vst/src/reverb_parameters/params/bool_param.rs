@@ -35,10 +35,6 @@ impl BoolParam {
 impl Params for BoolParam {
   type Plain = bool;
 
-  fn get_name(&self) -> &str {
-    self.name
-  }
-
   fn get_value(&self) -> Self::Plain {
     self.value.load(Ordering::Relaxed)
   }

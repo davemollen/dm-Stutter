@@ -23,9 +23,6 @@ pub struct ReverbParameters {
   #[id = "depth"]
   pub depth: FloatParam,
 
-  #[id = "shimmer"]
-  pub shimmer: FloatParam,
-
   #[id = "absorb"]
   pub absorb: FloatParam,
 
@@ -34,6 +31,9 @@ pub struct ReverbParameters {
 
   #[id = "tilt"]
   pub tilt: FloatParam,
+
+  #[id = "shimmer"]
+  pub shimmer: FloatParam,
 
   #[id = "mix"]
   pub mix: FloatParam,
@@ -84,10 +84,6 @@ impl Default for ReverbParameters {
         .with_unit("%")
         .with_value_to_string(formatters::v2s_f32_percentage(2)),
 
-      shimmer: FloatParam::new("Shimmer", 0., FloatRange::Linear { min: 0., max: 1. })
-        .with_unit("%")
-        .with_value_to_string(formatters::v2s_f32_percentage(2)),
-
       absorb: FloatParam::new("Absorb", 0.5, FloatRange::Linear { min: 0., max: 1. })
         .with_unit("%")
         .with_value_to_string(formatters::v2s_f32_percentage(2)),
@@ -97,6 +93,10 @@ impl Default for ReverbParameters {
         .with_value_to_string(formatters::v2s_f32_percentage(2)),
 
       tilt: FloatParam::new("Tilt", 0., FloatRange::Linear { min: -1., max: 1. })
+        .with_unit("%")
+        .with_value_to_string(formatters::v2s_f32_percentage(2)),
+
+      shimmer: FloatParam::new("Shimmer", 0., FloatRange::Linear { min: 0., max: 1. })
         .with_unit("%")
         .with_value_to_string(formatters::v2s_f32_percentage(2)),
 

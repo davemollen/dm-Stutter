@@ -36,10 +36,6 @@ impl FloatParam {
 impl Params for FloatParam {
   type Plain = f32;
 
-  fn get_name(&self) -> &str {
-    self.name
-  }
-
   fn get_value(&self) -> f32 {
     self.value.get()
   }

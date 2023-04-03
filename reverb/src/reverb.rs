@@ -41,10 +41,10 @@ impl Reverb {
     size: f32,
     speed: f32,
     depth: f32,
-    shimmer: f32,
     absorb: f32,
     decay: f32,
     tilt: f32,
+    shimmer: f32,
     mix: f32,
   ) -> (f32, f32, f32, f32, f32, f32, f32, f32, f32, f32) {
     let predelay = self.smooth_predelay.run(predelay, 12., Mode::Hertz);
@@ -61,7 +61,7 @@ impl Reverb {
     let absorb = (absorb - 0.3333333).max(0.) * 1.5;
 
     (
-      predelay, size, speed, depth, shimmer, absorb, diffuse, decay, tilt, mix,
+      predelay, size, speed, depth, absorb, diffuse, decay, tilt, shimmer, mix,
     )
   }
 
@@ -103,15 +103,15 @@ impl Reverb {
     size: f32,
     speed: f32,
     depth: f32,
-    shimmer: f32,
     absorb: f32,
     decay: f32,
     tilt: f32,
+    shimmer: f32,
     mix: f32,
   ) -> (f32, f32) {
-    let (predelay, size, speed, depth, shimmer, absorb, diffuse, decay, tilt, mix) = self
+    let (predelay, size, speed, depth, absorb, diffuse, decay, tilt, shimmer, mix) = self
       .map_reverb_parameters(
-        predelay, size, speed, depth, shimmer, absorb, decay, tilt, mix,
+        predelay, size, speed, depth, absorb, decay, tilt, shimmer, mix,
       );
 
     let predelay_output = self.get_predelay_output(input, predelay);
