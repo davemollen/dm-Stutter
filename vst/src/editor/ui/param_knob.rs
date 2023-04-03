@@ -1,5 +1,5 @@
 use super::{ParamChangeEvent, UiData};
-use crate::reverb_parameters::{FloatParam, ReverbParameters};
+use crate::reverb_parameters::{FloatParam, Params, ReverbParameters};
 use std::sync::Arc;
 use vizia::{
   prelude::{Context, EmitContext, LensExt},

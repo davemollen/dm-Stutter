@@ -1,4 +1,4 @@
-use crate::reverb_parameters::ReverbParameters;
+use crate::reverb_parameters::{Params, ReverbParameters};
 use std::sync::Arc;
 use vizia::{
   prelude::{Event, EventContext, Lens},

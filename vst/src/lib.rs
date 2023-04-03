@@ -4,7 +4,7 @@ mod editor;
 use editor::ReverbEditor;
 mod reverb_parameters;
 use reverb::Reverb;
-use reverb_parameters::ReverbParameters;
+use reverb_parameters::{Params, ReverbParameters};
 use std::sync::Arc;
 use vst::{
   buffer::AudioBuffer,
@@ -45,7 +45,7 @@ impl Plugin for DmReverb {
       version: 1,
       inputs: 2,
       outputs: 2,
-      parameters: 9,
+      parameters: 10,
       unique_id: 1358,
       f64_precision: true,
       category: Category::Effect,
@@ -54,6 +54,7 @@ impl Plugin for DmReverb {
   }
 
   fn process(&mut self, buffer: &mut AudioBuffer<f32>) {
+    let reverse = self.params.reverse.get_value();
     let predelay = self.params.predelay.get_value();
     let size = self.params.size.get_value();
     let speed = self.params.speed.get_value();

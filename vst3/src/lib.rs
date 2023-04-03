@@ -73,6 +73,7 @@ impl Plugin for DmReverb {
     _aux: &mut AuxiliaryBuffers,
     _context: &mut impl ProcessContext<Self>,
   ) -> ProcessStatus {
+    let reverse = self.params.reverse.value();
     let predelay = self.params.predelay.value();
     let size = self.params.size.value();
     let speed = self.params.speed.value();

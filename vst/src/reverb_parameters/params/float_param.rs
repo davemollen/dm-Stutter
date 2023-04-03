@@ -1,6 +1,7 @@
 use std::sync::Arc;
 use vst::util::AtomicFloat;
 mod float_range;
+use super::Params;
 pub use float_range::FloatRange;
 
 pub struct FloatParam {
@@ -26,20 +27,33 @@ impl FloatParam {
     }
   }
 
-  pub fn get_value(&self) -> f32 {
+  pub fn with_unit(mut self, unit: &'static str) -> Self {
+    self.unit = unit;
+    self
+  }
+}
+
+impl Params for FloatParam {
+  type Plain = f32;
+
+  fn get_name(&self) -> &str {
+    self.name
+  }
+
+  fn get_value(&self) -> f32 {
     self.value.get()
   }
 
-  pub fn get_normalized_value(&self) -> f32 {
+  fn get_normalized_value(&self) -> f32 {
     self.range.normalize(self.get_value())
   }
 
-  pub fn set_plain_value(&self, value: f32) {
+  fn set_plain_value(&self, value: f32) {
     let plain_value = self.range.unnormalize(value);
     self.value.set(plain_value);
   }
 
-  pub fn get_display_value(&self, include_unit: bool) -> String {
+  fn get_display_value(&self, include_unit: bool) -> String {
     let value = self.get_value();
     match (&self.value_to_string, include_unit) {
       (Some(f), true) => format!("{}{}", f(value), self.unit),
@@ -49,18 +63,13 @@ impl FloatParam {
     }
   }
 
-  pub fn get_default_normalized_value(&self) -> f32 {
+  fn get_default_normalized_value(&self) -> f32 {
     self.range.normalize(self.default)
   }
 
-  pub fn with_unit(mut self, unit: &'static str) -> Self {
-    self.unit = unit;
-    self
-  }
-
-  pub fn with_value_to_string(
+  fn with_value_to_string(
     mut self,
-    callback: Arc<dyn Fn(f32) -> String + Send + Sync>,
+    callback: Arc<dyn Fn(Self::Plain) -> String + Send + Sync>,
   ) -> Self {
     self.value_to_string = Some(callback);
     self

@@ -1,6 +1,6 @@
 use nih_plug::{
   formatters,
-  prelude::{FloatParam, FloatRange, Params},
+  prelude::{BoolParam, FloatParam, FloatRange, Params},
 };
 use reverb::{MAX_SIZE, MIN_SIZE};
 mod custom_formatters;
@@ -8,6 +8,9 @@ use custom_formatters::v2s_f32_digits;
 
 #[derive(Params)]
 pub struct ReverbParameters {
+  #[id = "reverse"]
+  pub reverse: BoolParam,
+
   #[id = "predelay"]
   pub predelay: FloatParam,
 
@@ -39,6 +42,8 @@ pub struct ReverbParameters {
 impl Default for ReverbParameters {
   fn default() -> Self {
     Self {
+      reverse: BoolParam::new("Reverse", false),
+
       predelay: FloatParam::new(
         "Predelay",
         7.,

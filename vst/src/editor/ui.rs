@@ -27,6 +27,12 @@ pub fn plugin_gui(cx: &mut Context, params: Arc<ReverbParameters>, host: Option<
 
   HStack::new(cx, |cx| {
     VStack::new(cx, |cx| {
+      // ParamKnob::new(cx, &params.reverse, |params| &params.reverse, host);
+    })
+    .child_space(Stretch(0.0))
+    .row_between(Pixels(10.0));
+
+    VStack::new(cx, |cx| {
       ParamKnob::new(cx, &params.predelay, |params| &params.predelay, host);
       ParamKnob::new(cx, &params.size, |params| &params.size, host);
     })
@@ -36,12 +42,6 @@ pub fn plugin_gui(cx: &mut Context, params: Arc<ReverbParameters>, host: Option<
     VStack::new(cx, |cx| {
       ParamKnob::new(cx, &params.speed, |params| &params.speed, host);
       ParamKnob::new(cx, &params.depth, |params| &params.depth, host);
-    })
-    .child_space(Stretch(1.0))
-    .row_between(Pixels(10.0));
-
-    VStack::new(cx, |cx| {
-      ParamKnob::new(cx, &params.shimmer, |params| &params.shimmer, host);
     })
     .child_space(Stretch(1.0))
     .row_between(Pixels(10.0));
@@ -58,6 +58,12 @@ pub fn plugin_gui(cx: &mut Context, params: Arc<ReverbParameters>, host: Option<
       ParamKnob::new(cx, &params.mix, |params| &params.mix, host);
     })
     .child_space(Stretch(1.0))
+    .row_between(Pixels(10.0));
+
+    VStack::new(cx, |cx| {
+      ParamKnob::new(cx, &params.shimmer, |params| &params.shimmer, host);
+    })
+    .child_top(Pixels(10.0))
     .row_between(Pixels(10.0));
   })
   .background_color(Color::rgb(80, 80, 80));
