@@ -76,6 +76,7 @@ impl Plugin for DmReverb {
     {
       let (reverb_left, reverb_right) = self.reverb.run(
         (*input_left, *input_right),
+        reverse,
         predelay,
         size,
         speed,

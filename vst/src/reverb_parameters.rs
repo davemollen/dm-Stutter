@@ -1,4 +1,4 @@
-use reverb::{MAX_SIZE, MIN_SIZE};
+use reverb::{MAX_PREDELAY, MAX_SIZE, MIN_PREDELAY, MIN_SIZE};
 use std::sync::Arc;
 use vst::plugin::PluginParameters;
 mod formatters;
@@ -26,11 +26,11 @@ impl Default for ReverbParameters {
 
       predelay: FloatParam::new(
         "Predelay",
-        7.,
+        MIN_PREDELAY,
         1,
         FloatRange::Skewed {
-          min: 7.,
-          max: 500.,
+          min: MIN_PREDELAY,
+          max: MAX_PREDELAY,
           factor: 0.5,
         },
       )
