@@ -6,29 +6,12 @@ use vizia::{
   state::Binding,
   views::{Knob, Label},
 };
-use vst::{host::Host, prelude::HostCallback};
-
-fn notify_host_parameter_changed(val: f32, index: i32, host: Option<HostCallback>) {
-  match host {
-    Some(host) => {
-      host.begin_edit(index);
-      host.automate(index, val);
-      host.end_edit(index);
-    }
-    None => {}
-  }
-}
 
 pub struct ParamKnob {}
 
 impl ParamKnob {
-  pub fn new<F, C>(
-    cx: &mut Context,
-    param: &FloatParam,
-    params_to_param: F,
-    on_change: C,
-    host: Option<HostCallback>,
-  ) where
+  pub fn new<F, C>(cx: &mut Context, param: &FloatParam, params_to_param: F, on_change: C)
+  where
     F: 'static + Fn(&Arc<ReverbParameters>) -> &FloatParam + Copy,
     C: 'static + Fn(f32) -> ParamChangeEvent + Copy,
   {
@@ -44,7 +27,6 @@ impl ParamKnob {
       )
       .on_changing(move |cx, val| {
         cx.emit(on_change(val));
-        notify_host_parameter_changed(val, index, host);
       });
 
       Label::new(

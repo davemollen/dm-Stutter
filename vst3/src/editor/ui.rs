@@ -12,6 +12,8 @@ use vizia::{
 };
 mod param_knob;
 use param_knob::ParamKnob;
+mod param_checkbox;
+use param_checkbox::ParamCheckbox;
 mod ui_data;
 pub use ui_data::{ParamChangeEvent, UiData};
 
@@ -32,7 +34,7 @@ pub fn plugin_gui(
 
   HStack::new(cx, |cx| {
     VStack::new(cx, |cx| {
-      ParamKnob::new(cx, params.reverse.as_ptr(), |params| &params.reverse);
+      ParamCheckbox::new(cx, params.reverse.as_ptr(), |params| &params.reverse);
     })
     .child_space(Stretch(0.5))
     .row_between(Pixels(10.0));

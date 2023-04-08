@@ -35,6 +35,10 @@ impl BoolParam {
 impl Params for BoolParam {
   type Plain = bool;
 
+  fn get_index(&self) -> i32 {
+    self.index
+  }
+
   fn get_value(&self) -> Self::Plain {
     self.value.load(Ordering::Relaxed)
   }
@@ -43,8 +47,8 @@ impl Params for BoolParam {
     self.convert_bool_to_float(self.get_value())
   }
 
-  fn set_plain_value(&self, value: f32) {
-    self.value.store(value == 1., Ordering::Relaxed);
+  fn set_plain_value(&self, value: Self::Plain) {
+    self.value.store(value, Ordering::Relaxed);
   }
 
   fn get_display_value(&self, _: bool) -> String {

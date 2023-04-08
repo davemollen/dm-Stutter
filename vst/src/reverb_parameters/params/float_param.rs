@@ -36,6 +36,10 @@ impl FloatParam {
 impl Params for FloatParam {
   type Plain = f32;
 
+  fn get_index(&self) -> i32 {
+    self.index
+  }
+
   fn get_value(&self) -> f32 {
     self.value.get()
   }
@@ -44,7 +48,7 @@ impl Params for FloatParam {
     self.range.normalize(self.get_value())
   }
 
-  fn set_plain_value(&self, value: f32) {
+  fn set_plain_value(&self, value: Self::Plain) {
     let plain_value = self.range.unnormalize(value);
     self.value.set(plain_value);
   }

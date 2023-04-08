@@ -13,3 +13,7 @@ reverb = { path = "../reverb" }
 
 [lib]
 crate-type = ["cdylib"]
+
+[[bin]]
+name = "dm_reverb_gui"
+path = "src/bin.rs"
