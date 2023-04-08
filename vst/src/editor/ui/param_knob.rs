@@ -15,7 +15,6 @@ impl ParamKnob {
     F: 'static + Fn(&Arc<ReverbParameters>) -> &FloatParam + Copy,
     C: 'static + Fn(f32) -> ParamChangeEvent + Copy,
   {
-    let index = param.index;
     Label::new(cx, param.name);
 
     Binding::new(cx, UiData::params, move |cx, params| {

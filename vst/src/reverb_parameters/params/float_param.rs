@@ -53,6 +53,10 @@ impl Params for FloatParam {
     self.value.set(plain_value);
   }
 
+  fn set_normalized_value(&self, value: f32) {
+    self.value.set(value);
+  }
+
   fn get_display_value(&self, include_unit: bool) -> String {
     let value = self.get_value();
     match (&self.value_to_string, include_unit) {

@@ -67,21 +67,21 @@ impl Default for ReverbParameters {
         .with_unit("%")
         .with_value_to_string(Arc::new(move |value| format!("{:.2}", value * 200. - 100.))),
 
-      shimmer: FloatParam::new("Shimmer", 0., 5, FloatRange::Linear { min: 0., max: 1. })
+      absorb: FloatParam::new("Absorb", 0.5, 5, FloatRange::Linear { min: 0., max: 1. })
         .with_unit("%")
         .with_value_to_string(formatters::v2s_f32_percentage(2)),
 
-      absorb: FloatParam::new("Absorb", 0.5, 6, FloatRange::Linear { min: 0., max: 1. })
+      decay: FloatParam::new("Decay", 0.9, 6, FloatRange::Linear { min: 0., max: 1.2 })
         .with_unit("%")
         .with_value_to_string(formatters::v2s_f32_percentage(2)),
 
-      decay: FloatParam::new("Decay", 0.9, 7, FloatRange::Linear { min: 0., max: 1.2 })
-        .with_unit("%")
-        .with_value_to_string(formatters::v2s_f32_percentage(2)),
-
-      tilt: FloatParam::new("Tilt", 0.5, 8, FloatRange::Linear { min: 0., max: 1. })
+      tilt: FloatParam::new("Tilt", 0.5, 7, FloatRange::Linear { min: 0., max: 1. })
         .with_unit("%")
         .with_value_to_string(Arc::new(move |value| format!("{:.2}", value * 200. - 100.))),
+
+      shimmer: FloatParam::new("Shimmer", 0., 8, FloatRange::Linear { min: 0., max: 1. })
+        .with_unit("%")
+        .with_value_to_string(formatters::v2s_f32_percentage(2)),
 
       mix: FloatParam::new("Mix", 0.5, 9, FloatRange::Linear { min: 0., max: 1. })
         .with_unit("%")
@@ -142,7 +142,7 @@ impl PluginParameters for ReverbParameters {
 
   fn set_parameter(&self, index: i32, val: f32) {
     match index {
-      0 => self.reverse.set_plain_value(val),
+      0 => self.reverse.set_normalized_value(val),
       1 => self.predelay.set_plain_value(val),
       2 => self.size.set_plain_value(val),
       3 => self.speed.set_plain_value(val),

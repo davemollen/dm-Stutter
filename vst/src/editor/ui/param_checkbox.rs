@@ -15,7 +15,6 @@ impl ParamCheckbox {
     F: 'static + Fn(&Arc<ReverbParameters>) -> &BoolParam + Copy + Send + Sync,
     C: 'static + Fn(bool) -> ParamChangeEvent + Copy + Send + Sync,
   {
-    let index = param.index;
     let name = param.name;
 
     Binding::new(cx, UiData::params, move |cx, params| {

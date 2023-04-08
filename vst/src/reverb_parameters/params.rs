@@ -11,6 +11,7 @@ pub trait Params {
   fn get_value(&self) -> Self::Plain;
   fn get_normalized_value(&self) -> f32;
   fn set_plain_value(&self, value: Self::Plain);
+  fn set_normalized_value(&self, value: f32);
   fn get_display_value(&self, include_unit: bool) -> String;
   fn get_default_normalized_value(&self) -> f32;
   fn with_value_to_string(self, callback: Arc<dyn Fn(Self::Plain) -> String + Send + Sync>)

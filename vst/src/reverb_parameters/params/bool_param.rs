@@ -30,6 +30,10 @@ impl BoolParam {
       0.
     }
   }
+
+  pub fn convert_float_to_bool(&self, value: f32) -> bool {
+    value > 0.5
+  }
 }
 
 impl Params for BoolParam {
@@ -49,6 +53,12 @@ impl Params for BoolParam {
 
   fn set_plain_value(&self, value: Self::Plain) {
     self.value.store(value, Ordering::Relaxed);
+  }
+
+  fn set_normalized_value(&self, value: f32) {
+    self
+      .value
+      .store(self.convert_float_to_bool(value), Ordering::Relaxed);
   }
 
   fn get_display_value(&self, _: bool) -> String {

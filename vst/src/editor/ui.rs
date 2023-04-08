@@ -37,7 +37,7 @@ pub fn plugin_gui(cx: &mut Context, params: Arc<ReverbParameters>, host: Option<
         |val| ParamChangeEvent::SetReverse(val),
       );
     })
-    .child_space(Stretch(0.0))
+    .child_space(Stretch(0.5))
     .row_between(Pixels(10.0));
 
     VStack::new(cx, |cx| {
@@ -118,17 +118,6 @@ pub fn plugin_gui(cx: &mut Context, params: Arc<ReverbParameters>, host: Option<
     })
     .child_space(Stretch(1.0))
     .child_top(Stretch(0.1))
-    .row_between(Pixels(10.0));
-
-    VStack::new(cx, |cx| {
-      ParamKnob::new(
-        cx,
-        &params.shimmer,
-        |params| &params.shimmer,
-        |val| ParamChangeEvent::SetSize(val),
-      );
-    })
-    .child_top(Pixels(10.0))
     .row_between(Pixels(10.0));
   })
   .background_color(Color::rgb(80, 80, 80));
