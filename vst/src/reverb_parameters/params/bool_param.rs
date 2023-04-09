@@ -10,6 +10,7 @@ pub struct BoolParam {
   pub default: bool,
   pub index: i32,
   pub value_to_string: Option<Arc<dyn Fn(bool) -> String + Send + Sync>>,
+  pub string_to_value: Option<Arc<dyn Fn(&str) -> Option<bool> + Send + Sync>>,
 }
 
 impl BoolParam {
@@ -20,19 +21,8 @@ impl BoolParam {
       default,
       index,
       value_to_string: None,
+      string_to_value: None,
     }
-  }
-
-  pub fn convert_bool_to_float(&self, value: bool) -> f32 {
-    if value {
-      1.
-    } else {
-      0.
-    }
-  }
-
-  pub fn convert_float_to_bool(&self, value: f32) -> bool {
-    value > 0.5
   }
 }
 
@@ -48,7 +38,19 @@ impl Params for BoolParam {
   }
 
   fn get_normalized_value(&self) -> f32 {
-    self.convert_bool_to_float(self.get_value())
+    self.preview_normalized_value(self.get_value())
+  }
+
+  fn preview_value(&self, value: f32) -> Self::Plain {
+    value > 0.5
+  }
+
+  fn preview_normalized_value(&self, value: Self::Plain) -> f32 {
+    if value {
+      1.
+    } else {
+      0.
+    }
   }
 
   fn set_plain_value(&self, value: Self::Plain) {
@@ -58,7 +60,7 @@ impl Params for BoolParam {
   fn set_normalized_value(&self, value: f32) {
     self
       .value
-      .store(self.convert_float_to_bool(value), Ordering::Relaxed);
+      .store(self.preview_value(value), Ordering::Relaxed);
   }
 
   fn get_display_value(&self, _: bool) -> String {
@@ -71,7 +73,16 @@ impl Params for BoolParam {
   }
 
   fn get_default_normalized_value(&self) -> f32 {
-    self.convert_bool_to_float(self.default)
+    self.preview_normalized_value(self.default)
+  }
+
+  fn string_to_normalized_value(&self, string: &str) -> Option<f32> {
+    let value = match &self.string_to_value {
+      Some(f) => f(string),
+      None => Some(string == ("On".to_string())),
+    }?;
+
+    Some(self.preview_normalized_value(value))
   }
 
   fn with_value_to_string(
@@ -79,6 +90,14 @@ impl Params for BoolParam {
     callback: Arc<dyn Fn(Self::Plain) -> String + Send + Sync>,
   ) -> Self {
     self.value_to_string = Some(callback);
+    self
+  }
+
+  fn with_string_to_value(
+    mut self,
+    callback: Arc<dyn Fn(&str) -> Option<Self::Plain> + Send + Sync>,
+  ) -> Self {
+    self.string_to_value = Some(callback);
     self
   }
 }

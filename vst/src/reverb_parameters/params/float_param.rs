@@ -12,6 +12,7 @@ pub struct FloatParam {
   pub range: FloatRange,
   pub unit: &'static str,
   pub value_to_string: Option<Arc<dyn Fn(f32) -> String + Send + Sync>>,
+  pub string_to_value: Option<Arc<dyn Fn(&str) -> Option<f32> + Send + Sync>>,
 }
 
 impl FloatParam {
@@ -24,6 +25,7 @@ impl FloatParam {
       range,
       unit: "",
       value_to_string: None,
+      string_to_value: None,
     }
   }
 
@@ -48,13 +50,22 @@ impl Params for FloatParam {
     self.range.normalize(self.get_value())
   }
 
+  fn preview_value(&self, value: Self::Plain) -> f32 {
+    self.range.unnormalize(value)
+  }
+
+  fn preview_normalized_value(&self, value: Self::Plain) -> f32 {
+    self.range.normalize(value)
+  }
+
   fn set_plain_value(&self, value: Self::Plain) {
     let plain_value = self.range.unnormalize(value);
     self.value.set(plain_value);
   }
 
   fn set_normalized_value(&self, value: f32) {
-    self.value.set(value);
+    let normalized_value = self.preview_normalized_value(value);
+    self.value.set(normalized_value);
   }
 
   fn get_display_value(&self, include_unit: bool) -> String {
@@ -71,11 +82,28 @@ impl Params for FloatParam {
     self.range.normalize(self.default)
   }
 
+  fn string_to_normalized_value(&self, string: &str) -> Option<f32> {
+    let value = match &self.string_to_value {
+      Some(f) => f(string),
+      None => string.trim().trim_end_matches(self.unit).parse().ok(),
+    }?;
+
+    Some(self.preview_normalized_value(value))
+  }
+
   fn with_value_to_string(
     mut self,
     callback: Arc<dyn Fn(Self::Plain) -> String + Send + Sync>,
   ) -> Self {
     self.value_to_string = Some(callback);
+    self
+  }
+
+  fn with_string_to_value(
+    mut self,
+    callback: Arc<dyn Fn(&str) -> Option<Self::Plain> + Send + Sync>,
+  ) -> Self {
+    self.string_to_value = Some(callback);
     self
   }
 }

@@ -42,7 +42,11 @@ impl Model for UiData {
       ParamChangeEvent::SetReverse(value) => {
         let param = &self.params.reverse;
         param.set_plain_value(*value);
-        notify_host_parameter_changed(param.index, param.convert_bool_to_float(*value), self.host);
+        notify_host_parameter_changed(
+          param.index,
+          param.preview_normalized_value(*value),
+          self.host,
+        );
       }
       ParamChangeEvent::SetPredelay(value) => {
         let param = &self.params.predelay;
