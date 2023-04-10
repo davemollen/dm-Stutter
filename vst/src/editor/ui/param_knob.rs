@@ -1,24 +1,31 @@
-use super::{ParamChangeEvent, UiData};
-use crate::reverb_parameters::{FloatParam, Params, ReverbParameters};
-use std::sync::Arc;
+use crate::reverb_parameters::{FloatParam, Params};
+use std::any::Any;
 use vizia::{
   prelude::{ActionModifiers, Context, EmitContext, LensExt, StyleModifiers},
-  state::Binding,
+  state::{Binding, Data, Lens},
   views::{Knob, Label, TextEvent, Textbox},
 };
 
-// TODO: make &Arc<ReverbParameters> a generic type so this can be reused
 pub struct ParamKnob {}
 
 impl ParamKnob {
-  pub fn new<F, C>(cx: &mut Context, param: &FloatParam, params_to_param: F, on_change: C)
-  where
-    F: 'static + Fn(&Arc<ReverbParameters>) -> &FloatParam + Copy + Send + Sync,
-    C: 'static + Fn(f32) -> ParamChangeEvent + Copy + Send + Sync,
+  pub fn new<L, F, M, C>(
+    cx: &mut Context,
+    lens: L,
+    param: &FloatParam,
+    params_to_param: F,
+    on_change: C,
+  ) where
+    L: 'static + Lens + Copy + Send + Sync,
+    <L as Lens>::Source: 'static,
+    <L as Lens>::Target: Data,
+    F: 'static + Fn(&<L as Lens>::Target) -> &FloatParam + Copy + Send + Sync,
+    M: Any + Send,
+    C: 'static + Fn(f32) -> M + Copy + Send + Sync,
   {
     Label::new(cx, param.name);
 
-    Binding::new(cx, UiData::params, move |cx, params| {
+    Binding::new(cx, lens, move |cx, params| {
       Knob::new(
         cx,
         params.map(move |params| params_to_param(params).get_default_normalized_value()),

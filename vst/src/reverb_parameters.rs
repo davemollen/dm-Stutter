@@ -34,7 +34,8 @@ impl Default for ReverbParameters {
           factor: 0.5,
         },
       )
-      .with_unit(" ms"),
+      .with_unit(" ms")
+      .with_value_to_string(v2s_f32_digits(2)),
 
       size: FloatParam::new(
         "Size",

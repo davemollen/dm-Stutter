@@ -1,26 +1,32 @@
-use std::sync::Arc;
-
-use crate::reverb_parameters::ReverbParameters;
-
-use super::{ParamChangeEvent, UiData};
 use nih_plug::prelude::{Param, ParamPtr};
+use std::any::Any;
 use vizia::{
   prelude::{ActionModifiers, Context, EmitContext, LensExt, StyleModifiers},
-  state::Binding,
+  state::{Binding, Data, Lens},
   views::{Knob, Label, TextEvent, Textbox},
 };
 
 pub struct ParamKnob {}
 
 impl ParamKnob {
-  pub fn new<P, F>(cx: &mut Context, param_ptr: ParamPtr, params_to_param: F)
-  where
+  pub fn new<L, P, F, M, C>(
+    cx: &mut Context,
+    lens: L,
+    param_ptr: ParamPtr,
+    params_to_param: F,
+    on_change: C,
+  ) where
+    L: 'static + Lens + Copy + Send + Sync,
+    <L as Lens>::Source: 'static,
+    <L as Lens>::Target: Data,
     P: Param,
-    F: 'static + Fn(&Arc<ReverbParameters>) -> &P + Copy + Send + Sync,
+    F: 'static + Fn(&<L as Lens>::Target) -> &P + Copy + Send + Sync,
+    M: Any + Send,
+    C: 'static + Fn(ParamPtr, f32) -> M + Copy + Send + Sync,
   {
     Label::new(cx, unsafe { param_ptr.name() });
 
-    Binding::new(cx, UiData::params, move |cx, params| {
+    Binding::new(cx, lens, move |cx, params| {
       Knob::new(
         cx,
         params.map(move |params| params_to_param(params).default_normalized_value()),
@@ -31,7 +37,7 @@ impl ParamKnob {
         false,
       )
       .on_changing(move |cx, val| {
-        cx.emit(ParamChangeEvent::SetParam(param_ptr, val));
+        cx.emit(on_change(param_ptr, val));
       });
 
       Textbox::new(
@@ -50,7 +56,7 @@ impl ParamKnob {
           let normalized_value =
             params.map(move |params| params_to_param(params).string_to_normalized_value(&text));
           match normalized_value.get(cx) {
-            Some(val) => cx.emit(ParamChangeEvent::SetParam(param_ptr, val)),
+            Some(val) => cx.emit(on_change(param_ptr, val)),
             _ => (),
           };
         }

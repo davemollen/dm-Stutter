@@ -32,6 +32,7 @@ pub fn plugin_gui(cx: &mut Context, params: Arc<ReverbParameters>, host: Option<
     VStack::new(cx, |cx| {
       ParamCheckbox::new(
         cx,
+        UiData::params,
         &params.reverse,
         |params| &params.reverse,
         |val| ParamChangeEvent::SetReverse(val),
@@ -43,12 +44,14 @@ pub fn plugin_gui(cx: &mut Context, params: Arc<ReverbParameters>, host: Option<
     VStack::new(cx, |cx| {
       ParamKnob::new(
         cx,
+        UiData::params,
         &params.predelay,
         |params| &params.predelay,
         |val| ParamChangeEvent::SetPredelay(val),
       );
       ParamKnob::new(
         cx,
+        UiData::params,
         &params.size,
         |params| &params.size,
         |val| ParamChangeEvent::SetSize(val),
@@ -60,12 +63,14 @@ pub fn plugin_gui(cx: &mut Context, params: Arc<ReverbParameters>, host: Option<
     VStack::new(cx, |cx| {
       ParamKnob::new(
         cx,
+        UiData::params,
         &params.speed,
         |params| &params.speed,
         |val| ParamChangeEvent::SetSpeed(val),
       );
       ParamKnob::new(
         cx,
+        UiData::params,
         &params.depth,
         |params| &params.depth,
         |val| ParamChangeEvent::SetDepth(val),
@@ -77,12 +82,14 @@ pub fn plugin_gui(cx: &mut Context, params: Arc<ReverbParameters>, host: Option<
     VStack::new(cx, |cx| {
       ParamKnob::new(
         cx,
+        UiData::params,
         &params.absorb,
         |params| &params.absorb,
         |val| ParamChangeEvent::SetAbsorb(val),
       );
       ParamKnob::new(
         cx,
+        UiData::params,
         &params.decay,
         |params| &params.decay,
         |val| ParamChangeEvent::SetDecay(val),
@@ -94,12 +101,14 @@ pub fn plugin_gui(cx: &mut Context, params: Arc<ReverbParameters>, host: Option<
     VStack::new(cx, |cx| {
       ParamKnob::new(
         cx,
+        UiData::params,
         &params.tilt,
         |params| &params.tilt,
         |val| ParamChangeEvent::SetTilt(val),
       );
       ParamKnob::new(
         cx,
+        UiData::params,
         &params.shimmer,
         |params| &params.shimmer,
         |val| ParamChangeEvent::SetShimmer(val),
@@ -111,6 +120,7 @@ pub fn plugin_gui(cx: &mut Context, params: Arc<ReverbParameters>, host: Option<
     VStack::new(cx, |cx| {
       ParamKnob::new(
         cx,
+        UiData::params,
         &params.mix,
         |params| &params.mix,
         |val| ParamChangeEvent::SetMix(val),
