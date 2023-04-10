@@ -49,7 +49,7 @@ impl Taps {
         ),
       ],
       lfo_phasor: Phasor::new(sample_rate),
-      average: Average::new(500),
+      average: Average::new(1000),
       average_result: 0.,
       smooth_saturation_gain: OnePoleFilter::new(sample_rate),
     }
