@@ -1,6 +1,6 @@
 label {
-  font-size: 16px;
-  color: #C2C2C2;
+  font-size: 14px;
+  color: #c2c2c2;
 }
 
 knob {
@@ -10,4 +10,32 @@ knob {
 
 knob .track {
   background-color: #ffb74d;
+}
+
+textbox {
+  font-size: 14px;
+  width: 72px;
+  color: #c2c2c2;
+  background-color: transparent;
+  border-width: 0px;
+  outline-color: none;
+}
+
+textbox:focus {
+  background-color: #6d6d6d;
+  border-width: 0px;
+  outline-color: none;
+}
+
+textbox:hover {
+  background-color: transparent;
+  border-width: 0px;
+  outline-color: none;
+}
+
+textbox:focus,
+textbox:hover {
+  background-color: #6d6d6d;
+  border-width: 0px;
+  outline-color: none;
 }

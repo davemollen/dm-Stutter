@@ -2,7 +2,7 @@ use reverb::{MAX_PREDELAY, MAX_SIZE, MIN_PREDELAY, MIN_SIZE};
 use std::sync::Arc;
 use vst::plugin::PluginParameters;
 mod formatters;
-use formatters::v2s_f32_digits;
+use formatters::{s2v_f32_percentage, v2s_f32_digits, v2s_f32_percentage};
 mod params;
 pub use params::{BoolParam, FloatParam, FloatRange, Params};
 
@@ -34,8 +34,7 @@ impl Default for ReverbParameters {
           factor: 0.5,
         },
       )
-      .with_unit("ms")
-      .with_value_to_string(v2s_f32_digits(2)),
+      .with_unit(" ms"),
 
       size: FloatParam::new(
         "Size",
@@ -47,7 +46,7 @@ impl Default for ReverbParameters {
           factor: 0.333333,
         },
       )
-      .with_unit("m2")
+      .with_unit(" m2")
       .with_value_to_string(v2s_f32_digits(2)),
 
       speed: FloatParam::new(
@@ -60,32 +59,50 @@ impl Default for ReverbParameters {
           factor: 0.333333,
         },
       )
-      .with_unit("Hz")
+      .with_unit(" Hz")
       .with_value_to_string(v2s_f32_digits(2)),
 
       depth: FloatParam::new("Depth", 0.375, 4, FloatRange::Linear { min: 0., max: 1. })
-        .with_unit("%")
-        .with_value_to_string(Arc::new(move |value| format!("{:.2}", value * 200. - 100.))),
+        .with_unit(" %")
+        .with_value_to_string(Arc::new(move |value| format!("{:.2}", value * 200. - 100.)))
+        .with_string_to_value(Arc::new(|string| {
+          string
+            .trim_end_matches(&[' ', '%'])
+            .parse()
+            .ok()
+            .map(|x: f32| (x + 100.) / 200.0)
+        })),
 
       absorb: FloatParam::new("Absorb", 0.5, 5, FloatRange::Linear { min: 0., max: 1. })
-        .with_unit("%")
-        .with_value_to_string(formatters::v2s_f32_percentage(2)),
+        .with_unit(" %")
+        .with_value_to_string(v2s_f32_percentage(2))
+        .with_string_to_value(s2v_f32_percentage()),
 
       decay: FloatParam::new("Decay", 0.9, 6, FloatRange::Linear { min: 0., max: 1.2 })
-        .with_unit("%")
-        .with_value_to_string(formatters::v2s_f32_percentage(2)),
+        .with_unit(" %")
+        .with_value_to_string(v2s_f32_percentage(2))
+        .with_string_to_value(s2v_f32_percentage()),
 
       tilt: FloatParam::new("Tilt", 0.5, 7, FloatRange::Linear { min: 0., max: 1. })
-        .with_unit("%")
-        .with_value_to_string(Arc::new(move |value| format!("{:.2}", value * 200. - 100.))),
+        .with_unit(" %")
+        .with_value_to_string(Arc::new(move |value| format!("{:.2}", value * 200. - 100.)))
+        .with_string_to_value(Arc::new(|string| {
+          string
+            .trim_end_matches(&[' ', '%'])
+            .parse()
+            .ok()
+            .map(|x: f32| (x + 100.) / 200.0)
+        })),
 
       shimmer: FloatParam::new("Shimmer", 0., 8, FloatRange::Linear { min: 0., max: 1. })
-        .with_unit("%")
-        .with_value_to_string(formatters::v2s_f32_percentage(2)),
+        .with_unit(" %")
+        .with_value_to_string(v2s_f32_percentage(2))
+        .with_string_to_value(s2v_f32_percentage()),
 
       mix: FloatParam::new("Mix", 0.5, 9, FloatRange::Linear { min: 0., max: 1. })
-        .with_unit("%")
-        .with_value_to_string(formatters::v2s_f32_percentage(2)),
+        .with_unit(" %")
+        .with_value_to_string(v2s_f32_percentage(2))
+        .with_string_to_value(s2v_f32_percentage()),
     }
   }
 }

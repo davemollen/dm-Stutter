@@ -5,9 +5,9 @@ use crate::reverb_parameters::ReverbParameters;
 use super::{ParamChangeEvent, UiData};
 use nih_plug::prelude::{Param, ParamPtr};
 use vizia::{
-  prelude::{Context, EmitContext, LensExt},
+  prelude::{ActionModifiers, Context, EmitContext, LensExt, StyleModifiers},
   state::Binding,
-  views::{Knob, Label},
+  views::{Knob, Label, TextEvent, Textbox},
 };
 
 pub struct ParamKnob {}
@@ -16,7 +16,7 @@ impl ParamKnob {
   pub fn new<P, F>(cx: &mut Context, param_ptr: ParamPtr, params_to_param: F)
   where
     P: Param,
-    F: 'static + Fn(&Arc<ReverbParameters>) -> &P + Copy,
+    F: 'static + Fn(&Arc<ReverbParameters>) -> &P + Copy + Send + Sync,
   {
     Label::new(cx, unsafe { param_ptr.name() });
 
@@ -34,13 +34,28 @@ impl ParamKnob {
         cx.emit(ParamChangeEvent::SetParam(param_ptr, val));
       });
 
-      Label::new(
+      Textbox::new(
         cx,
         params.map(move |params| {
           params_to_param(params)
             .normalized_value_to_string(params_to_param(params).modulated_normalized_value(), true)
         }),
-      );
+      )
+      .on_mouse_down(|cx, _| {
+        cx.emit(TextEvent::StartEdit);
+        cx.emit(TextEvent::ResetText("".to_string()));
+      })
+      .on_submit(move |cx, text, success| {
+        if success {
+          let normalized_value =
+            params.map(move |params| params_to_param(params).string_to_normalized_value(&text));
+          match normalized_value.get(cx) {
+            Some(val) => cx.emit(ParamChangeEvent::SetParam(param_ptr, val)),
+            _ => (),
+          };
+        }
+      })
+      .class("align_center");
     })
   }
 }

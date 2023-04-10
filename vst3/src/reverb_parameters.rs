@@ -1,5 +1,5 @@
 use nih_plug::{
-  formatters,
+  formatters::{s2v_f32_percentage, v2s_f32_percentage},
   prelude::{BoolParam, FloatParam, FloatRange, Params},
 };
 use reverb::{MAX_PREDELAY, MAX_SIZE, MIN_PREDELAY, MIN_SIZE};
@@ -53,7 +53,7 @@ impl Default for ReverbParameters {
           factor: 0.5,
         },
       )
-      .with_unit("ms")
+      .with_unit(" ms")
       .with_value_to_string(v2s_f32_digits(2)),
 
       size: FloatParam::new(
@@ -65,7 +65,7 @@ impl Default for ReverbParameters {
           factor: 0.333333,
         },
       )
-      .with_unit("m2")
+      .with_unit(" m2")
       .with_value_to_string(v2s_f32_digits(2)),
 
       speed: FloatParam::new(
@@ -77,32 +77,38 @@ impl Default for ReverbParameters {
           factor: 0.333333,
         },
       )
-      .with_unit("Hz")
+      .with_unit(" Hz")
       .with_value_to_string(v2s_f32_digits(2)),
 
       depth: FloatParam::new("Depth", -0.25, FloatRange::Linear { min: -1., max: 1. })
-        .with_unit("%")
-        .with_value_to_string(formatters::v2s_f32_percentage(2)),
+        .with_unit(" %")
+        .with_value_to_string(v2s_f32_percentage(2))
+        .with_string_to_value(s2v_f32_percentage()),
 
       absorb: FloatParam::new("Absorb", 0.5, FloatRange::Linear { min: 0., max: 1. })
-        .with_unit("%")
-        .with_value_to_string(formatters::v2s_f32_percentage(2)),
+        .with_unit(" %")
+        .with_value_to_string(v2s_f32_percentage(2))
+        .with_string_to_value(s2v_f32_percentage()),
 
       decay: FloatParam::new("Decay", 0.9, FloatRange::Linear { min: 0., max: 1.2 })
-        .with_unit("%")
-        .with_value_to_string(formatters::v2s_f32_percentage(2)),
+        .with_unit(" %")
+        .with_value_to_string(v2s_f32_percentage(2))
+        .with_string_to_value(s2v_f32_percentage()),
 
       tilt: FloatParam::new("Tilt", 0., FloatRange::Linear { min: -1., max: 1. })
-        .with_unit("%")
-        .with_value_to_string(formatters::v2s_f32_percentage(2)),
+        .with_unit(" %")
+        .with_value_to_string(v2s_f32_percentage(2))
+        .with_string_to_value(s2v_f32_percentage()),
 
       shimmer: FloatParam::new("Shimmer", 0., FloatRange::Linear { min: 0., max: 1. })
-        .with_unit("%")
-        .with_value_to_string(formatters::v2s_f32_percentage(2)),
+        .with_unit(" %")
+        .with_value_to_string(v2s_f32_percentage(2))
+        .with_string_to_value(s2v_f32_percentage()),
 
       mix: FloatParam::new("Mix", 0.5, FloatRange::Linear { min: 0., max: 1. })
-        .with_unit("%")
-        .with_value_to_string(formatters::v2s_f32_percentage(2)),
+        .with_unit(" %")
+        .with_value_to_string(v2s_f32_percentage(2))
+        .with_string_to_value(s2v_f32_percentage()),
     }
   }
 }
