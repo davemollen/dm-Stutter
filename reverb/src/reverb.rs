@@ -1,5 +1,6 @@
 use crate::{
   delay_line::{DelayLine, Interpolation},
+  float_ext::FloatExt,
   mix::Mix,
   one_pole_filter::{Mode, OnePoleFilter},
   reverse::Reverse,
@@ -15,11 +16,14 @@ pub struct Reverb {
   shimmer: Shimmer,
   taps: Taps,
   tilt_filter: TiltFilter,
+  smooth_reverse: OnePoleFilter,
   smooth_predelay: OnePoleFilter,
   smooth_size: OnePoleFilter,
   smooth_depth: OnePoleFilter,
   smooth_absorb: OnePoleFilter,
   smooth_tilt: OnePoleFilter,
+  smooth_shimmer: OnePoleFilter,
+  smooth_mix: OnePoleFilter,
 }
 
 impl Reverb {
@@ -33,11 +37,14 @@ impl Reverb {
       shimmer: Shimmer::new(sample_rate),
       taps: Taps::new(sample_rate),
       tilt_filter: TiltFilter::new(sample_rate),
+      smooth_reverse: OnePoleFilter::new(sample_rate),
       smooth_predelay: OnePoleFilter::new(sample_rate),
       smooth_size: OnePoleFilter::new(sample_rate),
       smooth_depth: OnePoleFilter::new(sample_rate),
       smooth_absorb: OnePoleFilter::new(sample_rate),
       smooth_tilt: OnePoleFilter::new(sample_rate),
+      smooth_shimmer: OnePoleFilter::new(sample_rate),
+      smooth_mix: OnePoleFilter::new(sample_rate),
     }
   }
 
@@ -53,7 +60,10 @@ impl Reverb {
     tilt: f32,
     shimmer: f32,
     mix: f32,
-  ) -> (bool, f32, f32, f32, f32, f32, f32, f32, f32, f32, f32) {
+  ) -> (f32, f32, f32, f32, f32, f32, f32, f32, f32, f32, f32) {
+    let reverse = self
+      .smooth_reverse
+      .run(if reverse { 1. } else { 0. }, 12., Mode::Hertz);
     let predelay = self.smooth_predelay.run(predelay, 12., Mode::Hertz);
     let size = self.smooth_size.run(size, 12., Mode::Hertz);
     let depth = self.smooth_depth.run(
@@ -63,6 +73,8 @@ impl Reverb {
     );
     let absorb = self.smooth_absorb.run(absorb, 12., Mode::Hertz);
     let tilt = self.smooth_tilt.run(tilt, 12., Mode::Hertz);
+    let shimmer = self.smooth_shimmer.run(shimmer, 12., Mode::Hertz);
+    let mix = self.smooth_mix.run(mix, 12., Mode::Hertz);
     let decay = decay.powf(0.3333333);
     let diffuse = (absorb * 3.).min(1.) * 0.8;
     let absorb = (absorb - 0.3333333).max(0.) * 1.5;
@@ -72,11 +84,16 @@ impl Reverb {
     )
   }
 
-  fn get_predelay_output(&mut self, input: (f32, f32), time: f32, reverse: bool) -> f32 {
-    let predelay_output = if reverse {
+  fn get_predelay_output(&mut self, input: (f32, f32), time: f32, reverse: f32) -> f32 {
+    let predelay_output = if reverse == 0. {
+      self.predelay_tap.read(time, Interpolation::Linear)
+    } else if reverse == 1. {
       self.reverse.run(&mut self.predelay_tap, time)
     } else {
-      self.predelay_tap.read(time, Interpolation::Linear)
+      self
+        .predelay_tap
+        .read(time, Interpolation::Linear)
+        .mix(self.reverse.run(&mut self.predelay_tap, time), reverse)
     };
     self.predelay_tap.write((input.0 + input.1) * 0.5);
     predelay_output

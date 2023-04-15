@@ -1,6 +1,7 @@
 use crate::{
   delay_line::{DelayLine, Interpolation},
   delta::Delta,
+  float_ext::FloatExt,
   MAX_DEPTH,
 };
 use rand::random;
@@ -52,7 +53,7 @@ impl Grains {
 
   fn mix(&self, a: f32, b: f32, lfo_depth: f32, threshold: f32) -> f32 {
     let factor = lfo_depth / MAX_DEPTH * threshold.recip();
-    a * (1. - factor) + b * factor
+    a.mix(b, factor)
   }
 
   fn apply_grains(

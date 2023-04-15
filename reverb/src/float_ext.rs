@@ -3,6 +3,7 @@ use std::f32::consts::{FRAC_PI_2, PI};
 pub trait FloatExt {
   fn dbtoa(self) -> Self;
   fn scale(self, in_low: Self, in_high: Self, out_low: Self, out_high: Self) -> Self;
+  fn mix(self, right: f32, factor: f32) -> Self;
   fn fast_atan1(self) -> Self;
   fn fast_atan2(self) -> Self;
   fn fast_tanh1(self) -> Self;
@@ -26,6 +27,10 @@ impl FloatExt for f32 {
     let out_range = out_high - out_low;
     let normalized_value = (self - in_low) * in_scale;
     normalized_value * out_range + out_low
+  }
+
+  fn mix(self, right: f32, factor: f32) -> Self {
+    self * (1. - factor) + right * factor
   }
 
   /// This is an atan approximation
@@ -140,6 +145,13 @@ mod tests {
     assert_eq!((1f32).scale(1., 500., -6., -15.), -6.);
     assert_eq!((250f32).scale(1., 500., -6., -15.), -10.490982);
     assert_eq!((500f32).scale(1., 500., -6., -15.), -15.);
+  }
+
+  #[test]
+  fn mix() {
+    assert_eq!((1f32).mix(0., 0.), 1.);
+    assert_eq!((1f32).mix(0., 0.5), 0.5);
+    assert_eq!((1f32).mix(0., 1.), 0.);
   }
 
   #[test]

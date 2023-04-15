@@ -28,7 +28,7 @@ mod tests {
   }
 
   #[test]
-  fn mix() {
+  fn pan() {
     assert_approximately_eq(1f32.pan(-50.), (1., 0.));
     assert_approximately_eq(1f32.pan(50.), (0., 1.));
     assert_approximately_eq(1f32.pan(0.), (FRAC_1_SQRT_2, FRAC_1_SQRT_2));
