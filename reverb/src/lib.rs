@@ -1,9 +1,3 @@
-/*
-    TODO's:
-    - implement pitchshift on taps_output
-    - implement reverse on predelay
-*/
-
 include!(concat!(env!("OUT_DIR"), "/wave_table.rs"));
 mod allpass_filter;
 mod average;
