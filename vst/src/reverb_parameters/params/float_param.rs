@@ -42,7 +42,7 @@ impl Params for FloatParam {
     self.index
   }
 
-  fn get_value(&self) -> f32 {
+  fn get_value(&self) -> Self::Plain {
     self.value.get()
   }
 
@@ -50,7 +50,7 @@ impl Params for FloatParam {
     self.range.normalize(self.get_value())
   }
 
-  fn preview_value(&self, value: Self::Plain) -> f32 {
+  fn preview_value(&self, value: f32) -> Self::Plain {
     self.range.unnormalize(value)
   }
 
