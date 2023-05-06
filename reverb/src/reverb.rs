@@ -75,7 +75,6 @@ impl Reverb {
     let tilt = self.smooth_tilt.run(tilt, 12., Mode::Hertz);
     let shimmer = self.smooth_shimmer.run(shimmer, 12., Mode::Hertz);
     let mix = self.smooth_mix.run(mix, 12., Mode::Hertz);
-    let decay = decay.powf(0.3333333);
     let diffuse = (absorb * 3.).min(1.) * 0.8;
     let absorb = (absorb - 0.3333333).max(0.) * 1.5;
 
