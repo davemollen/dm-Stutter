@@ -7,6 +7,8 @@ use crate::{
   MAX_SIZE, MIN_SIZE,
 };
 
+const SATURATION_THRESHOLD: f32 = 0.5;
+
 pub struct Taps {
   taps: [Tap; 4],
   lfo_phasor: Phasor,
@@ -129,7 +131,11 @@ impl Taps {
   }
 
   fn get_saturation_gain(&mut self) -> f32 {
-    let saturation_gain = if self.average_result > 0.5 { 1. } else { 0. };
+    let saturation_gain = if self.average_result > SATURATION_THRESHOLD {
+      1.
+    } else {
+      0.
+    };
 
     self
       .smooth_saturation_gain
@@ -146,9 +152,13 @@ impl Taps {
     self.average_result = self
       .average
       .run(left_delay_network_out + right_delay_network_out);
+    let saturation_gain_compensation =
+      (1. + SATURATION_THRESHOLD - self.average_result).clamp(0.5, 1.);
 
-    let left_out = (left_delay_network_out + early_reflections_output.0) * 0.5;
-    let right_out = (right_delay_network_out + early_reflections_output.1) * 0.5;
+    let left_out =
+      (left_delay_network_out + early_reflections_output.0) * saturation_gain_compensation * 0.5;
+    let right_out =
+      (right_delay_network_out + early_reflections_output.1) * saturation_gain_compensation * 0.5;
     (left_out, right_out)
   }
 
