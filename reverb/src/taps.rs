@@ -76,7 +76,7 @@ impl Taps {
       .collect()
   }
 
-  fn apply_feedback_matrix<'a>(&self, inputs: &'a Vec<f32>) -> impl Iterator<Item = f32> + 'a {
+  fn apply_feedback_matrix(inputs: &Vec<f32>) -> impl Iterator<Item = f32> + '_ {
     [
       [1.0, -1.0, -1.0, 1.0],
       [1.0, 1.0, -1.0, -1.0],
@@ -106,10 +106,10 @@ impl Taps {
   //   }
   // }
 
-  fn process_and_write_taps<'a>(
-    &'a mut self,
+  fn process_and_write_taps(
+    &mut self,
     input: f32,
-    feedback_matrix_outputs: impl Iterator<Item = f32> + 'a,
+    feedback_matrix_outputs: impl Iterator<Item = f32>,
     diffuse: f32,
     absorb: f32,
     decay: f32,
@@ -174,7 +174,7 @@ impl Taps {
   ) -> (f32, f32) {
     let delay_network_outputs = self.read_from_delay_network(size, speed, depth);
     let early_reflections_outputs = self.read_early_reflections(size);
-    let feedback_matrix_outputs = self.apply_feedback_matrix(&delay_network_outputs);
+    let feedback_matrix_outputs = Self::apply_feedback_matrix(&delay_network_outputs);
     self.process_and_write_taps(input, feedback_matrix_outputs, diffuse, absorb, decay);
     self.get_stereo_output(delay_network_outputs, early_reflections_outputs)
   }
