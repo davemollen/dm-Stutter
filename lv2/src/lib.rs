@@ -48,12 +48,12 @@ impl Plugin for DmReverb {
     let predelay = *ports.predelay;
     let size = *ports.size;
     let speed = *ports.speed;
-    let depth = *ports.depth;
-    let absorb = *ports.absorb;
-    let decay = *ports.decay;
-    let tilt = *ports.tilt;
-    let shimmer = *ports.shimmer;
-    let mix = *ports.mix;
+    let depth = *ports.depth * 0.01;
+    let absorb = *ports.absorb * 0.01;
+    let decay = *ports.decay * 0.01;
+    let tilt = *ports.tilt * 0.01;
+    let shimmer = *ports.shimmer * 0.01;
+    let mix = *ports.mix * 0.01;
 
     let input_channels = ports
       .input_left
