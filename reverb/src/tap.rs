@@ -2,6 +2,7 @@ use crate::{
   allpass_filter::AllpassFilter,
   dc_block::DcBlock,
   delay_line::{DelayLine, Interpolation},
+  float_ext::FloatExt,
   grains::Grains,
   lfo::Lfo,
   one_pole_filter::{Mode, OnePoleFilter},
@@ -109,7 +110,7 @@ impl Tap {
 
   pub fn apply_saturation(&mut self, input: f32, decay: f32, saturation_gain: f32) -> f32 {
     let clean_gain = 1. - saturation_gain;
-    let saturation_out = input * clean_gain + input.atan() * saturation_gain;
+    let saturation_out = input * clean_gain + input.fast_atan2() * saturation_gain;
     self.dc_block.run(saturation_out * decay * 0.5)
   }
 
