@@ -65,7 +65,6 @@ impl Default for ReverbParameters {
           factor: 0.333333,
         },
       )
-      .with_unit(" m3")
       .with_value_to_string(v2s_f32_digits(2)),
 
       speed: FloatParam::new(

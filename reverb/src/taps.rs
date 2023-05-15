@@ -38,7 +38,7 @@ impl Taps {
         Tap::new(
           sample_rate,
           0.7372262773722628,
-          vec![(0., 0.841, 32.), (0.26, 0.794, -32.)],
+          vec![(0., 0.841, 32.), (0.113, 0.794, -32.)],
           13.083333333333332,
           0.5,
         ),
@@ -62,7 +62,7 @@ impl Taps {
       let early_reflections = tap.read_early_reflections(size);
       (sum.0 + early_reflections.0, sum.1 + early_reflections.1)
     });
-    let gain = size.scale(MIN_SIZE, MAX_SIZE, -6., -12.).dbtoa();
+    let gain = size.scale(MIN_SIZE, MAX_SIZE, -6., -15.).dbtoa();
 
     (early_reflections.0 * gain, early_reflections.1 * gain)
   }
