@@ -39,7 +39,7 @@ impl Default for ReverbParameters {
 
       size: FloatParam::new(
         "Size",
-        40.,
+        80.,
         2,
         FloatRange::Skewed {
           min: MIN_SIZE,

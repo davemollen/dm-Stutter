@@ -120,7 +120,7 @@ impl Reverb {
   fn apply_tilt_filter(&mut self, input: (f32, f32), tilt: f32) -> (f32, f32) {
     self
       .tilt_filter
-      .run(input, 520., 4000., 3.981072, 15.848932, tilt)
+      .run(input, 520., 4000., 6f32.dbtoa(), 12f32.dbtoa(), tilt)
   }
 
   pub fn run(

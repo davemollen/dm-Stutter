@@ -139,7 +139,7 @@ impl Taps {
 
     self
       .smooth_saturation_gain
-      .run(saturation_gain, 2.4, Mode::Hertz)
+      .run(saturation_gain, 1., Mode::Hertz)
   }
 
   fn get_stereo_output(
@@ -154,7 +154,6 @@ impl Taps {
       .run((left_delay_network_out + right_delay_network_out) * 0.5);
     let saturation_gain_compensation =
       (1. + SATURATION_THRESHOLD - self.average_result).clamp(0.7, 1.);
-    // let saturation_gain_compensation = 1.;
 
     let left_out =
       (left_delay_network_out + early_reflections_output.0) * saturation_gain_compensation * 0.5;
