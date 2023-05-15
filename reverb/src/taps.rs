@@ -7,7 +7,7 @@ use crate::{
   MAX_SIZE, MIN_SIZE,
 };
 
-const SATURATION_THRESHOLD: f32 = 0.5;
+const SATURATION_THRESHOLD: f32 = 0.25;
 
 pub struct Taps {
   taps: [Tap; 4],
@@ -24,34 +24,34 @@ impl Taps {
         Tap::new(
           sample_rate,
           0.34306569343065696,
-          vec![(0., 1., 0.), (0.226, 0.917, -8.)],
+          vec![(0., 1., 0.), (0.26, 0.917, -16.)],
           5.75,
           0.,
         ),
         Tap::new(
           sample_rate,
           0.48905109489051096,
-          vec![(0.453, 0.891, 8.)],
+          vec![(0.1496, 0.891, 16.)],
           9.416666666666668,
           0.25,
         ),
         Tap::new(
           sample_rate,
           0.7372262773722628,
-          vec![(0., 0.841, 16.), (0.113, 0.794, -16.)],
+          vec![(0., 0.841, 32.), (0.26, 0.794, -32.)],
           13.083333333333332,
           0.5,
         ),
         Tap::new(
           sample_rate,
           1.,
-          vec![(0., 0.75, -32.), (0.155, 0.7071, 32.)],
+          vec![(0.26, 0.75, -40.), (0.52, 0.7071, 40.)],
           14.916666666666666,
           0.75,
         ),
       ],
       lfo_phasor: Phasor::new(sample_rate),
-      average: Average::new(1000),
+      average: Average::new((sample_rate * 0.1) as usize),
       average_result: 0.,
       smooth_saturation_gain: OnePoleFilter::new(sample_rate),
     }
@@ -62,7 +62,7 @@ impl Taps {
       let early_reflections = tap.read_early_reflections(size);
       (sum.0 + early_reflections.0, sum.1 + early_reflections.1)
     });
-    let gain = size.scale(MIN_SIZE, MAX_SIZE, -6., -15.).dbtoa();
+    let gain = size.scale(MIN_SIZE, MAX_SIZE, -6., -12.).dbtoa();
 
     (early_reflections.0 * gain, early_reflections.1 * gain)
   }
@@ -139,7 +139,7 @@ impl Taps {
 
     self
       .smooth_saturation_gain
-      .run(saturation_gain, 7., Mode::Hertz)
+      .run(saturation_gain, 2.4, Mode::Hertz)
   }
 
   fn get_stereo_output(
@@ -151,9 +151,10 @@ impl Taps {
     let right_delay_network_out = inputs[1] + inputs[3];
     self.average_result = self
       .average
-      .run(left_delay_network_out + right_delay_network_out);
+      .run((left_delay_network_out + right_delay_network_out) * 0.5);
     let saturation_gain_compensation =
-      (1. + SATURATION_THRESHOLD - self.average_result).clamp(0.5, 1.);
+      (1. + SATURATION_THRESHOLD - self.average_result).clamp(0.7, 1.);
+    // let saturation_gain_compensation = 1.;
 
     let left_out =
       (left_delay_network_out + early_reflections_output.0) * saturation_gain_compensation * 0.5;
