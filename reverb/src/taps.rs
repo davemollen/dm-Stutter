@@ -1,15 +1,15 @@
 use crate::{
   average::Average,
-  float_ext::FloatExt,
+  early_reflections::EarlyReflections,
   one_pole_filter::{Mode, OnePoleFilter},
   phasor::Phasor,
   tap::Tap,
-  MAX_SIZE, MIN_SIZE,
 };
 
 const SATURATION_THRESHOLD: f32 = 0.25;
 
 pub struct Taps {
+  early_reflections: EarlyReflections,
   taps: [Tap; 4],
   lfo_phasor: Phasor,
   average: Average,
@@ -20,51 +20,18 @@ pub struct Taps {
 impl Taps {
   pub fn new(sample_rate: f32) -> Self {
     Self {
+      early_reflections: EarlyReflections::new(),
       taps: [
-        Tap::new(
-          sample_rate,
-          0.34306569343065696,
-          vec![(0., 1., 0.), (0.26, 0.917, -16.)],
-          5.75,
-          0.,
-        ),
-        Tap::new(
-          sample_rate,
-          0.48905109489051096,
-          vec![(0.1496, 0.891, 16.)],
-          9.416666666666668,
-          0.25,
-        ),
-        Tap::new(
-          sample_rate,
-          0.7372262773722628,
-          vec![(0., 0.841, 32.), (0.113, 0.794, -32.)],
-          13.083333333333332,
-          0.5,
-        ),
-        Tap::new(
-          sample_rate,
-          1.,
-          vec![(0.26, 0.75, -40.), (0.52, 0.7071, 40.)],
-          14.916666666666666,
-          0.75,
-        ),
+        Tap::new(sample_rate, 0.34306569343065696, 5.75, 0.),
+        Tap::new(sample_rate, 0.48905109489051096, 9.416666666666668, 0.25),
+        Tap::new(sample_rate, 0.7372262773722628, 13.083333333333332, 0.5),
+        Tap::new(sample_rate, 1., 14.916666666666666, 0.75),
       ],
       lfo_phasor: Phasor::new(sample_rate),
       average: Average::new((sample_rate * 0.1) as usize),
       average_result: 0.,
       smooth_saturation_gain: OnePoleFilter::new(sample_rate),
     }
-  }
-
-  fn read_early_reflections(&mut self, size: f32) -> (f32, f32) {
-    let early_reflections = self.taps.iter_mut().fold((0., 0.), |sum, tap| {
-      let early_reflections = tap.read_early_reflections(size);
-      (sum.0 + early_reflections.0, sum.1 + early_reflections.1)
-    });
-    let gain = size.scale(MIN_SIZE, MAX_SIZE, -6., -15.).dbtoa();
-
-    (early_reflections.0 * gain, early_reflections.1 * gain)
   }
 
   fn read_from_delay_network(&mut self, size: f32, speed: f32, depth: f32) -> Vec<f32> {
@@ -142,7 +109,7 @@ impl Taps {
       .run(saturation_gain, 1., Mode::Hertz)
   }
 
-  fn get_stereo_output(
+  fn mix_delay_network_and_reflections(
     &mut self,
     inputs: Vec<f32>,
     early_reflections_output: (f32, f32),
@@ -173,9 +140,9 @@ impl Taps {
     decay: f32,
   ) -> (f32, f32) {
     let delay_network_outputs = self.read_from_delay_network(size, speed, depth);
-    let early_reflections_outputs = self.read_early_reflections(size);
+    let early_reflections_outputs = self.early_reflections.run(size, &mut self.taps);
     let feedback_matrix_outputs = Self::apply_feedback_matrix(&delay_network_outputs);
     self.process_and_write_taps(input, feedback_matrix_outputs, diffuse, absorb, decay);
-    self.get_stereo_output(delay_network_outputs, early_reflections_outputs)
+    self.mix_delay_network_and_reflections(delay_network_outputs, early_reflections_outputs)
   }
 }
