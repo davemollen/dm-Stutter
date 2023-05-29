@@ -44,7 +44,7 @@ impl Plugin for DmReverb {
   // Process a chunk of audio. The audio ports are dereferenced to slices, which the plugin
   // iterates over.
   fn run(&mut self, ports: &mut Ports, _features: &mut (), _sample_count: u32) {
-    let reverse = *ports.reverse;
+    let reverse = if *ports.reverse == 1. { true } else { false };
     let predelay = *ports.predelay;
     let size = *ports.size;
     let speed = *ports.speed;
