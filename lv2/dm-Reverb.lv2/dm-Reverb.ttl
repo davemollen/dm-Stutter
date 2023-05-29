@@ -8,7 +8,7 @@
 @prefix mod:   <http://moddevices.com/ns/mod#> .
 
 <https://github.com/davemollen/dm-Reverb>
-	a lv2:Plugin , lv2:ReverbPlugin ;
+	a lv2:Plugin , lv2:ReverbPlugin , mod:ReverbPlugin;
 	lv2:project <http://lv2plug.in/ns/lv2> ;
 	doap:name "dm-Reverb" ;
 	doap:license <http://opensource.org/licenses/isc> ;
@@ -36,7 +36,7 @@ A reverb effect written in Rust.
 		lv2:index 1 ;
 		lv2:symbol "predelay" ;
 		lv2:name "Predelay" ;
-		lv2:portProperty epp:logarithmic ;
+		lv2:portProperty mod:tempoRelatedDynamicScalePoints ;
 		lv2:default 7.0 ;
 		lv2:minimum 7.0 ;
 		lv2:maximum 500.0 ;
@@ -110,7 +110,6 @@ A reverb effect written in Rust.
 		lv2:index 9 ;
 		lv2:symbol "mix" ;
 		lv2:name "Mix" ;
-		lv2:portProperty epp:logarithmic ;
 		lv2:default 50.0 ;
 		lv2:minimum 0.0 ;
 		lv2:maximum 100.0 ;
