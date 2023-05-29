@@ -59,6 +59,25 @@
         <div
           class="mod-knob-image"
           mod-role="input-control-port"
+          mod-port-symbol="absorb"
+        ></div>
+        <div class="mod-param-title">Absorb</div>
+      </div>
+      <div class="mod-knob">
+        <div
+          class="mod-knob-image"
+          mod-role="input-control-port"
+          mod-port-symbol="decay"
+        ></div>
+        <div class="mod-param-title">Decay</div>
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="mod-knob">
+        <div
+          class="mod-knob-image"
+          mod-role="input-control-port"
           mod-port-symbol="tilt"
         ></div>
         <div class="mod-param-title">Tilt</div>
@@ -95,8 +114,6 @@
       <div class="mod-plugin-name"><h1>{{label}}</h1></div>
     </div>
   </section>
-
-  <div class="swoosh" />
 
   <div class="mod-pedal-input">
     {{#effect.ports.audio.input}}

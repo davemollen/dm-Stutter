@@ -3,57 +3,44 @@
 @import url(/fonts/nexa/stylesheet.css);
 @import url(/fonts/questrial/stylesheet.css);
 
-section.reverse {
+.mod-pedal{{{cns}}} section.reverse {
     margin-left: 16px;
     margin-top: -64px;
     align-self: center;
 }
 
-section.knobs {
+.mod-pedal{{{cns}}} section.knobs {
     margin-top: -64px;
     margin-left: 24px;
     display: flex;
     flex-direction: row;
-    width: 232px;
-    flex-wrap: wrap;
+    width: 280px;
     gap: 20px;
     height: 120px;
     align-self: center;
 }
 
-section.output {
-    margin-left: 8px;
-    width: 112px;
+.mod-pedal{{{cns}}} section.output {
+    margin-left: 40px;
+    width: 100px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
 }
 
-.column {
+.mod-pedal{{{cns}}} .column {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
-.mod-knob.mix {
+.mod-pedal{{{cns}}} .mod-knob.mix {
     align-self: baseline;
 }
 
-.logo {
+.mod-pedal{{{cns}}} .logo {
     align-self: end;
-}
-
-.swoosh {
-    position: absolute;
-    bottom: -46px;
-    right: -224px;
-    background-color: #1b1b2180;
-    width: 420px;
-    height: 240px;
-    border-radius: 25%;
-    transform: skew(-29deg, -8deg) rotate(10deg);
-    filter: blur(16px);
 }
 
 /* = CONTAINER
@@ -66,15 +53,14 @@ section.output {
     background-image:url(/resources/assets/background.png{{{ns}}});
     background-position:center center;
     background-repeat:no-repeat;
-    background-size:496px 312px;
-    height:312px;
+    background-size:560px 320px;
+    height:320px;
     position:absolute;
-    width:496px;
+    width:560px;
     border-radius: 16px;
     display: flex;
     flex-direction: row;
     color: white;
-    overflow: hidden;
 }
 
 /* PORTS
