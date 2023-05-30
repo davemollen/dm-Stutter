@@ -3,30 +3,24 @@
 @import url(/fonts/nexa/stylesheet.css);
 @import url(/fonts/questrial/stylesheet.css);
 
-.mod-pedal{{{cns}}} section.reverse {
-    margin-left: 16px;
-    margin-top: -64px;
-    align-self: center;
+.mod-pedal{{{cns}}} .knobs-container {
+    display: flex;
+    flex-direction: row;
+    margin: 16px;
+    margin-bottom: 0px;
+    gap: 16px;
+    height: 224px;
+    align-items: center;
 }
 
 .mod-pedal{{{cns}}} section.knobs {
-    margin-top: -64px;
-    margin-left: 24px;
     display: flex;
     flex-direction: row;
-    width: 280px;
-    gap: 20px;
-    height: 120px;
-    align-self: center;
+    gap: 16px;
 }
 
 .mod-pedal{{{cns}}} section.output {
-    margin-left: 40px;
-    width: 100px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
+    align-self: flex-start;
 }
 
 .mod-pedal{{{cns}}} .column {
@@ -40,7 +34,7 @@
 }
 
 .mod-pedal{{{cns}}} .logo {
-    align-self: end;
+    align-self: center;
 }
 
 /* = CONTAINER
@@ -53,13 +47,13 @@
     background-image:url(/resources/assets/background.png{{{ns}}});
     background-position:center center;
     background-repeat:no-repeat;
-    background-size:560px 320px;
-    height:320px;
+    background-size:504px 420px;
+    height:420px;
     position:absolute;
-    width:560px;
+    width:504px;
     border-radius: 16px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     color: white;
 }
 
