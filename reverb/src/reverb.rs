@@ -69,11 +69,9 @@ impl Reverb {
       .run(if reverse { 1. } else { 0. }, 12., Mode::Hertz);
     let predelay = self.smooth_predelay.run(predelay, 12., Mode::Hertz);
     let size = self.smooth_size.run(size, 12., Mode::Hertz);
-    let depth = self.smooth_depth.run(
-      depth.powf(2.) * depth.signum() * MAX_DEPTH,
-      12.,
-      Mode::Hertz,
-    );
+    let depth = self
+      .smooth_depth
+      .run(depth * depth * depth.signum() * MAX_DEPTH, 12., Mode::Hertz);
     let absorb = self.smooth_absorb.run(absorb, 12., Mode::Hertz);
     let tilt = self.smooth_tilt.run(tilt, 12., Mode::Hertz);
     let shimmer = self.smooth_shimmer.run(shimmer, 12., Mode::Hertz);

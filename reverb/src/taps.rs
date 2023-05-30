@@ -43,40 +43,39 @@ impl Taps {
       .collect()
   }
 
-  fn apply_feedback_matrix(inputs: &Vec<f32>) -> impl Iterator<Item = f32> + '_ {
-    [
-      [1.0, -1.0, -1.0, 1.0],
-      [1.0, 1.0, -1.0, -1.0],
-      [1.0, -1.0, 1.0, -1.0],
-      [1.0, 1.0, 1.0, 1.0],
-    ]
-    .iter()
-    .map(move |feedback_values| -> f32 {
-      feedback_values
-        .iter()
-        .zip(inputs)
-        .map(|(feedback, input)| input * feedback)
-        .sum()
-    })
-  }
-  // TODO: test if this has an impact on performance
-  //
-  // fn apply_feedback_matrix<'a>(&self, inputs: &'a Vec<f32>) -> [f32; 4] {
-  //   if let [first, second, third, fourth] = inputs.as_slice() {
-  //     let a = first - second;
-  //     let b = first + second;
-  //     let c = third - fourth;
-  //     let d = third + fourth;
-  //     [a - c, b - d, a + c, b + d]
-  //   } else {
-  //     panic!("Feedback matrix should receive a vector with four input signals")
-  //   }
+  // fn apply_feedback_matrix(inputs: &Vec<f32>) -> impl Iterator<Item = f32> + '_ {
+  //   [
+  //     [1.0, -1.0, -1.0, 1.0],
+  //     [1.0, 1.0, -1.0, -1.0],
+  //     [1.0, -1.0, 1.0, -1.0],
+  //     [1.0, 1.0, 1.0, 1.0],
+  //   ]
+  //   .iter()
+  //   .map(move |feedback_values| -> f32 {
+  //     feedback_values
+  //       .iter()
+  //       .zip(inputs)
+  //       .map(|(feedback, input)| input * feedback)
+  //       .sum()
+  //   })
   // }
+
+  fn apply_feedback_matrix(inputs: &Vec<f32>) -> [f32; 4] {
+    if let [first, second, third, fourth] = inputs.as_slice() {
+      let a = first - second;
+      let b = first + second;
+      let c = third - fourth;
+      let d = third + fourth;
+      [a - c, b - d, a + c, b + d]
+    } else {
+      panic!("Feedback matrix should receive a vector with four input signals")
+    }
+  }
 
   fn process_and_write_taps(
     &mut self,
     input: f32,
-    feedback_matrix_outputs: impl Iterator<Item = f32>,
+    feedback_matrix_outputs: [f32; 4],
     diffuse: f32,
     absorb: f32,
     decay: f32,
