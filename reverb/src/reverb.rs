@@ -10,6 +10,9 @@ use crate::{
   MAX_DEPTH, MAX_PREDELAY, MIN_PREDELAY,
 };
 
+const TWELVE_DB: f32 = 3.981072;
+const TWENTY_FOUR_DB: f32 = 15.848932;
+
 pub struct Reverb {
   predelay_tap: DelayLine,
   reverse: Reverse,
@@ -120,7 +123,7 @@ impl Reverb {
   fn apply_tilt_filter(&mut self, input: (f32, f32), tilt: f32) -> (f32, f32) {
     self
       .tilt_filter
-      .run(input, 520., 4000., 6f32.dbtoa(), 12f32.dbtoa(), tilt)
+      .run(input, 520., 4000., TWELVE_DB, TWENTY_FOUR_DB, tilt)
   }
 
   pub fn run(
