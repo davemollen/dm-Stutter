@@ -67,8 +67,8 @@ impl Reverb {
     let reverse = self
       .smooth_reverse
       .run(if reverse { 1. } else { 0. }, 12., Mode::Hertz);
-    let predelay = self.smooth_predelay.run(predelay, 12., Mode::Hertz);
-    let size = self.smooth_size.run(size, 12., Mode::Hertz);
+    let predelay = self.smooth_predelay.run(predelay, 7., Mode::Hertz);
+    let size = self.smooth_size.run(size, 7., Mode::Hertz);
     let depth = self
       .smooth_depth
       .run(depth * depth * depth.signum() * MAX_DEPTH, 12., Mode::Hertz);
@@ -119,9 +119,13 @@ impl Reverb {
   }
 
   fn apply_tilt_filter(&mut self, input: (f32, f32), tilt: f32) -> (f32, f32) {
-    self
-      .tilt_filter
-      .run(input, 520., 4000., TWELVE_DB, TWENTY_FOUR_DB, tilt)
+    if tilt == 0. {
+      input
+    } else {
+      self
+        .tilt_filter
+        .run(input, 520., 4000., TWELVE_DB, TWENTY_FOUR_DB, tilt)
+    }
   }
 
   pub fn run(
