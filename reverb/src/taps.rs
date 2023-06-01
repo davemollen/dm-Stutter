@@ -1,20 +1,13 @@
 use crate::{
-  average::Average,
-  early_reflections::EarlyReflections,
-  one_pole_filter::{Mode, OnePoleFilter},
-  phasor::Phasor,
+  early_reflections::EarlyReflections, phasor::Phasor, saturation_activator::SaturationActivator,
   tap::Tap,
 };
-
-const SATURATION_THRESHOLD: f32 = 0.25;
 
 pub struct Taps {
   early_reflections: EarlyReflections,
   taps: [Tap; 4],
   lfo_phasor: Phasor,
-  average: Average,
-  average_result: f32,
-  smooth_saturation_gain: OnePoleFilter,
+  saturation_activator: SaturationActivator,
 }
 
 impl Taps {
@@ -28,9 +21,7 @@ impl Taps {
         Tap::new(sample_rate, 1., 14.916666666666666, 0.75),
       ],
       lfo_phasor: Phasor::new(sample_rate),
-      average: Average::new((sample_rate * 0.1) as usize),
-      average_result: 0.,
-      smooth_saturation_gain: OnePoleFilter::new(sample_rate),
+      saturation_activator: SaturationActivator::new(sample_rate),
     }
   }
 
@@ -39,48 +30,48 @@ impl Taps {
     self
       .taps
       .iter_mut()
-      .map(|tap| tap.read(size, phase, depth))
+      .map(|tap| tap.delay_network_read(size, phase, depth))
       .collect()
   }
 
-  // fn apply_feedback_matrix(inputs: &Vec<f32>) -> impl Iterator<Item = f32> + '_ {
-  //   [
-  //     [1.0, -1.0, -1.0, 1.0],
-  //     [1.0, 1.0, -1.0, -1.0],
-  //     [1.0, -1.0, 1.0, -1.0],
-  //     [1.0, 1.0, 1.0, 1.0],
-  //   ]
-  //   .iter()
-  //   .map(move |feedback_values| -> f32 {
-  //     feedback_values
-  //       .iter()
-  //       .zip(inputs)
-  //       .map(|(feedback, input)| input * feedback)
-  //       .sum()
-  //   })
-  // }
-
-  fn apply_feedback_matrix(inputs: &Vec<f32>) -> [f32; 4] {
-    if let [first, second, third, fourth] = inputs.as_slice() {
-      let a = first - second;
-      let b = first + second;
-      let c = third - fourth;
-      let d = third + fourth;
-      [a - c, b - d, a + c, b + d]
-    } else {
-      panic!("Feedback matrix should receive a vector with four input signals")
-    }
+  fn apply_feedback_matrix(inputs: &Vec<f32>) -> impl Iterator<Item = f32> + '_ {
+    [
+      [1.0, -1.0, -1.0, 1.0],
+      [1.0, 1.0, -1.0, -1.0],
+      [1.0, -1.0, 1.0, -1.0],
+      [1.0, 1.0, 1.0, 1.0],
+    ]
+    .iter()
+    .map(move |feedback_values| -> f32 {
+      feedback_values
+        .iter()
+        .zip(inputs)
+        .map(|(feedback, input)| input * feedback)
+        .sum()
+    })
   }
+
+  // fn apply_feedback_matrix(inputs: &Vec<f32>) -> [f32; 4] {
+  //   if let [first, second, third, fourth] = inputs.as_slice() {
+  //     let a = first - second;
+  //     let b = first + second;
+  //     let c = third - fourth;
+  //     let d = third + fourth;
+  //     [a - c, b - d, a + c, b + d]
+  //   } else {
+  //     panic!("Feedback matrix should receive a vector with four input signals")
+  //   }
+  // }
 
   fn process_and_write_taps(
     &mut self,
     input: f32,
-    feedback_matrix_outputs: [f32; 4],
+    feedback_matrix_outputs: impl Iterator<Item = f32>,
     diffuse: f32,
     absorb: f32,
     decay: f32,
   ) {
-    let saturation_gain = self.get_saturation_gain();
+    let saturation_gain = self.saturation_activator.get_saturation_gain();
 
     self
       .taps
@@ -96,18 +87,6 @@ impl Taps {
       });
   }
 
-  fn get_saturation_gain(&mut self) -> f32 {
-    let saturation_gain = if self.average_result > SATURATION_THRESHOLD {
-      1.
-    } else {
-      0.
-    };
-
-    self
-      .smooth_saturation_gain
-      .run(saturation_gain, 1., Mode::Hertz)
-  }
-
   fn mix_delay_network_and_reflections(
     &mut self,
     inputs: Vec<f32>,
@@ -115,11 +94,9 @@ impl Taps {
   ) -> (f32, f32) {
     let left_delay_network_out = inputs[0] + inputs[2];
     let right_delay_network_out = inputs[1] + inputs[3];
-    self.average_result = self
-      .average
-      .run((left_delay_network_out + right_delay_network_out) * 0.5);
-    let saturation_gain_compensation =
-      (1. + SATURATION_THRESHOLD - self.average_result).clamp(0.7, 1.);
+    let saturation_gain_compensation = self
+      .saturation_activator
+      .set_average_and_retrieve_gain_compensation(left_delay_network_out, right_delay_network_out);
 
     let left_out =
       (left_delay_network_out + early_reflections_output.0) * saturation_gain_compensation * 0.5;

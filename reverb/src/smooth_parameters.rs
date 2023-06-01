@@ -45,7 +45,7 @@ impl SmoothParameters {
       .smooth_reverse
       .run(if reverse { 1. } else { 0. }, 12., Mode::Hertz);
     let predelay = self.smooth_predelay.run(predelay, 7., Mode::Hertz);
-    let size = self.smooth_size.run(size, 7., Mode::Hertz);
+    let size = self.smooth_size.run(size, 4., Mode::Hertz);
     let depth = self
       .smooth_depth
       .run(depth * depth * depth.signum() * MAX_DEPTH, 12., Mode::Hertz);

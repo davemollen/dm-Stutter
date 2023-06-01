@@ -44,7 +44,7 @@ impl Tap {
     }
   }
 
-  pub fn read(&mut self, size: f32, lfo_phase: f32, lfo_depth: f32) -> f32 {
+  pub fn delay_network_read(&mut self, size: f32, lfo_phase: f32, lfo_depth: f32) -> f32 {
     if lfo_depth == 0. {
       self
         .delay_line
@@ -56,7 +56,7 @@ impl Tap {
     }
   }
 
-  pub fn read_early_reflection(&mut self, size: f32, time_fraction: f32) -> f32 {
+  pub fn early_reflection_read(&mut self, size: f32, time_fraction: f32) -> f32 {
     self
       .delay_line
       .read(size * time_fraction, Interpolation::Linear)

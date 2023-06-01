@@ -14,6 +14,7 @@ mod one_pole_filter;
 mod phasor;
 mod reverb;
 mod reverse;
+mod saturation_activator;
 mod shimmer;
 mod smooth_parameters;
 mod tap;
