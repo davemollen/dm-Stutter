@@ -15,6 +15,7 @@ mod phasor;
 mod reverb;
 mod reverse;
 mod shimmer;
+mod smooth_parameters;
 mod tap;
 mod taps;
 mod tilt_filter;
