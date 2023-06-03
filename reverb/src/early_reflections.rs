@@ -1,6 +1,6 @@
 use crate::{float_ext::FloatExt, tap::Tap, MAX_SIZE, MIN_SIZE};
 
-// TODO: add a gain curve for the reflections
+const LAST_EARLY_REFLECTION_GAIN: f32 = 0.501187;
 const MINUS_TWELVE_DB: f32 = 0.251189;
 
 pub struct EarlyReflections {
@@ -16,14 +16,22 @@ impl EarlyReflections {
     }
   }
 
-  fn read_early_reflection(&self, size: f32, time_fraction: &f32, tap: &mut Tap) -> f32 {
-    tap.early_reflection_read(size, *time_fraction)
+  fn read_early_reflection(
+    &self,
+    index: usize,
+    size: f32,
+    time_fraction: &f32,
+    tap: &mut Tap,
+  ) -> f32 {
+    let attenuation = 1. - (index as f32 / 5. * (1. - LAST_EARLY_REFLECTION_GAIN));
+    tap.early_reflection_read(size, *time_fraction) * attenuation
   }
 
   fn process_channel(&mut self, reflections: [f32; 6], size: f32, tap: &mut Tap, gain: f32) -> f32 {
     reflections
       .iter()
-      .map(|time_fraction| self.read_early_reflection(size, time_fraction, tap))
+      .enumerate()
+      .map(|(index, time_fraction)| self.read_early_reflection(index, size, time_fraction, tap))
       .sum::<f32>()
       * gain
   }
