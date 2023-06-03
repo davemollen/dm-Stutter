@@ -4,15 +4,16 @@ const LAST_EARLY_REFLECTION_GAIN: f32 = 0.501187;
 const MINUS_TWELVE_DB: f32 = 0.251189;
 
 pub struct EarlyReflections {
-  reflections_left: [f32; 6],
-  reflections_right: [f32; 6],
+  reflections: [[f32; 6]; 2],
 }
 
 impl EarlyReflections {
   pub fn new() -> Self {
     Self {
-      reflections_left: [0., 0.188, 0.278, 0.38, 0.482, 0.584],
-      reflections_right: [0.018, 0.086, 0.29, 0.392, 0.494, 0.597],
+      reflections: [
+        [0., 0.188, 0.278, 0.38, 0.482, 0.584],
+        [0.018, 0.086, 0.29, 0.392, 0.494, 0.597],
+      ],
     }
   }
 
@@ -36,10 +37,14 @@ impl EarlyReflections {
       * gain
   }
 
-  pub fn run(&mut self, size: f32, taps: &mut [Tap; 4]) -> (f32, f32) {
+  pub fn run(&mut self, size: f32, taps: &mut [Tap; 4]) -> Vec<f32> {
     let gain = size.scale(MIN_SIZE, MAX_SIZE, 1., MINUS_TWELVE_DB);
-    let out_left = self.process_channel(self.reflections_left, size, &mut taps[0], gain);
-    let out_right = self.process_channel(self.reflections_right, size, &mut taps[1], gain);
-    (out_left, out_right)
+
+    taps
+      .iter_mut()
+      .take(2)
+      .zip(self.reflections)
+      .map(|(tap, reflections)| self.process_channel(reflections, size, tap, gain))
+      .collect()
   }
 }
