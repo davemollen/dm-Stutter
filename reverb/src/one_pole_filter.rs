@@ -1,4 +1,4 @@
-use std::f32::consts::PI;
+use std::f32::consts::TAU;
 
 #[allow(dead_code)]
 pub enum Mode {
@@ -21,7 +21,7 @@ impl OnePoleFilter {
   }
 
   fn convert_hertz_to_coefficient(&self, freq: f32) -> f32 {
-    let coef = (freq * 2. * PI / self.sample_rate).sin();
+    let coef = (freq * TAU / self.sample_rate).sin();
     coef.clamp(0., 1.)
   }
 

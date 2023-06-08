@@ -1,5 +1,5 @@
 use crate::biquad_filter::BiquadFilter;
-use std::f32::consts::PI;
+use std::f32::consts::TAU;
 
 pub struct TiltFilter {
   double_sr: f32,
@@ -26,14 +26,13 @@ impl TiltFilter {
   ) -> (f32, f32, f32, f32, f32, f32) {
     let squared_double_sr = self.double_sr * self.double_sr;
     let normalized_tilt = tilt * 0.5 + 0.5;
-    let two_pi = PI * 2.;
 
-    let low_radians = low_frequency * two_pi;
+    let low_radians = low_frequency * TAU;
     let low_range = low_radians * low_gain - low_radians;
     let low_a = low_range * normalized_tilt + low_radians;
     let low_b = low_range * (1. - normalized_tilt) + low_radians;
 
-    let high_radians = high_frequency * two_pi;
+    let high_radians = high_frequency * TAU;
     let high_offset = 1. / high_gain * high_radians;
     let high_range = high_radians - high_offset;
     let high_a = high_gain.powf(tilt);

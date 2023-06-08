@@ -4,10 +4,10 @@ use crate::{
   delay_line::{DelayLine, Interpolation},
   float_ext::FloatExt,
   grains::Grains,
-  lfo::Lfo,
   one_pole_filter::{Mode, OnePoleFilter},
   MAX_DEPTH, MAX_SIZE,
 };
+use std::f32::consts::TAU;
 
 pub struct Tap {
   time_fraction: f32,
@@ -15,7 +15,6 @@ pub struct Tap {
   all_pass_filter: AllpassFilter,
   one_pole_filter: OnePoleFilter,
   diffuser_time: f32,
-  lfo: Lfo,
   lfo_phase_offset: f32,
   grains: Grains,
   dc_block: DcBlock,
@@ -37,7 +36,6 @@ impl Tap {
       all_pass_filter: AllpassFilter::new(sample_rate),
       diffuser_time,
       one_pole_filter: OnePoleFilter::new(sample_rate),
-      lfo: Lfo::default(),
       lfo_phase_offset,
       grains: Grains::new(),
       dc_block: DcBlock::new(sample_rate),
@@ -81,7 +79,9 @@ impl Tap {
   }
 
   fn vibrato_read(&mut self, size: f32, lfo_phase: f32, lfo_depth: f32) -> f32 {
-    let lfo = self.lfo.run(lfo_phase, self.lfo_phase_offset) * lfo_depth.abs();
+    let lfo_phase_input = (lfo_phase + self.lfo_phase_offset) % 1. * TAU;
+    let lfo = lfo_phase_input.fast_sin() * lfo_depth.abs();
+
     self
       .delay_line
       .read(self.time_fraction * size + lfo, Interpolation::Linear)

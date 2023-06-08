@@ -1,9 +1,8 @@
-use std::simd::{f32x4, SimdFloat};
-
 use crate::{
   early_reflections::EarlyReflections, phasor::Phasor, saturation_activator::SaturationActivator,
   tap::Tap,
 };
+use std::simd::{f32x4, SimdFloat};
 
 pub struct Taps {
   early_reflections: EarlyReflections,

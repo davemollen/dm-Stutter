@@ -1,5 +1,6 @@
 use crate::{
   delay_line::{DelayLine, Interpolation},
+  float_ext::FloatExt,
   phasor::Phasor,
 };
 use std::f32::consts::PI;
@@ -31,7 +32,7 @@ impl Shimmer {
     (0..2)
       .map(|index| {
         let phase = (main_phase + index as f32 * 0.5) % 1.;
-        let window = (phase * PI).sin();
+        let window = (phase * PI).fast_sin();
         self.delay_line.read(phase * 200., Interpolation::Linear) * window * window
       })
       .sum()

@@ -1,5 +1,4 @@
 #![feature(portable_simd)]
-include!(concat!(env!("OUT_DIR"), "/wave_table.rs"));
 mod allpass_filter;
 mod average;
 mod biquad_filter;
@@ -9,7 +8,6 @@ mod delta;
 mod early_reflections;
 mod float_ext;
 mod grains;
-mod lfo;
 mod mix;
 mod one_pole_filter;
 mod phasor;
@@ -21,7 +19,6 @@ mod smooth_parameters;
 mod tap;
 mod taps;
 mod tilt_filter;
-mod wave_table;
 
 pub const MIN_PREDELAY: f32 = 7.;
 pub const MAX_PREDELAY: f32 = 500.;
