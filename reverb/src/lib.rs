@@ -1,3 +1,4 @@
+#![feature(portable_simd)]
 include!(concat!(env!("OUT_DIR"), "/wave_table.rs"));
 mod allpass_filter;
 mod average;

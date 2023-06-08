@@ -1,3 +1,5 @@
+use std::simd::{f32x4, SimdFloat};
+
 use crate::{
   early_reflections::EarlyReflections, phasor::Phasor, saturation_activator::SaturationActivator,
   tap::Tap,
@@ -34,39 +36,31 @@ impl Taps {
       .collect()
   }
 
-  fn apply_feedback_matrix(inputs: &Vec<f32>) -> impl Iterator<Item = f32> + '_ {
-    [
+  fn apply_feedback_matrix(inputs: &Vec<f32>) -> [f32; 4] {
+    let tap_outputs = f32x4::from_slice(&inputs);
+    let feedback_matrix = [
       [1.0, -1.0, -1.0, 1.0],
       [1.0, 1.0, -1.0, -1.0],
       [1.0, -1.0, 1.0, -1.0],
       [1.0, 1.0, 1.0, 1.0],
-    ]
-    .iter()
-    .map(move |feedback_values| -> f32 {
-      feedback_values
-        .iter()
-        .zip(inputs)
-        .map(|(feedback, input)| input * feedback)
-        .sum()
-    })
-  }
+    ];
 
-  // fn apply_feedback_matrix(inputs: &Vec<f32>) -> [f32; 4] {
-  //   if let [first, second, third, fourth] = inputs.as_slice() {
-  //     let a = first - second;
-  //     let b = first + second;
-  //     let c = third - fourth;
-  //     let d = third + fourth;
-  //     [a - c, b - d, a + c, b + d]
-  //   } else {
-  //     panic!("Feedback matrix should receive a vector with four input signals")
-  //   }
-  // }
+    let tap_matrix1 = f32x4::from_array(feedback_matrix[0]);
+    let tap_matrix2 = f32x4::from_array(feedback_matrix[1]);
+    let tap_matrix3 = f32x4::from_array(feedback_matrix[2]);
+    let tap_matrix4 = f32x4::from_array(feedback_matrix[3]);
+    [
+      (tap_outputs * tap_matrix1).reduce_sum(),
+      (tap_outputs * tap_matrix2).reduce_sum(),
+      (tap_outputs * tap_matrix3).reduce_sum(),
+      (tap_outputs * tap_matrix4).reduce_sum(),
+    ]
+  }
 
   fn process_and_write_taps(
     &mut self,
     input: f32,
-    feedback_matrix_outputs: impl Iterator<Item = f32>,
+    feedback_matrix_outputs: [f32; 4],
     diffuse: f32,
     absorb: f32,
     decay: f32,
