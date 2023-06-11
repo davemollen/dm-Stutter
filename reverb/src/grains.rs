@@ -74,7 +74,7 @@ impl Grains {
         if trigger {
           grain.start_position = random::<f32>() * lfo_depth;
         };
-        let window = (phase * PI).sin();
+        let window = (phase * PI).fast_sin();
         let time = size * time_fraction + grain.start_position;
 
         delay_line.read(time, Interpolation::Linear) * window * window

@@ -56,21 +56,6 @@ impl Reverb {
     self.shimmer.run(input, shimmer)
   }
 
-  fn get_delay_taps_output(
-    &mut self,
-    input: f32,
-    size: f32,
-    speed: f32,
-    depth: f32,
-    diffuse: f32,
-    absorb: f32,
-    decay: f32,
-  ) -> (f32, f32) {
-    self
-      .taps
-      .run(input, size, speed, depth, diffuse, absorb, decay)
-  }
-
   fn apply_tilt_filter(&mut self, input: (f32, f32), tilt: f32) -> (f32, f32) {
     if tilt == 0. {
       input
@@ -102,8 +87,10 @@ impl Reverb {
 
     let predelay_output = self.get_predelay_output(input, predelay, reverse);
     let shimmer_output = self.get_shimmer_output(predelay_output, shimmer);
-    let taps_output =
-      self.get_delay_taps_output(shimmer_output, size, speed, depth, diffuse, absorb, decay);
+    let taps_output = self
+      .taps
+      .run(shimmer_output, size, speed, depth, diffuse, absorb, decay);
+
     let tilt_filter_output = self.apply_tilt_filter(taps_output, tilt);
     Mix::run(input, tilt_filter_output, mix)
   }

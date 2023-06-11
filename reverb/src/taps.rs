@@ -108,8 +108,9 @@ impl Taps {
     absorb: f32,
     decay: f32,
   ) -> (f32, f32) {
-    let delay_network_outputs = self.read_from_delay_network(size, speed, depth);
     let early_reflections_outputs = self.early_reflections.run(size, &mut self.taps);
+
+    let delay_network_outputs = self.read_from_delay_network(size, speed, depth);
     let feedback_matrix_outputs = Self::apply_feedback_matrix(&delay_network_outputs);
     self.process_and_write_taps(input, feedback_matrix_outputs, diffuse, absorb, decay);
     self.mix_delay_network_and_reflections(delay_network_outputs, early_reflections_outputs)

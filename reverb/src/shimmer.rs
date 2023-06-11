@@ -27,7 +27,7 @@ impl Shimmer {
   }
 
   fn apply_shimmer(&mut self) -> f32 {
-    let main_phase = self.phasor.run(-3.);
+    let main_phase = self.phasor.run(-5.);
 
     (0..2)
       .map(|index| {
