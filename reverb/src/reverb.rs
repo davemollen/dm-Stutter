@@ -1,13 +1,17 @@
-use crate::{
+mod mix;
+mod reverse;
+mod shimmer;
+mod smooth_parameters;
+mod taps;
+mod tilt_filter;
+use crate::shared::{
+  constants::{MAX_PREDELAY, MIN_PREDELAY},
   delay_line::{DelayLine, Interpolation},
   float_ext::FloatExt,
-  mix::Mix,
-  reverse::Reverse,
-  shimmer::Shimmer,
-  smooth_parameters::SmoothParameters,
-  taps::Taps,
+};
+use {
+  mix::Mix, reverse::Reverse, shimmer::Shimmer, smooth_parameters::SmoothParameters, taps::Taps,
   tilt_filter::TiltFilter,
-  MAX_PREDELAY, MIN_PREDELAY,
 };
 
 const TWELVE_DB: f32 = 3.981072;

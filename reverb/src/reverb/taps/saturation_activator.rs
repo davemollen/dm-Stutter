@@ -1,7 +1,6 @@
-use crate::{
-  average::Average,
-  one_pole_filter::{Mode, OnePoleFilter},
-};
+mod average;
+use crate::shared::one_pole_filter::{Mode, OnePoleFilter};
+use average::Average;
 
 const SATURATION_THRESHOLD: f32 = 0.25;
 

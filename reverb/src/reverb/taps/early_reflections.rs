@@ -1,4 +1,8 @@
-use crate::{float_ext::FloatExt, tap::Tap, MAX_SIZE, MIN_SIZE};
+use super::tap::Tap;
+use crate::shared::{
+  constants::{MAX_SIZE, MIN_SIZE},
+  float_ext::FloatExt,
+};
 
 const LAST_EARLY_REFLECTION_GAIN: f32 = 0.501187;
 const MINUS_TWELVE_DB: f32 = 0.251189;

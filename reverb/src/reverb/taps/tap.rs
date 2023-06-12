@@ -1,13 +1,14 @@
-use crate::{
-  allpass_filter::AllpassFilter,
-  dc_block::DcBlock,
+mod allpass_filter;
+mod dc_block;
+mod grains;
+use crate::shared::{
+  constants::{MAX_DEPTH, MAX_SIZE},
   delay_line::{DelayLine, Interpolation},
   float_ext::FloatExt,
-  grains::Grains,
   one_pole_filter::{Mode, OnePoleFilter},
-  MAX_DEPTH, MAX_SIZE,
 };
 use std::f32::consts::TAU;
+use {allpass_filter::AllpassFilter, dc_block::DcBlock, grains::Grains};
 
 pub struct Tap {
   time_fraction: f32,

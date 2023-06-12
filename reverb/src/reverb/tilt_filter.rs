@@ -1,4 +1,5 @@
-use crate::biquad_filter::BiquadFilter;
+mod biquad_filter;
+use biquad_filter::BiquadFilter;
 use std::f32::consts::TAU;
 
 pub struct TiltFilter {

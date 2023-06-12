@@ -1,4 +1,4 @@
-use crate::delay_line::{DelayLine, Interpolation};
+use crate::shared::delay_line::{DelayLine, Interpolation};
 
 #[derive(Clone)]
 pub struct AllpassFilter {

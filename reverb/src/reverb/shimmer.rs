@@ -1,4 +1,4 @@
-use crate::{
+use crate::shared::{
   delay_line::{DelayLine, Interpolation},
   float_ext::FloatExt,
   phasor::Phasor,

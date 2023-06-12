@@ -6,7 +6,7 @@ MOVE_FROM="./target/bundled/$OLD_VST_NAME"
 MOVE_TO="/Library/Audio/Plug-Ins/VST3/$NEW_VST_NAME"
 
 cd vst3
-cargo xtask bundle $PACKAGE_NAME --release
+sudo cargo xtask bundle $PACKAGE_NAME --release
 
 if [ -d "$MOVE_TO" ]; then
     sudo rm -r "$MOVE_TO"

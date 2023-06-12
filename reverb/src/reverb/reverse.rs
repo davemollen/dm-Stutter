@@ -1,7 +1,7 @@
-use crate::{
+use crate::shared::{
+  constants::MIN_PREDELAY,
   delay_line::{DelayLine, Interpolation},
   phasor::Phasor,
-  MIN_PREDELAY,
 };
 
 pub struct Reverse {

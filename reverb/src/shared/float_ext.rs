@@ -126,7 +126,7 @@ impl FloatExt for f32 {
 
 #[cfg(test)]
 mod tests {
-  use crate::float_ext::FloatExt;
+  use super::FloatExt;
   use std::f32::consts::{FRAC_1_SQRT_2, PI};
 
   fn assert_approximately_eq(left: f32, right: f32) {

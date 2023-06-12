@@ -1,6 +1,6 @@
-use crate::{
+use crate::shared::{
+  constants::MAX_DEPTH,
   one_pole_filter::{Mode, OnePoleFilter},
-  MAX_DEPTH,
 };
 
 pub struct SmoothParameters {

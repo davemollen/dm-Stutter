@@ -1,8 +1,9 @@
-use crate::{
-  early_reflections::EarlyReflections, phasor::Phasor, saturation_activator::SaturationActivator,
-  tap::Tap,
-};
+mod early_reflections;
+mod saturation_activator;
+mod tap;
+use crate::shared::phasor::Phasor;
 use std::simd::{f32x4, SimdFloat};
+use {early_reflections::EarlyReflections, saturation_activator::SaturationActivator, tap::Tap};
 
 pub struct Taps {
   early_reflections: EarlyReflections,

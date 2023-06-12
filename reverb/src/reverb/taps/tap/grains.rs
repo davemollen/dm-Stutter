@@ -1,9 +1,10 @@
-use crate::{
+mod delta;
+use crate::shared::{
+  constants::MAX_DEPTH,
   delay_line::{DelayLine, Interpolation},
-  delta::Delta,
   float_ext::FloatExt,
-  MAX_DEPTH,
 };
+use delta::Delta;
 use rand::random;
 use std::f32::consts::PI;
 

@@ -2,7 +2,7 @@ use nih_plug::{
   formatters::{s2v_f32_percentage, v2s_f32_percentage},
   prelude::{BoolParam, FloatParam, FloatRange, Params},
 };
-use reverb::{MAX_PREDELAY, MAX_SIZE, MIN_PREDELAY, MIN_SIZE};
+use reverb::shared::constants::{MAX_PREDELAY, MAX_SIZE, MIN_PREDELAY, MIN_SIZE};
 mod custom_formatters;
 use custom_formatters::v2s_f32_digits;
 
@@ -58,7 +58,7 @@ impl Default for ReverbParameters {
 
       size: FloatParam::new(
         "Size",
-        40.,
+        80.,
         FloatRange::Skewed {
           min: MIN_SIZE,
           max: MAX_SIZE,
