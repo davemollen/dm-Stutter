@@ -28,7 +28,7 @@ impl SmoothParameters {
     }
   }
 
-  pub fn get_parameters(
+  pub fn run(
     &mut self,
     reverse: bool,
     predelay: f32,

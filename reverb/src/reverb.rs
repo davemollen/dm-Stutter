@@ -85,7 +85,7 @@ impl Reverb {
     mix: f32,
   ) -> (f32, f32) {
     let (reverse, predelay, size, speed, depth, absorb, diffuse, decay, tilt, shimmer, mix) =
-      self.smooth_parameters.get_parameters(
+      self.smooth_parameters.run(
         reverse, predelay, size, speed, depth, absorb, decay, tilt, shimmer, mix,
       );
 
