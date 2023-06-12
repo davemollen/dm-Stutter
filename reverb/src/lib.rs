@@ -8,4 +8,4 @@ pub mod shared {
   pub mod phasor;
 }
 mod reverb;
-pub use self::reverb::Reverb;
+pub use reverb::Reverb;
