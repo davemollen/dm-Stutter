@@ -1,7 +1,7 @@
 pub struct Average {
   buffer: Vec<f32>,
   write_pointer: usize,
-  previous_mean: f32,
+  previous_sum: f32,
 }
 
 impl Average {
@@ -9,7 +9,7 @@ impl Average {
     Self {
       buffer: vec![0.0; length],
       write_pointer: 0,
-      previous_mean: 0.,
+      previous_sum: 0.,
     }
   }
 
@@ -36,15 +36,15 @@ impl Average {
 
     let squared = input * input;
     let oldest_buffer_entry = self.get_oldest_buffer_entry();
-    let mean = squared + self.previous_mean - oldest_buffer_entry;
+    let sum = squared + self.previous_sum - oldest_buffer_entry;
 
-    self.previous_mean = mean;
+    self.previous_sum = sum;
     self.write(squared);
 
-    if mean <= 0. {
+    if sum <= 0. {
       0.
     } else {
-      (mean / n as f32).sqrt()
+      (sum / n as f32).sqrt()
     }
   }
 }
