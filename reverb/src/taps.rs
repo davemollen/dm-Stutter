@@ -87,14 +87,12 @@ impl Taps {
   ) -> (f32, f32) {
     let left_delay_network_out = inputs[0] + inputs[2];
     let right_delay_network_out = inputs[1] + inputs[3];
-    let saturation_gain_compensation = self
+    self
       .saturation_activator
-      .set_average_and_retrieve_gain_compensation(left_delay_network_out, right_delay_network_out);
+      .set_average(left_delay_network_out, right_delay_network_out);
 
-    let left_out =
-      (left_delay_network_out + early_reflections_output[0]) * saturation_gain_compensation * 0.5;
-    let right_out =
-      (right_delay_network_out + early_reflections_output[1]) * saturation_gain_compensation * 0.5;
+    let left_out = (left_delay_network_out + early_reflections_output[0]) * 0.5;
+    let right_out = (right_delay_network_out + early_reflections_output[1]) * 0.5;
     (left_out, right_out)
   }
 

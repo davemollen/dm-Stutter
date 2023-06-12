@@ -14,19 +14,14 @@ pub struct SaturationActivator {
 impl SaturationActivator {
   pub fn new(sample_rate: f32) -> Self {
     Self {
-      average: Average::new((sample_rate * 0.1) as usize),
+      average: Average::new((sample_rate * 0.2) as usize),
       average_result: 0.,
       smooth_saturation_gain: OnePoleFilter::new(sample_rate),
     }
   }
 
-  pub fn set_average_and_retrieve_gain_compensation(
-    &mut self,
-    left_input: f32,
-    right_input: f32,
-  ) -> f32 {
+  pub fn set_average(&mut self, left_input: f32, right_input: f32) {
     self.average_result = self.average.run((left_input + right_input) * 0.5);
-    (1. + SATURATION_THRESHOLD - self.average_result).clamp(0.7, 1.)
   }
 
   pub fn get_saturation_gain(&mut self) -> f32 {
