@@ -2,7 +2,6 @@ mod early_reflections;
 mod saturation_activator;
 mod tap;
 use crate::shared::phasor::Phasor;
-use std::simd::{f32x4, SimdFloat};
 use {early_reflections::EarlyReflections, saturation_activator::SaturationActivator, tap::Tap};
 
 pub struct Taps {
@@ -36,31 +35,27 @@ impl Taps {
       .collect()
   }
 
-  fn apply_feedback_matrix(inputs: &Vec<f32>) -> [f32; 4] {
-    let tap_outputs = f32x4::from_slice(&inputs);
-    let feedback_matrix = [
+  fn apply_feedback_matrix(inputs: &Vec<f32>) -> impl Iterator<Item = f32> + '_ {
+    [
       [1.0, -1.0, -1.0, 1.0],
       [1.0, 1.0, -1.0, -1.0],
       [1.0, -1.0, 1.0, -1.0],
       [1.0, 1.0, 1.0, 1.0],
-    ];
-
-    let tap_matrix1 = f32x4::from_array(feedback_matrix[0]);
-    let tap_matrix2 = f32x4::from_array(feedback_matrix[1]);
-    let tap_matrix3 = f32x4::from_array(feedback_matrix[2]);
-    let tap_matrix4 = f32x4::from_array(feedback_matrix[3]);
-    [
-      (tap_outputs * tap_matrix1).reduce_sum(),
-      (tap_outputs * tap_matrix2).reduce_sum(),
-      (tap_outputs * tap_matrix3).reduce_sum(),
-      (tap_outputs * tap_matrix4).reduce_sum(),
     ]
+    .iter()
+    .map(move |feedback_values| -> f32 {
+      feedback_values
+        .iter()
+        .zip(inputs)
+        .map(|(feedback, input)| input * feedback)
+        .sum()
+    })
   }
 
   fn process_and_write_taps(
     &mut self,
     input: f32,
-    feedback_matrix_outputs: [f32; 4],
+    feedback_matrix_outputs: impl Iterator<Item = f32>,
     diffuse: f32,
     absorb: f32,
     decay: f32,
