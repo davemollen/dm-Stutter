@@ -72,7 +72,12 @@ impl Taps {
           tap.apply_saturation(feedback_matrix_output, decay, saturation_gain);
         let absorb_output = tap.apply_absorb(dry_signal + saturation_output, absorb);
         let diffuse_output = tap.apply_diffuse(absorb_output, diffuse);
-        tap.write(diffuse_output);
+
+        tap.write(if diffuse_output.is_subnormal() {
+          0.
+        } else {
+          diffuse_output
+        });
       });
   }
 

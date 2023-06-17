@@ -61,25 +61,25 @@ impl Plugin for DmReverb {
       .iter_mut()
       .zip(ports.output_right.iter_mut());
 
-    for ((input_left, input_right), (output_left, output_right)) in
-      input_channels.zip(output_channels)
-    {
-      let reverb_output = self.reverb.run(
-        (*input_left, *input_right),
-        reverse,
-        predelay,
-        size,
-        speed,
-        depth,
-        absorb,
-        decay,
-        tilt,
-        shimmer,
-        mix,
-      );
-      *output_left = reverb_output.0;
-      *output_right = reverb_output.1;
-    }
+    input_channels.zip(output_channels).for_each(
+      |((input_left, input_right), (output_left, output_right))| {
+        let reverb_output = self.reverb.run(
+          (*input_left, *input_right),
+          reverse,
+          predelay,
+          size,
+          speed,
+          depth,
+          absorb,
+          decay,
+          tilt,
+          shimmer,
+          mix,
+        );
+        *output_left = reverb_output.0;
+        *output_right = reverb_output.1;
+      },
+    );
   }
 }
 

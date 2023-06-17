@@ -71,25 +71,26 @@ impl Plugin for DmReverb {
       .get_mut(0)
       .iter_mut()
       .zip(output_channels.get_mut(1));
-    for ((input_left, input_right), (output_left, output_right)) in
-      zipped_input_channels.zip(zipped_output_channels)
-    {
-      let (reverb_left, reverb_right) = self.reverb.run(
-        (*input_left, *input_right),
-        reverse,
-        predelay,
-        size,
-        speed,
-        depth,
-        absorb,
-        decay,
-        tilt,
-        shimmer,
-        mix,
-      );
-      *output_left = reverb_left;
-      *output_right = reverb_right;
-    }
+
+    zipped_input_channels.zip(zipped_output_channels).for_each(
+      |((input_left, input_right), (output_left, output_right))| {
+        let (reverb_left, reverb_right) = self.reverb.run(
+          (*input_left, *input_right),
+          reverse,
+          predelay,
+          size,
+          speed,
+          depth,
+          absorb,
+          decay,
+          tilt,
+          shimmer,
+          mix,
+        );
+        *output_left = reverb_left;
+        *output_right = reverb_right;
+      },
+    );
   }
 
   fn get_parameter_object(&mut self) -> Arc<dyn PluginParameters> {
