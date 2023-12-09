@@ -85,13 +85,11 @@ impl Plugin for DmReverb {
     let mix = self.params.mix.value();
 
     buffer.iter_samples().for_each(|mut channel_samples| {
-      let left_channel = channel_samples.get_mut(0).unwrap();
-      let input_left = *left_channel;
-      let right_channel = channel_samples.get_mut(1).unwrap();
-      let input_right = *right_channel;
+      let input_left = channel_samples.get_mut(0).unwrap();
+      let input_right = channel_samples.get_mut(1).unwrap();
 
       let (reverb_left, reverb_right) = self.reverb.run(
-        (input_left, input_right),
+        (*input_left, *input_right),
         reverse,
         predelay,
         size,
@@ -104,10 +102,10 @@ impl Plugin for DmReverb {
         mix,
       );
 
-      let left_channel_out = channel_samples.get_mut(0).unwrap();
-      *left_channel_out = reverb_left;
-      let right_channel_out = channel_samples.get_mut(1).unwrap();
-      *right_channel_out = reverb_right;
+      let output_left = channel_samples.get_mut(0).unwrap();
+      *output_left = reverb_left;
+      let output_right = channel_samples.get_mut(1).unwrap();
+      *output_right = reverb_right;
     });
     ProcessStatus::Normal
   }
