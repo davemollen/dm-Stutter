@@ -31,7 +31,7 @@ impl Editor for ReverbEditor {
   fn spawn(&self, parent: ParentWindowHandle, context: Arc<dyn GuiContext>) -> Box<dyn Any + Send> {
     let params = self.params.clone();
     let window = Application::new(move |cx| plugin_gui(cx, Arc::clone(&params), context.clone()))
-      .title("Dm-Reverb")
+      .title("dm-Reverb")
       .inner_size(WINDOW_SIZE)
       .open_parented(&parent);
 
