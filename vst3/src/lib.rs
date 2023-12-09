@@ -129,7 +129,7 @@ impl ClapPlugin for DmReverb {
 }
 
 impl Vst3Plugin for DmReverb {
-  const VST3_CLASS_ID: [u8; 13] = *b"DM-ReverbPlug";
+  const VST3_CLASS_ID: [u8; 16] = *b"DaveM-ReverbPlug";
   const VST3_CATEGORIES: &'static str = "Fx|Reverb";
 }
 
