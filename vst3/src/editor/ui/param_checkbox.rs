@@ -30,11 +30,11 @@ impl ParamCheckbox {
         params.map(move |params| params_to_param(params).modulated_plain_value())
       })
       .on_press(move |cx| {
-        let is_checked = params
+        let current_normalized_value = params
           .map(move |params| params_to_param(params).modulated_normalized_value())
           .get(cx);
 
-        cx.emit(on_change(param_ptr, is_checked));
+        cx.emit(on_change(param_ptr, 1. - current_normalized_value));
       });
     });
   }
