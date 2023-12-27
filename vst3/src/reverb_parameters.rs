@@ -1,13 +1,19 @@
+use std::sync::Arc;
 use nih_plug::{
   formatters::{s2v_f32_percentage, v2s_f32_percentage},
   prelude::{BoolParam, FloatParam, FloatRange, Params},
 };
+use nih_plug_vizia::ViziaState;
 use reverb::shared::constants::{MAX_PREDELAY, MAX_SIZE, MIN_PREDELAY, MIN_SIZE};
 mod custom_formatters;
 use custom_formatters::v2s_f32_digits;
+use crate::editor;
 
 #[derive(Params)]
 pub struct ReverbParameters {
+  #[persist = "editor-state"]
+  pub editor_state: Arc<ViziaState>,
+
   #[id = "reverse"]
   pub reverse: BoolParam,
 
@@ -42,6 +48,8 @@ pub struct ReverbParameters {
 impl Default for ReverbParameters {
   fn default() -> Self {
     Self {
+      editor_state: editor::default_state(),
+
       reverse: BoolParam::new("Reverse", false),
 
       predelay: FloatParam::new(

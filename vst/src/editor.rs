@@ -5,9 +5,9 @@ pub use ui::plugin_gui;
 use vizia::{prelude::WindowSize, Application, ParentWindow};
 use vst::{editor::Editor, prelude::HostCallback};
 
-const WINDOW_SIZE: WindowSize = WindowSize {
+pub const WINDOW_SIZE: WindowSize = WindowSize {
   width: 520,
-  height: 260,
+  height: 296,
 };
 
 pub struct ReverbEditor {
@@ -36,7 +36,7 @@ impl Editor for ReverbEditor {
     let params = self.params.clone();
 
     Application::new(move |cx| plugin_gui(cx, Arc::clone(&params), host))
-      .title("Dm-Reverb")
+      .title("dm-Reverb")
       .inner_size(WINDOW_SIZE)
       .open_parented(&ParentWindow(parent));
 
