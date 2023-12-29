@@ -22,7 +22,17 @@ pub struct ReverbParameters {
 impl Default for ReverbParameters {
   fn default() -> Self {
     Self {
-      reverse: BoolParam::new("Reverse", false, 0),
+      size: FloatParam::new(
+        "Size",
+        80.,
+        0,
+        FloatRange::Skewed {
+          min: MIN_SIZE,
+          max: MAX_SIZE,
+          factor: 0.333333,
+        },
+      )
+      .with_value_to_string(v2s_f32_digits(2)),
 
       predelay: FloatParam::new(
         "Predelay",
@@ -37,17 +47,7 @@ impl Default for ReverbParameters {
       .with_unit(" ms")
       .with_value_to_string(v2s_f32_digits(2)),
 
-      size: FloatParam::new(
-        "Size",
-        80.,
-        2,
-        FloatRange::Skewed {
-          min: MIN_SIZE,
-          max: MAX_SIZE,
-          factor: 0.333333,
-        },
-      )
-      .with_value_to_string(v2s_f32_digits(2)),
+      reverse: BoolParam::new("Reverse", false, 2),
 
       speed: FloatParam::new(
         "Speed",
@@ -110,9 +110,9 @@ impl Default for ReverbParameters {
 impl PluginParameters for ReverbParameters {
   fn get_parameter(&self, index: i32) -> f32 {
     match index {
-      0 => self.reverse.get_normalized_value(),
+      0 => self.size.get_normalized_value(),
       1 => self.predelay.get_normalized_value(),
-      2 => self.size.get_normalized_value(),
+      2 => self.reverse.get_normalized_value(),
       3 => self.speed.get_normalized_value(),
       4 => self.depth.get_normalized_value(),
       5 => self.absorb.get_normalized_value(),
@@ -126,9 +126,9 @@ impl PluginParameters for ReverbParameters {
 
   fn get_parameter_text(&self, index: i32) -> String {
     match index {
-      0 => self.reverse.get_display_value(true),
+      0 => self.size.get_display_value(true),
       1 => self.predelay.get_display_value(true),
-      2 => self.size.get_display_value(true),
+      2 => self.reverse.get_display_value(true),
       3 => self.speed.get_display_value(true),
       4 => self.depth.get_display_value(true),
       5 => self.absorb.get_display_value(true),
@@ -142,9 +142,9 @@ impl PluginParameters for ReverbParameters {
 
   fn get_parameter_name(&self, index: i32) -> String {
     match index {
-      0 => self.reverse.name,
+      0 => self.size.name,
       1 => self.predelay.name,
-      2 => self.size.name,
+      2 => self.reverse.name,
       3 => self.speed.name,
       4 => self.depth.name,
       5 => self.absorb.name,
@@ -159,9 +159,9 @@ impl PluginParameters for ReverbParameters {
 
   fn set_parameter(&self, index: i32, val: f32) {
     match index {
-      0 => self.reverse.set_normalized_value(val),
+      0 => self.size.set_plain_value(val),
       1 => self.predelay.set_plain_value(val),
-      2 => self.size.set_plain_value(val),
+      2 => self.reverse.set_normalized_value(val),
       3 => self.speed.set_plain_value(val),
       4 => self.depth.set_plain_value(val),
       5 => self.absorb.set_plain_value(val),

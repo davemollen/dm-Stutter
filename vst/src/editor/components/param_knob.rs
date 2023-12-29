@@ -1,10 +1,24 @@
 use crate::reverb_parameters::{FloatParam, Params};
 use std::any::Any;
 use vizia::{
-  prelude::{ActionModifiers, Context, EmitContext, LensExt, StyleModifiers, LayoutModifiers, Units::{Stretch, Pixels}, Weight},
+  prelude::{ActionModifiers, Context, EmitContext, LensExt, StyleModifiers, LayoutModifiers, Units, Units::{Stretch, Pixels}, Weight},
   state::{Data, Lens},
   views::{Knob, Label, TextEvent, Textbox, VStack}, handle::Handle, modifiers::TextModifiers,
 };
+
+pub enum ParamKnobSize {
+  Regular,
+  Large,
+}
+
+impl ParamKnobSize {
+  fn get_value(&self) -> Units {
+    match self {
+      ParamKnobSize::Regular => Pixels(40.),
+      ParamKnobSize::Large => Pixels(64.)
+    }
+  }
+}
 
 pub struct ParamKnob;
 
@@ -15,6 +29,7 @@ impl ParamKnob {
     lens: L,
     params_to_param: F,
     on_change: C,
+    size: ParamKnobSize
   ) -> Handle<'a, VStack> 
   where
     L: 'static + Lens + Copy + Send + Sync,
@@ -39,7 +54,8 @@ impl ParamKnob {
       )
       .on_changing(move |cx, val| {
         cx.emit(on_change(val));
-      });
+      })
+      .size(size.get_value());
 
       Textbox::new(
         cx,

@@ -25,12 +25,12 @@ A reverb effect written in Rust.
 	lv2:port [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 0 ;
-		lv2:symbol "reverse" ;
-		lv2:name "Reverse" ;
-		lv2:portProperty lv2:integer, lv2:toggled;
-		lv2:default 0 ;
-		lv2:minimum 0 ;
-		lv2:maximum 1 ;
+		lv2:symbol "size" ;
+		lv2:name "Size" ;
+		lv2:portProperty epp:logarithmic ;
+		lv2:default 80.0 ;
+		lv2:minimum 1.0 ;
+		lv2:maximum 500.0 ;
 	], [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 1 ;
@@ -41,16 +41,16 @@ A reverb effect written in Rust.
 		lv2:minimum 7.0 ;
 		lv2:maximum 500.0 ;
 		units:unit units:ms
-	] , [
+	], [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 2 ;
-		lv2:symbol "size" ;
-		lv2:name "Size" ;
-		lv2:portProperty epp:logarithmic ;
-		lv2:default 80.0 ;
-		lv2:minimum 1.0 ;
-		lv2:maximum 500.0 ;
-	], [
+		lv2:symbol "reverse" ;
+		lv2:name "Reverse" ;
+		lv2:portProperty lv2:integer, lv2:toggled;
+		lv2:default 0 ;
+		lv2:minimum 0 ;
+		lv2:maximum 1 ;
+	] , [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 3 ;
 		lv2:symbol "speed" ;

@@ -14,14 +14,14 @@ pub struct ReverbParameters {
   #[persist = "editor-state"]
   pub editor_state: Arc<ViziaState>,
 
-  #[id = "reverse"]
-  pub reverse: BoolParam,
-
-  #[id = "predelay"]
-  pub predelay: FloatParam,
-
   #[id = "size"]
   pub size: FloatParam,
+  
+  #[id = "predelay"]
+  pub predelay: FloatParam,
+  
+  #[id = "reverse"]
+  pub reverse: BoolParam,
 
   #[id = "speed"]
   pub speed: FloatParam,
@@ -49,9 +49,18 @@ impl Default for ReverbParameters {
   fn default() -> Self {
     Self {
       editor_state: editor::default_state(),
-
-      reverse: BoolParam::new("Reverse", false),
-
+      
+      size: FloatParam::new(
+        "Size",
+        80.,
+        FloatRange::Skewed {
+          min: MIN_SIZE,
+          max: MAX_SIZE,
+          factor: 0.333333,
+        },
+      )
+      .with_value_to_string(v2s_f32_digits(2)),
+      
       predelay: FloatParam::new(
         "Predelay",
         MIN_PREDELAY,
@@ -63,17 +72,8 @@ impl Default for ReverbParameters {
       )
       .with_unit(" ms")
       .with_value_to_string(v2s_f32_digits(2)),
-
-      size: FloatParam::new(
-        "Size",
-        80.,
-        FloatRange::Skewed {
-          min: MIN_SIZE,
-          max: MAX_SIZE,
-          factor: 0.333333,
-        },
-      )
-      .with_value_to_string(v2s_f32_digits(2)),
+      
+      reverse: BoolParam::new("Reverse", false),
 
       speed: FloatParam::new(
         "Speed",

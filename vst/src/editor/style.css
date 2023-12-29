@@ -12,6 +12,19 @@ knob .track {
   background-color: #ffb433;
 }
 
+checkbox {
+  width: 28px;
+  height: 28px;
+  border-radius: 2px;
+  border-width: 0px;
+  background-color: #363636;
+  top: 10px;
+}
+
+checkbox:hover {
+  background-color: #E1D9D1;
+}
+
 textbox {
   font-size: 12px;
   width: 72px;

@@ -148,6 +148,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 8px;
+    margin-top: 7.5px;
 }
 
 .mod-pedal{{{cns}}} .mod-toggle-image {
@@ -222,11 +224,27 @@
     margin:0 auto;
 }
 
+.mod-pedal{{{cns}}} .mod-knob.large > .mod-knob-image {
+    background-image:url(/resources/assets/steel-knob.png{{{ns}}});
+    background-repeat:no-repeat;
+    background-size:auto 80px;
+    height:80px;
+    width:80px;
+    margin:0 auto;
+}
+
 /* = PARAMETER TITLE
 ================================================ */
 .mod-pedal{{{cns}}} div.mod-param-title {
     font-size:11px;
     font-weight:bold;
     width: 60px;
+    text-transform:uppercase;
+}
+
+.mod-pedal{{{cns}}} .mod-knob.large > div.mod-param-title {
+    font-size:11px;
+    font-weight:bold;
+    width: 80px;
     text-transform:uppercase;
 }
