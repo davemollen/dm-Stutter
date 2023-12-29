@@ -90,7 +90,7 @@ impl Taps {
     let right_delay_network_out = inputs[1] + inputs[3];
     self
       .saturation_activator
-      .set_average(left_delay_network_out, right_delay_network_out);
+      .set_amplitude(left_delay_network_out, right_delay_network_out);
 
     let left_out = (left_delay_network_out + early_reflections_output[0]) * 0.5;
     let right_out = (right_delay_network_out + early_reflections_output[1]) * 0.5;

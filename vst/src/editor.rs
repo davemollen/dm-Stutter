@@ -6,7 +6,7 @@ use vizia::{prelude::WindowSize, Application, ParentWindow};
 use vst::{editor::Editor, prelude::HostCallback};
 
 pub const WINDOW_SIZE: WindowSize = WindowSize {
-  width: 520,
+  width: 480,
   height: 296,
 };
 

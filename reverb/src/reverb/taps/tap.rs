@@ -94,7 +94,16 @@ impl Tap {
 
   pub fn apply_saturation(&mut self, input: f32, decay: f32, saturation_gain: f32) -> f32 {
     let clean_gain = 1. - saturation_gain;
-    let saturation_out = input * clean_gain + input.fast_atan2() * saturation_gain;
-    self.dc_block.run(saturation_out * decay * 0.5)
+    let clean_out = match (clean_gain > 0., decay >= 1.) {
+      (true, true) => (input * clean_gain).clamp(-1., 1.),
+      (true, false) => input * clean_gain,
+      _ => 0.
+    };
+
+    let saturation_out = match saturation_gain > 0. {
+      true => input.fast_atan2() * saturation_gain,
+      false => 0.
+    };
+    self.dc_block.run((clean_out + saturation_out) * decay * 0.5)
   }
 }
