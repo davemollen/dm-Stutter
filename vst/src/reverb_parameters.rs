@@ -62,16 +62,10 @@ impl Default for ReverbParameters {
       .with_unit(" Hz")
       .with_value_to_string(v2s_f32_digits(2)),
 
-      depth: FloatParam::new("Depth", 0.375, 4, FloatRange::Linear { min: 0., max: 1. })
+      depth: FloatParam::new("Depth", 0., 4, FloatRange::Linear { min: -1., max: 1. })
         .with_unit(" %")
-        .with_value_to_string(Arc::new(move |value| format!("{:.2}", value * 200. - 100.)))
-        .with_string_to_value(Arc::new(|string| {
-          string
-            .trim_end_matches(&[' ', '%'])
-            .parse()
-            .ok()
-            .map(|x: f32| (x + 100.) / 200.0)
-        })),
+        .with_value_to_string(v2s_f32_percentage(2))
+        .with_string_to_value(s2v_f32_percentage()),
 
       absorb: FloatParam::new("Absorb", 0.5, 5, FloatRange::Linear { min: 0., max: 1. })
         .with_unit(" %")
@@ -83,16 +77,10 @@ impl Default for ReverbParameters {
         .with_value_to_string(v2s_f32_percentage(2))
         .with_string_to_value(s2v_f32_percentage()),
 
-      tilt: FloatParam::new("Tilt", 0.5, 7, FloatRange::Linear { min: 0., max: 1. })
+      tilt: FloatParam::new("Tilt", 0., 7, FloatRange::Linear { min: -1., max: 1. })
         .with_unit(" %")
-        .with_value_to_string(Arc::new(move |value| format!("{:.2}", value * 200. - 100.)))
-        .with_string_to_value(Arc::new(|string| {
-          string
-            .trim_end_matches(&[' ', '%'])
-            .parse()
-            .ok()
-            .map(|x: f32| (x + 100.) / 200.0)
-        })),
+        .with_value_to_string(v2s_f32_percentage(2))
+        .with_string_to_value(s2v_f32_percentage()),
 
       shimmer: FloatParam::new("Shimmer", 0., 8, FloatRange::Linear { min: 0., max: 1. })
         .with_unit(" %")
