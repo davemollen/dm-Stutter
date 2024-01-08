@@ -5,9 +5,9 @@ use reverb::Reverb;
 
 #[derive(PortCollection)]
 struct Ports {
-  reverse: InputPort<Control>,
-  predelay: InputPort<Control>,
   size: InputPort<Control>,
+  predelay: InputPort<Control>,
+  reverse: InputPort<Control>,
   speed: InputPort<Control>,
   depth: InputPort<Control>,
   absorb: InputPort<Control>,
@@ -44,9 +44,9 @@ impl Plugin for DmReverb {
   // Process a chunk of audio. The audio ports are dereferenced to slices, which the plugin
   // iterates over.
   fn run(&mut self, ports: &mut Ports, _features: &mut (), _sample_count: u32) {
-    let reverse = if *ports.reverse == 1. { true } else { false };
-    let predelay = *ports.predelay;
     let size = *ports.size;
+    let predelay = *ports.predelay;
+    let reverse = if *ports.reverse == 1. { true } else { false };
     let speed = *ports.speed;
     let depth = *ports.depth * 0.01;
     let absorb = *ports.absorb * 0.01;
