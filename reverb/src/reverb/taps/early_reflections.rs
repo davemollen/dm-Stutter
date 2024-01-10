@@ -5,7 +5,8 @@ use crate::shared::{
 };
 
 const LAST_EARLY_REFLECTION_GAIN: f32 = 0.501187;
-const MINUS_TWELVE_DB: f32 = 0.251189;
+const MINUS_THREE_DB: f32 = 0.707946;
+const MINUS_FIFTEEN_DB: f32 = 0.177828;
 
 pub struct EarlyReflections {
   reflections: [[f32; 6]; 2],
@@ -42,7 +43,7 @@ impl EarlyReflections {
   }
 
   pub fn run(&mut self, size: f32, taps: &mut [Tap; 4]) -> Vec<f32> {
-    let gain = size.scale(MIN_SIZE, MAX_SIZE, 1., MINUS_TWELVE_DB);
+    let gain = size.scale(MIN_SIZE, MAX_SIZE, MINUS_THREE_DB, MINUS_FIFTEEN_DB);
 
     taps
       .iter_mut()

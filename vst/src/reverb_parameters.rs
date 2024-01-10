@@ -1,5 +1,4 @@
 use reverb::shared::constants::{MAX_PREDELAY, MAX_SIZE, MIN_PREDELAY, MIN_SIZE};
-use std::sync::Arc;
 use vst::plugin::PluginParameters;
 mod formatters;
 use formatters::{s2v_f32_percentage, v2s_f32_digits, v2s_f32_percentage};
