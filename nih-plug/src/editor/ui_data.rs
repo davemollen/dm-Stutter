@@ -1,11 +1,7 @@
 use crate::reverb_parameters::ReverbParameters;
 use nih_plug::prelude::{GuiContext, ParamPtr};
 use std::sync::Arc;
-use nih_plug_vizia::vizia::{
-  prelude::{Lens, Wrapper, Event}, 
-  context::EventContext, 
-  state::Model
-};
+use nih_plug_vizia::vizia::prelude::*;
 
 pub enum ParamChangeEvent {
   SetParam(ParamPtr, f32),

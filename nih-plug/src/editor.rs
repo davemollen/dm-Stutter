@@ -1,5 +1,6 @@
 #[path="./editor/components/param_checkbox.rs"]
 mod param_checkbox;
+use nih_plug_vizia::vizia::style::FontWeightKeyword;
 use param_checkbox::ParamCheckbox;
 #[path="./editor/components/param_knob.rs"]
 mod param_knob;
@@ -10,9 +11,9 @@ pub use ui_data::{UiData, ParamChangeEvent};
 use nih_plug::prelude::Editor;
 use nih_plug_vizia::{ViziaState, ViziaTheming, create_vizia_editor};
 use nih_plug_vizia::vizia::{
-  prelude::{LayoutType, Units::{Stretch, Pixels}, Weight},
+  prelude::{LayoutType, Units::{Stretch, Pixels}},
   views::{HStack, VStack, Label}, 
-  state::Model,
+  model::Model,
   modifiers::{LayoutModifiers, TextModifiers, StyleModifiers}
 };
 use std::sync::Arc;
@@ -30,7 +31,7 @@ pub(crate) fn create(
     editor_state: Arc<ViziaState>,
 ) -> Option<Box<dyn Editor>> {
   create_vizia_editor(editor_state, ViziaTheming::Custom, move |cx, gui_context| { 
-    cx.add_theme(STYLE);
+    let _ = cx.add_stylesheet(STYLE);
 
     UiData {
       params: params.clone(),
@@ -48,91 +49,90 @@ pub(crate) fn create(
           |params| &params.size,
           |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
           ParamKnobSize::Large
-        )
-        .child_space(Stretch(1.0))
-        .row_between(Pixels(8.0));
+        ).top(Stretch(1.0)).bottom(Stretch(1.0));
   
         VStack::new(cx, |cx| {
-          HStack::new(cx, |cx| {
-            ParamKnob::new(
-              cx,
-              params.predelay.name(),
-              UiData::params,
-              params.predelay.as_ptr(),
-              |params| &params.predelay,
-              |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
-              ParamKnobSize::Regular
-            );
-            ParamKnob::new(
-              cx,
-              params.speed.name(),
-              UiData::params,
-              params.speed.as_ptr(),
-              |params| &params.speed,
-              |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
-              ParamKnobSize::Regular
-            );
-            ParamKnob::new(
-              cx,
-              params.absorb.name(),
-              UiData::params,
-              params.absorb.as_ptr(),
-              |params| &params.absorb,
-              |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
-              ParamKnobSize::Regular
-            );
-            ParamKnob::new(
-              cx,
-              params.tilt.name(),
-              UiData::params,
-              params.tilt.as_ptr(),
-              |params| &params.tilt,
-              |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
-              ParamKnobSize::Regular
-            );
-          }).layout_type(LayoutType::Row);
-          
-          HStack::new(cx, |cx| {
-            ParamCheckbox::new(
-              cx,
-              params.reverse.name(),
-              UiData::params,
-              params.reverse.as_ptr(),
-              |params| &params.reverse,
-              |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
-            );
-            ParamKnob::new(
-              cx,
-              params.depth.name(),
-              UiData::params,
-              params.depth.as_ptr(),
-              |params| &params.depth,
-              |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
-              ParamKnobSize::Regular
-            );
-            ParamKnob::new(
-              cx,
-              params.decay.name(),
-              UiData::params,
-              params.decay.as_ptr(),
-              |params| &params.decay,
-              |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
-              ParamKnobSize::Regular
-            );
-            ParamKnob::new(
-              cx,
-              params.shimmer.name(),
-              UiData::params,
-              params.shimmer.as_ptr(),
-              |params| &params.shimmer,
-              |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
-              ParamKnobSize::Regular
-            );
-          }).layout_type(LayoutType::Row);
-        })
-        .layout_type(LayoutType::Column)
-        .height(Pixels(184.))
-        .space(Stretch(1.0));
+          ParamKnob::new(
+            cx,
+            params.predelay.name(),
+            UiData::params,
+            params.predelay.as_ptr(),
+            |params| &params.predelay,
+            |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
+            ParamKnobSize::Regular
+          );
+          ParamCheckbox::new(
+            cx,
+            params.reverse.name(),
+            UiData::params,
+            params.reverse.as_ptr(),
+            |params| &params.reverse,
+            |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
+          ).top(Pixels(4.)).left(Stretch(1.0)).right(Stretch(1.0)).height(Pixels(92.));
+        }).child_space(Stretch(1.0)).left(Pixels(16.0));
+        
+        VStack::new(cx, |cx| {
+          ParamKnob::new(
+            cx,
+            params.speed.name(),
+            UiData::params,
+            params.speed.as_ptr(),
+            |params| &params.speed,
+            |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
+            ParamKnobSize::Regular
+          );
+          ParamKnob::new(
+            cx,
+            params.depth.name(),
+            UiData::params,
+            params.depth.as_ptr(),
+            |params| &params.depth,
+            |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
+            ParamKnobSize::Regular
+          ).top(Pixels(4.));
+        }).child_space(Stretch(1.0));
+        
+        VStack::new(cx, |cx| {
+          ParamKnob::new(
+            cx,
+            params.absorb.name(),
+            UiData::params,
+            params.absorb.as_ptr(),
+            |params| &params.absorb,
+            |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
+            ParamKnobSize::Regular
+          );
+          ParamKnob::new(
+            cx,
+            params.decay.name(),
+            UiData::params,
+            params.decay.as_ptr(),
+            |params| &params.decay,
+            |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
+            ParamKnobSize::Regular
+          ).top(Pixels(4.));
+        }).child_space(Stretch(1.0));
+  
+        VStack::new(cx, |cx| {
+          ParamKnob::new(
+            cx,
+            params.tilt.name(),
+            UiData::params,
+            params.tilt.as_ptr(),
+            |params| &params.tilt,
+            |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
+            ParamKnobSize::Regular
+          );
+          ParamKnob::new(
+            cx,
+            params.shimmer.name(),
+            UiData::params,
+            params.shimmer.as_ptr(),
+            |params| &params.shimmer,
+            |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
+            ParamKnobSize::Regular
+          ).top(Pixels(4.));
+        }).child_space(Stretch(1.0));
   
         ParamKnob::new(
           cx,
@@ -142,15 +142,12 @@ pub(crate) fn create(
           |params| &params.mix,
           |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
           ParamKnobSize::Regular
-        )
-        .child_space(Stretch(1.0))
-        .top(Pixels(-128.0))
-        .left(Pixels(-16.0));
+        );
       });
   
       Label::new(cx, "dm-Reverb")
         .font_size(22.0)
-        .font_weight(Weight::BOLD)
+        .font_weight(FontWeightKeyword::Bold)
         .border_radius(Pixels(16.0))
         .border_width(Pixels(1.))
         .border_color("#2c5494")

@@ -8,8 +8,13 @@ knob {
   height: 40px;
 }
 
-knob .track {
-  background-color: #ffb433;
+knob .knob-track {
+  color: #ffb433;
+  background-color: #363636;
+}
+
+knob .knob-head {
+  display: none;
 }
 
 checkbox {
@@ -32,6 +37,7 @@ textbox {
   background-color: transparent;
   border-width: 0px;
   outline-color: none;
+  child-space: 1s;
 }
 
 textbox:hover {
