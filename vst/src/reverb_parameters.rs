@@ -81,7 +81,7 @@ impl Default for ReverbParameters {
         .with_value_to_string(v2s_f32_percentage(2))
         .with_string_to_value(s2v_f32_percentage()),
 
-      shimmer: FloatParam::new("Shimmer", 0., 8, FloatRange::Linear { min: 0., max: 1. })
+      shimmer: FloatParam::new("Shimmer", 0., 8, FloatRange::Skewed { min: 0., max: 1., factor: 0.5 })
         .with_unit(" %")
         .with_value_to_string(v2s_f32_percentage(2))
         .with_string_to_value(s2v_f32_percentage()),

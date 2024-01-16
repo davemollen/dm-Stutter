@@ -1,14 +1,16 @@
 mod early_reflections;
 mod saturation_activator;
 mod tap;
+mod shimmer;
 use crate::shared::phasor::Phasor;
-use {early_reflections::EarlyReflections, saturation_activator::SaturationActivator, tap::Tap};
+use {early_reflections::EarlyReflections, saturation_activator::SaturationActivator, tap::Tap, shimmer::Shimmer};
 
 pub struct Taps {
   early_reflections: EarlyReflections,
   taps: [Tap; 4],
   lfo_phasor: Phasor,
   saturation_activator: SaturationActivator,
+  shimmer: Shimmer
 }
 
 impl Taps {
@@ -22,6 +24,7 @@ impl Taps {
         Tap::new(sample_rate, 1., 14.916666666666666, 0.75),
       ],
       lfo_phasor: Phasor::new(sample_rate),
+      shimmer: Shimmer::new(sample_rate),
       saturation_activator: SaturationActivator::new(sample_rate),
     }
   }
@@ -54,7 +57,7 @@ impl Taps {
 
   fn process_and_write_taps(
     &mut self,
-    input: f32,
+    input: (f32, f32),
     feedback_matrix_outputs: impl Iterator<Item = f32>,
     diffuse: f32,
     absorb: f32,
@@ -65,7 +68,7 @@ impl Taps {
     self
       .taps
       .iter_mut()
-      .zip([input, input, 0., 0.])
+      .zip([input.0, input.1, 0., 0.])
       .zip(feedback_matrix_outputs)
       .for_each(|((tap, dry_signal), feedback_matrix_output)| {
         let saturation_output =
@@ -81,17 +84,18 @@ impl Taps {
       });
   }
 
+  fn retrieve_channels_from_delay_network(inputs: &Vec<f32>) -> (f32, f32) {
+    (
+      inputs[0] + inputs[2],
+      inputs[1] + inputs[3]
+    )
+  }
+
   fn mix_delay_network_and_reflections(
     &mut self,
-    inputs: Vec<f32>,
+    (left_delay_network_out, right_delay_network_out): (f32, f32),
     early_reflections_output: Vec<f32>,
   ) -> (f32, f32) {
-    let left_delay_network_out = inputs[0] + inputs[2];
-    let right_delay_network_out = inputs[1] + inputs[3];
-    self
-      .saturation_activator
-      .set_amplitude(left_delay_network_out, right_delay_network_out);
-
     let left_out = (left_delay_network_out + early_reflections_output[0]) * 0.5;
     let right_out = (right_delay_network_out + early_reflections_output[1]) * 0.5;
     (left_out, right_out)
@@ -106,12 +110,18 @@ impl Taps {
     diffuse: f32,
     absorb: f32,
     decay: f32,
+    shimmer: f32
   ) -> (f32, f32) {
     let early_reflections_outputs = self.early_reflections.run(size, &mut self.taps);
 
     let delay_network_outputs = self.read_from_delay_network(size, speed, depth);
+    let delay_network_channels = Self::retrieve_channels_from_delay_network(&delay_network_outputs);
+    self.saturation_activator.set_amplitude(delay_network_channels);
+    let mixed = self.mix_delay_network_and_reflections(delay_network_channels, early_reflections_outputs);
+    let shimmer = self.shimmer.run((input, input), delay_network_channels, shimmer);
     let feedback_matrix_outputs = Self::apply_feedback_matrix(&delay_network_outputs);
-    self.process_and_write_taps(input, feedback_matrix_outputs, diffuse, absorb, decay);
-    self.mix_delay_network_and_reflections(delay_network_outputs, early_reflections_outputs)
+    self.process_and_write_taps(shimmer, feedback_matrix_outputs, diffuse, absorb, decay);
+
+    mixed
   }
 }

@@ -11,7 +11,7 @@ pub use ui_data::{UiData, ParamChangeEvent};
 use nih_plug::prelude::Editor;
 use nih_plug_vizia::{ViziaState, ViziaTheming, create_vizia_editor};
 use nih_plug_vizia::vizia::{
-  prelude::{LayoutType, Units::{Stretch, Pixels}},
+  prelude::Units::{Stretch, Pixels},
   views::{HStack, VStack, Label}, 
   model::Model,
   modifiers::{LayoutModifiers, TextModifiers, StyleModifiers}

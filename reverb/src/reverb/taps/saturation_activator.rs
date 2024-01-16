@@ -15,8 +15,8 @@ impl SaturationActivator {
     }
   }
 
-  pub fn set_amplitude(&mut self, left_input: f32, right_input: f32) {
-    self.amplitude = left_input.min(right_input).abs();
+  pub fn set_amplitude(&mut self, input: (f32, f32)) {
+    self.amplitude = input.0.abs().max(input.1.abs());
   }
 
   pub fn get_saturation_gain(&mut self) -> f32 {
