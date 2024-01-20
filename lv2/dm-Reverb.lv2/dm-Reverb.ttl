@@ -101,7 +101,6 @@ A reverb effect written in Rust.
 		lv2:index 8 ;
 		lv2:symbol "shimmer" ;
 		lv2:name "Shimmer" ;
-		lv2:portProperty epp:logarithmic ;
 		lv2:default 0.0 ;
 		lv2:minimum 0.0 ;
 		lv2:maximum 100.0 ;
