@@ -1,6 +1,6 @@
 use crate::shared::{
   constants::MAX_DEPTH,
-  one_pole_filter::{Mode, OnePoleFilter},
+  one_pole_filter::{Mode, OnePoleFilter}, float_ext::FloatExt,
 };
 
 pub struct SmoothParameters {
@@ -51,7 +51,7 @@ impl SmoothParameters {
       .run(depth * depth * depth.signum() * MAX_DEPTH, 12., Mode::Hertz);
     let absorb = self.smooth_absorb.run(absorb, 12., Mode::Hertz);
     let tilt = self.smooth_tilt.run(tilt, 12., Mode::Hertz);
-    let shimmer = self.smooth_shimmer.run(shimmer, 12., Mode::Hertz);
+    let shimmer = self.smooth_shimmer.run(shimmer.fast_pow(2.), 12., Mode::Hertz);
     let mix = self.smooth_mix.run(mix, 12., Mode::Hertz);
     let diffuse = (absorb * 3.).min(1.) * 0.8;
     let absorb = (absorb - 0.3333333).max(0.) * 1.5;

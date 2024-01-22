@@ -52,16 +52,18 @@ impl Default for ReverbParameters {
         "Speed",
         2.,
         3,
-        FloatRange::Skewed {
+        FloatRange::AsymmetricalSkewed {
           min: 0.02,
           max: 150.,
-          factor: 0.333333,
+          center: 5.,
+          below_center_factor: 0.333333,
+          above_center_factor: 0.333333
         },
       )
       .with_unit(" Hz")
       .with_value_to_string(v2s_f32_digits(2)),
 
-      depth: FloatParam::new("Depth", 0., 4, FloatRange::Linear { min: -1., max: 1. })
+      depth: FloatParam::new("Depth", -0.1, 4, FloatRange::Linear { min: -1., max: 1. })
         .with_unit(" %")
         .with_value_to_string(v2s_f32_percentage(2))
         .with_string_to_value(s2v_f32_percentage()),
@@ -81,7 +83,7 @@ impl Default for ReverbParameters {
         .with_value_to_string(v2s_f32_percentage(2))
         .with_string_to_value(s2v_f32_percentage()),
 
-      shimmer: FloatParam::new("Shimmer", 0., 8, FloatRange::Skewed { min: 0., max: 1., factor: 0.5 })
+      shimmer: FloatParam::new("Shimmer", 0., 8, FloatRange::Linear { min: 0., max: 1. })
         .with_unit(" %")
         .with_value_to_string(v2s_f32_percentage(2))
         .with_string_to_value(s2v_f32_percentage()),
