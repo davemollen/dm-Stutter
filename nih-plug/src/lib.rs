@@ -117,8 +117,7 @@ impl ClapPlugin for DmReverb {
   const CLAP_FEATURES: &'static [ClapFeature] = &[
     ClapFeature::AudioEffect,
     ClapFeature::Stereo,
-    ClapFeature::Mono,
-    ClapFeature::Utility,
+    ClapFeature::Reverb,
   ];
 }
 
@@ -126,7 +125,8 @@ impl Vst3Plugin for DmReverb {
   const VST3_CLASS_ID: [u8; 16] = *b"dm-Reverb.......";
   const VST3_SUBCATEGORIES: &'static [Vst3SubCategory] = &[
     Vst3SubCategory::Fx, 
-    Vst3SubCategory::Reverb
+    Vst3SubCategory::Reverb,
+    Vst3SubCategory::Stereo
   ];
 }
 
