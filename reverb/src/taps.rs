@@ -1,16 +1,19 @@
 mod early_reflections;
 mod saturation_activator;
-mod tap;
 mod shimmer;
+mod tap;
 use crate::shared::phasor::Phasor;
-use {early_reflections::EarlyReflections, saturation_activator::SaturationActivator, tap::Tap, shimmer::Shimmer};
+use {
+  early_reflections::EarlyReflections, saturation_activator::SaturationActivator, shimmer::Shimmer,
+  tap::Tap,
+};
 
 pub struct Taps {
   early_reflections: EarlyReflections,
   taps: [Tap; 4],
   lfo_phasor: Phasor,
   saturation_activator: SaturationActivator,
-  shimmer: Shimmer
+  shimmer: Shimmer,
 }
 
 impl Taps {
@@ -85,10 +88,7 @@ impl Taps {
   }
 
   fn retrieve_channels_from_delay_network(inputs: &Vec<f32>) -> (f32, f32) {
-    (
-      inputs[0] + inputs[2],
-      inputs[1] + inputs[3]
-    )
+    (inputs[0] + inputs[2], inputs[1] + inputs[3])
   }
 
   fn mix_delay_network_and_reflections(
@@ -110,15 +110,20 @@ impl Taps {
     diffuse: f32,
     absorb: f32,
     decay: f32,
-    shimmer: f32
+    shimmer: f32,
   ) -> (f32, f32) {
     let early_reflections_outputs = self.early_reflections.run(size, &mut self.taps);
 
     let delay_network_outputs = self.read_from_delay_network(size, speed, depth);
     let delay_network_channels = Self::retrieve_channels_from_delay_network(&delay_network_outputs);
-    self.saturation_activator.set_amplitude(delay_network_channels);
-    let mixed = self.mix_delay_network_and_reflections(delay_network_channels, early_reflections_outputs);
-    let shimmer = self.shimmer.run((input, input), delay_network_channels, shimmer);
+    self
+      .saturation_activator
+      .set_amplitude(delay_network_channels);
+    let mixed =
+      self.mix_delay_network_and_reflections(delay_network_channels, early_reflections_outputs);
+    let shimmer = self
+      .shimmer
+      .run((input, input), delay_network_channels, shimmer);
     let feedback_matrix_outputs = Self::apply_feedback_matrix(&delay_network_outputs);
     self.process_and_write_taps(shimmer, feedback_matrix_outputs, diffuse, absorb, decay);
 
