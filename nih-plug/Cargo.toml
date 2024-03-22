@@ -1,5 +1,5 @@
 [package]
-name = "dm_reverb"
+name = "dm_stutter"
 version = "0.1.0"
 authors = ["Dave Mollen <davemollen@gmail.com>"]
 edition = "2021"
@@ -10,7 +10,7 @@ crate-type = ["cdylib"]
 [dependencies]
 nih_plug = { git = "https://github.com/robbert-vdh/nih-plug", features = ["assert_process_allocs"] }
 nih_plug_vizia = { git = "https://github.com/robbert-vdh/nih-plug.git" }
-reverb = { path = "../reverb" }
+stutter = { path = "../stutter" }
 
 [workspace]
 members = ["xtask"]

@@ -1,6 +1,6 @@
-## dm-Reverb
+## dm-Stutter
 
-A reverb effect written in Rust.
+A stuttering effect written in Rust.
 
 The effect can be compiled to a [MOD devices](https://moddevices.com/), VST3 or CLAP plugin.
 VST is a trademark of Steinberg Media Technologies GmbH, registered in Europe and other countries.
@@ -15,7 +15,7 @@ VST is a trademark of Steinberg Media Technologies GmbH, registered in Europe an
 
 ## Download VST3 and CLAP plugin
 
-You can download the VST3 and CLAP plugins for Linux, Windows and macOS from the [release page](https://github.com/davemollen/dm-Reverb/releases).
+You can download the VST3 and CLAP plugins for Linux, Windows and macOS from the [release page](https://github.com/davemollen/dm-Stutter/releases).
 
 On macOS you may need to [disable Gatekeeper](https://disable-gatekeeper.github.io/) as Apple has recently made it more difficult to run unsigned code on macOS.
 
@@ -24,14 +24,8 @@ If you want to build the plugin on your own machine, check out the [nih-plug rea
 ## MOD devices installation
 
 This plugin is not yet in the MOD Audio plugin store.
-However, you can find a build of the plugin for the MOD Dwarf at [./lv2/dm-Reverb.lv2](./lv2/dm-Reverb.lv2/). Copy this file to your MOD devices' plugin folder. If you want a build for MOD Duo or MOD Duo X you'll need to build the plugin yourself for now. For more information about building this plugin for your MOD device, see [these instructions](https://github.com/moddevices/mod-plugin-builder).
+However, you can find a build of the plugin for the MOD Dwarf at [./lv2/dm-Stutter.lv2](./lv2/dm-Stutter.lv2/). Copy this file to your MOD devices' plugin folder. If you want a build for MOD Duo or MOD Duo X you'll need to build the plugin yourself for now. For more information about building this plugin for your MOD device, see [these instructions](https://github.com/moddevices/mod-plugin-builder).
 
 ## Other plugin formats
 
-- VST2:
-
-  Legacy code for a VST2 plugin is also in this repository. Since VST2 has been deprecated automated builds for VST2 have been excluded.
-
-- LV2
-
-  Code for a LV2 plugin is also in this repository. Automated builds are excluded for LV2 because the rust lv2 crate doesn't have GUI support. The LV2 plugin format is being used for the MOD devices plugin which in turn does have a GUI. Because MOD has it's own GUI layer on top of the LV2 plugin.
+Code for a LV2 plugin is also in this repository. Automated builds are excluded for LV2 because the rust lv2 crate doesn't have GUI support. The LV2 plugin format is being used for the MOD devices plugin which in turn does have a GUI. Because MOD has it's own GUI layer on top of the LV2 plugin.

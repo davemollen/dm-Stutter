@@ -1,7 +1,7 @@
-use crate::reverb_parameters::ReverbParameters;
+use crate::stutter_parameters::StutterParameters;
 use nih_plug::prelude::{GuiContext, ParamPtr};
-use std::sync::Arc;
 use nih_plug_vizia::vizia::prelude::*;
+use std::sync::Arc;
 
 pub enum ParamChangeEvent {
   SetParam(ParamPtr, f32),
@@ -9,7 +9,7 @@ pub enum ParamChangeEvent {
 
 #[derive(Lens)]
 pub struct UiData {
-  pub params: Arc<ReverbParameters>,
+  pub params: Arc<StutterParameters>,
   pub gui_context: Arc<dyn GuiContext>,
 }
 

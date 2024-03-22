@@ -10,8 +10,8 @@ defaults:
     shell: bash
 
 env:
-  binary_name: dm_reverb
-  plugin_name: dm-Reverb
+  binary_name: dm_stutter
+  plugin_name: dm-Stutter
 
 jobs:
   package-nih-plug:

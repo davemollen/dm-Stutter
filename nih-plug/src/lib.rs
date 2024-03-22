@@ -1,35 +1,35 @@
 use nih_plug::prelude::*;
-use reverb::Reverb;
-mod reverb_parameters;
-use reverb_parameters::ReverbParameters;
+use stutter::Stutter;
+mod stutter_parameters;
 use std::sync::Arc;
+use stutter_parameters::StutterParameters;
 mod editor;
 
-struct DmReverb {
-  params: Arc<ReverbParameters>,
-  reverb: Reverb,
+struct DmStutter {
+  params: Arc<StutterParameters>,
+  stutter: Stutter,
 }
 
-impl Default for DmReverb {
+impl Default for DmStutter {
   fn default() -> Self {
-    let params = Arc::new(ReverbParameters::default());
+    let params = Arc::new(StutterParameters::default());
     Self {
       params: params.clone(),
-      reverb: Reverb::new(44100.),
+      stutter: Stutter::new(44100.),
     }
   }
 }
 
-impl Plugin for DmReverb {
-  const NAME: &'static str = "dm-Reverb";
+impl Plugin for DmStutter {
+  const NAME: &'static str = "dm-Stutter";
   const VENDOR: &'static str = "DM";
-  const URL: &'static str = "https://github.com/davemollen/dm-Reverb";
+  const URL: &'static str = "https://github.com/davemollen/dm-Stutter";
   const EMAIL: &'static str = "davemollen@gmail.com";
   const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 
   const AUDIO_IO_LAYOUTS: &'static [AudioIOLayout] = &[AudioIOLayout {
-    main_input_channels: NonZeroU32::new(2),
-    main_output_channels: NonZeroU32::new(2),
+    main_input_channels: NonZeroU32::new(1),
+    main_output_channels: NonZeroU32::new(1),
     ..AudioIOLayout::const_default()
   }];
   const MIDI_INPUT: MidiConfig = MidiConfig::None;
@@ -55,7 +55,7 @@ impl Plugin for DmReverb {
     buffer_config: &BufferConfig,
     _context: &mut impl InitContext<Self>,
   ) -> bool {
-    self.reverb = Reverb::new(buffer_config.sample_rate);
+    self.stutter = Stutter::new(buffer_config.sample_rate);
     true
   }
 
@@ -65,41 +65,21 @@ impl Plugin for DmReverb {
     _aux: &mut AuxiliaryBuffers,
     _context: &mut impl ProcessContext<Self>,
   ) -> ProcessStatus {
-    let reverse = self.params.reverse.value();
-    let predelay = self.params.predelay.value();
-    let size = self.params.size.value();
-    let speed = self.params.speed.value();
-    let depth = self.params.depth.value();
-    let absorb = self.params.absorb.value();
-    let decay = self.params.decay.value();
-    let tilt = self.params.tilt.value();
-    let shimmer = self.params.shimmer.value();
-    let mix = self.params.mix.value();
+    let on = self.params.on.value();
+    let auto = self.params.auto.value();
+    let trigger = self.params.trigger.value();
+    let pulse = self.params.pulse.value();
+    let duration = self.params.duration.value();
+    let chance = self.params.chance.value();
 
     buffer.iter_samples().for_each(|mut channel_samples| {
-      let left_channel_in = channel_samples.get_mut(0).unwrap();
-      let input_left = *left_channel_in;
-      let right_channel_in = channel_samples.get_mut(1).unwrap();
-      let input_right = *right_channel_in;
+      let input = *channel_samples.get_mut(0).unwrap();
+      let stutter_output = self
+        .stutter
+        .process(input, on, auto, trigger, pulse, duration, chance);
 
-      let (reverb_left, reverb_right) = self.reverb.run(
-        (input_left, input_right),
-        reverse,
-        predelay,
-        size,
-        speed,
-        depth,
-        absorb,
-        decay,
-        tilt,
-        shimmer,
-        mix,
-      );
-
-      let left_channel_out = channel_samples.get_mut(0).unwrap();
-      *left_channel_out = reverb_left;
-      let right_channel_out = channel_samples.get_mut(1).unwrap();
-      *right_channel_out = reverb_right;
+      let output = channel_samples.get_mut(0).unwrap();
+      *output = stutter_output;
     });
     ProcessStatus::Normal
   }
@@ -109,26 +89,26 @@ impl Plugin for DmReverb {
   fn deactivate(&mut self) {}
 }
 
-impl ClapPlugin for DmReverb {
-  const CLAP_ID: &'static str = "dm-Reverb";
-  const CLAP_DESCRIPTION: Option<&'static str> = Some("A reverb plugin");
+impl ClapPlugin for DmStutter {
+  const CLAP_ID: &'static str = "dm-Stutter";
+  const CLAP_DESCRIPTION: Option<&'static str> = Some("A delay plugin");
   const CLAP_MANUAL_URL: Option<&'static str> = Some(Self::URL);
   const CLAP_SUPPORT_URL: Option<&'static str> = None;
   const CLAP_FEATURES: &'static [ClapFeature] = &[
     ClapFeature::AudioEffect,
     ClapFeature::Stereo,
-    ClapFeature::Reverb,
+    ClapFeature::Delay,
   ];
 }
 
-impl Vst3Plugin for DmReverb {
-  const VST3_CLASS_ID: [u8; 16] = *b"dm-Reverb.......";
+impl Vst3Plugin for DmStutter {
+  const VST3_CLASS_ID: [u8; 16] = *b"dm-Stutter......";
   const VST3_SUBCATEGORIES: &'static [Vst3SubCategory] = &[
-    Vst3SubCategory::Fx, 
-    Vst3SubCategory::Reverb,
-    Vst3SubCategory::Stereo
+    Vst3SubCategory::Fx,
+    Vst3SubCategory::Delay,
+    Vst3SubCategory::Stereo,
   ];
 }
 
-nih_export_clap!(DmReverb);
-nih_export_vst3!(DmReverb);
+nih_export_clap!(DmStutter);
+nih_export_vst3!(DmStutter);

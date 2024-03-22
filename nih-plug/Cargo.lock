@@ -889,12 +889,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "dm_reverb"
+name = "dm_stutter"
 version = "0.1.0"
 dependencies = [
  "nih_plug",
  "nih_plug_vizia",
- "reverb",
+ "stutter",
 ]
 
 [[package]]
@@ -2384,13 +2384,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c08c74e62047bb2de4ff487b251e4a92e24f48745648451635cec7d591162d9f"
 
 [[package]]
-name = "reverb"
-version = "0.1.0"
-dependencies = [
- "rand 0.8.5",
-]
-
-[[package]]
 name = "rgb"
 version = "0.8.37"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2655,6 +2648,13 @@ name = "static_assertions"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
+
+[[package]]
+name = "stutter"
+version = "0.1.0"
+dependencies = [
+ "rand 0.8.5",
+]
 
 [[package]]
 name = "swash"

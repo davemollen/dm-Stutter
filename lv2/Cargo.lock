@@ -9,11 +9,11 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
-name = "dm_reverb"
+name = "dm_stutter"
 version = "0.1.0"
 dependencies = [
  "lv2",
- "reverb",
+ "stutter",
 ]
 
 [[package]]
@@ -175,7 +175,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "reverb"
+name = "stutter"
 version = "0.1.0"
 dependencies = [
  "rand",

@@ -1,12 +1,12 @@
 [package]
-name = "dm_reverb"
+name = "dm_stutter"
 version = "0.1.0"
 authors = ["davemollen <davemollen@gmail.com>"]
 edition = "2021"
 
 [dependencies]
 lv2 = "0.6.0"
-reverb = { path = "../reverb" }
+stutter = { path = "../stutter" }
 
 [lib]
 crate-type = ["cdylib"]
