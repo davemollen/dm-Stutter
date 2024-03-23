@@ -38,12 +38,12 @@ impl Plugin for DmStutter {
   // Process a chunk of audio. The audio ports are dereferenced to slices, which the plugin
   // iterates over.
   fn run(&mut self, ports: &mut Ports, _features: &mut (), _sample_count: u32) {
-    let on = if *ports.on == 1. { true } else { false };
-    let auto = if *ports.auto == 1. { true } else { false };
-    let trigger = if *ports.trigger == 1. { true } else { false };
+    let on = *ports.on == 1.;
+    let auto = *ports.auto == 1.;
+    let trigger = *ports.trigger == 1.;
     let pulse = *ports.pulse;
-    let duration = *ports.duration;
-    let chance = *ports.chance;
+    let duration = *ports.duration * 0.01;
+    let chance = *ports.chance * 0.01;
 
     for (input, output) in ports.input.iter().zip(ports.output.iter_mut()) {
       *output = self
