@@ -73,13 +73,11 @@ impl Plugin for DmStutter {
     let chance = self.params.chance.value();
 
     buffer.iter_samples().for_each(|mut channel_samples| {
-      let input = *channel_samples.get_mut(0).unwrap();
+      let sample = channel_samples.iter_mut().next().unwrap();
       let stutter_output = self
         .stutter
-        .process(input, on, auto, trigger, pulse, duration, chance);
-
-      let output = channel_samples.get_mut(0).unwrap();
-      *output = stutter_output;
+        .process(*sample, on, auto, trigger, pulse, duration, chance);
+      *sample = stutter_output;
     });
     ProcessStatus::Normal
   }
