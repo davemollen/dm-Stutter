@@ -1,5 +1,3 @@
-use rand::{thread_rng, Rng};
-
 pub struct TimeFractionGenerator {
   fraction: f32,
 }
@@ -28,8 +26,7 @@ impl TimeFractionGenerator {
 
   pub fn process(&mut self, trigger: bool) -> f32 {
     if trigger {
-      let mut rng = thread_rng();
-      let index = rng.gen_range(0..FRACTIONS.len());
+      let index = fastrand::usize(..FRACTIONS.len());
       self.fraction = FRACTIONS[index];
     }
 

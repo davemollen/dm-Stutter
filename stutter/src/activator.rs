@@ -1,5 +1,3 @@
-use rand::random;
-
 use crate::crossfade::Crossfade;
 
 pub struct Activator {
@@ -24,7 +22,7 @@ impl Activator {
     trigger: bool,
   ) -> f32 {
     if trigger {
-      let random = random::<f32>();
+      let random = fastrand::f32();
       self.is_active = random <= chance
     }
 

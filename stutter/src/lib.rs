@@ -1,19 +1,17 @@
-mod time_fraction_generator;
 mod activator;
 mod crossfade;
 mod delay;
 mod delay_line;
 mod duration_generator;
-mod phasor;
 mod manual_trigger;
+mod phasor;
+mod time_fraction_generator;
+mod shared {
+  pub mod float_ext;
+}
 use {
-  delay::Delay,
-  activator::Activator,
-  crossfade::Crossfade,
-  duration_generator::DurationGenerator,
-  manual_trigger::ManualTrigger,
-  phasor::Phasor,
-  time_fraction_generator::TimeFractionGenerator
+  activator::Activator, crossfade::Crossfade, delay::Delay, duration_generator::DurationGenerator,
+  manual_trigger::ManualTrigger, phasor::Phasor, time_fraction_generator::TimeFractionGenerator,
 };
 
 pub struct Stutter {

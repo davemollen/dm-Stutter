@@ -1,6 +1,8 @@
+use crate::shared::float_ext::FloatExt;
+
 pub struct Crossfade {
   prev: f32,
-  index: u32,
+  index: usize,
   step_size: f32,
   z: f32,
   sample_rate: f32,
@@ -20,7 +22,7 @@ impl Crossfade {
   pub fn process(&mut self, input: f32, ramp_time: f32) -> (f32, f32) {
     let difference = input - self.z;
 
-    if difference.is_subnormal() {
+    if difference.is_equal_to(0.) {
       (input, 1. - input)
     } else {
       let ramp = self.ramp(input, self.mstosamps(ramp_time), difference);
@@ -30,7 +32,7 @@ impl Crossfade {
 
   fn ramp(&mut self, input: f32, ramp_time: f32, difference: f32) -> f32 {
     if input != self.prev {
-      self.index = ramp_time as u32;
+      self.index = ramp_time as usize;
       self.step_size = difference / ramp_time;
       self.prev = input;
     }
