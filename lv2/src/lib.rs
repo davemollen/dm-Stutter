@@ -11,6 +11,21 @@ struct Ports {
   pulse: InputPort<Control>,
   duration: InputPort<Control>,
   chance: InputPort<Control>,
+  half_notes: InputPort<Control>,
+  seven_sixteenth_notes: InputPort<Control>,
+  six_sixteenth_notes: InputPort<Control>,
+  half_triplet_notes: InputPort<Control>,
+  five_sixteenth_notes: InputPort<Control>,
+  quarter_notes: InputPort<Control>,
+  three_sixteenth_notes: InputPort<Control>,
+  quarter_triplet_notes: InputPort<Control>,
+  eighth_notes: InputPort<Control>,
+  eighth_triplet_notes: InputPort<Control>,
+  sixteenth_notes: InputPort<Control>,
+  sixteenth_triplet_notes: InputPort<Control>,
+  thirty_second_notes: InputPort<Control>,
+  thirty_second_triplet_notes: InputPort<Control>,
+  sixty_fourth_notes: InputPort<Control>,
   input: InputPort<Audio>,
   output: OutputPort<Audio>,
 }
@@ -42,8 +57,26 @@ impl Plugin for DmStutter {
     let auto = *ports.auto == 1.;
     let trigger = *ports.trigger == 1.;
     let pulse = *ports.pulse;
-    let duration = *ports.duration * 0.01;
-    let chance = *ports.chance * 0.01;
+    let duration = *ports.duration;
+    let chance = *ports.chance;
+
+    self.stutter.set_probability(
+      *ports.half_notes,
+      *ports.seven_sixteenth_notes,
+      *ports.six_sixteenth_notes,
+      *ports.half_triplet_notes,
+      *ports.five_sixteenth_notes,
+      *ports.quarter_notes,
+      *ports.three_sixteenth_notes,
+      *ports.quarter_triplet_notes,
+      *ports.eighth_notes,
+      *ports.eighth_triplet_notes,
+      *ports.sixteenth_notes,
+      *ports.sixteenth_triplet_notes,
+      *ports.thirty_second_notes,
+      *ports.thirty_second_triplet_notes,
+      *ports.sixty_fourth_notes,
+    );
 
     for (input, output) in ports.input.iter().zip(ports.output.iter_mut()) {
       *output = self

@@ -37,6 +37,43 @@ impl Stutter {
     }
   }
 
+  pub fn set_probability(
+    &mut self,
+    half_notes: f32,
+    seven_sixteenth_notes: f32,
+    six_sixteenth_notes: f32,
+    half_triplet_notes: f32,
+    five_sixteenth_notes: f32,
+    quarter_notes: f32,
+    three_sixteenth_notes: f32,
+    quarter_triplet_notes: f32,
+    eighth_notes: f32,
+    eighth_triplet_notes: f32,
+    sixteenth_notes: f32,
+    sixteenth_triplet_notes: f32,
+    thirty_second_notes: f32,
+    thirty_second_triplet_notes: f32,
+    sixty_fourth_notes: f32,
+  ) {
+    self.time_fraction_generator.set_probability([
+      (half_notes, 2.),
+      (seven_sixteenth_notes, 1.75),
+      (six_sixteenth_notes, 1.5),
+      (half_triplet_notes, 1.33333333),
+      (five_sixteenth_notes, 1.25),
+      (quarter_notes, 1.),
+      (three_sixteenth_notes, 0.75),
+      (quarter_triplet_notes, 1.5_f32.recip()),
+      (eighth_notes, 2_f32.recip()),
+      (eighth_triplet_notes, 3_f32.recip()),
+      (sixteenth_notes, 4_f32.recip()),
+      (sixteenth_triplet_notes, 6_f32.recip()),
+      (thirty_second_notes, 8_f32.recip()),
+      (thirty_second_triplet_notes, 12_f32.recip()),
+      (sixty_fourth_notes, 16_f32.recip()),
+    ]);
+  }
+
   pub fn process(
     &mut self,
     input: f32,
@@ -57,11 +94,14 @@ impl Stutter {
     let any_trigger = trigger.0 || trigger.1;
 
     let time_fraction = self.time_fraction_generator.process(any_trigger);
-    let delay_time = pulse / time_fraction;
-    let duration =
-      self
-        .duration_generator
-        .process(delay_time, time_fraction, duration, any_trigger);
+    let fraction = match time_fraction {
+      Some(f) => f,
+      None => 1.,
+    };
+    let delay_time = pulse * fraction;
+    let duration = self
+      .duration_generator
+      .process(delay_time, fraction, duration, any_trigger);
 
     self.phasor.process(duration, auto_trigger, manual_trigger);
 
@@ -71,8 +111,14 @@ impl Stutter {
     let delay_out = self.delay[0].process(input, trigger.0, delay_time, delay_fade_a, delay_fade_b)
       + self.delay[1].process(input, trigger.1, delay_time, delay_fade_b, delay_fade_a);
 
-    self
-      .activator
-      .process(input, delay_out, on, chance, any_trigger)
+    self.activator.process(
+      input,
+      delay_out,
+      on,
+      time_fraction,
+      chance,
+      auto_trigger,
+      any_trigger,
+    )
   }
 }

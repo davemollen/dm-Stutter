@@ -18,12 +18,18 @@ impl Activator {
     dry_signal: f32,
     wet_signal: f32,
     on: bool,
+    time_fraction: Option<f32>,
     chance: f32,
+    auto_trigger: bool,
     trigger: bool,
   ) -> f32 {
     if trigger {
-      let random = fastrand::f32();
-      self.is_active = random <= chance
+      if auto_trigger {
+        let random = fastrand::f32();
+        self.is_active = time_fraction.is_some() && random <= chance
+      } else {
+        self.is_active = true;
+      }
     }
 
     let (activity_fade_a, activity_fade_b) = self

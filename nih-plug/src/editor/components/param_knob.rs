@@ -29,7 +29,7 @@ impl ParamKnobSize {
   }
 }
 
-pub struct ParamKnob {}
+pub struct ParamKnob;
 
 impl ParamKnob {
   pub fn new<'a, L, P, F, M, C>(

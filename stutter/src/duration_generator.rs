@@ -17,7 +17,7 @@ impl DurationGenerator {
     if trigger {
       let random = fastrand::f32();
       let random = random * random;
-      self.fraction = (random * duration * 8. * time_fraction).ceil().max(1.);
+      self.fraction = (random * duration * 8. / time_fraction).ceil().max(1.);
     }
 
     delay_time * self.fraction

@@ -1,6 +1,6 @@
 label {
   font-size: 14px;
-  color: #E1D9D1;
+  color: #e1d9d1;
 }
 
 knob {
@@ -26,14 +26,18 @@ checkbox {
   top: 10px;
 }
 
+checkbox:disabled {
+  background-color: #767676;
+}
+
 checkbox:hover {
-  background-color: #E1D9D1;
+  background-color: #e1d9d1;
 }
 
 textbox {
   font-size: 12px;
   width: 72px;
-  color: #E1D9D1;
+  color: #e1d9d1;
   background-color: transparent;
   border-width: 0px;
   outline-color: none;

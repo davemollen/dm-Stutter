@@ -72,6 +72,24 @@ impl Plugin for DmStutter {
     let duration = self.params.duration.value();
     let chance = self.params.chance.value();
 
+    self.stutter.set_probability(
+      self.params.half_notes.value(),
+      self.params.seven_sixteenth_notes.value(),
+      self.params.six_sixteenth_notes.value(),
+      self.params.half_triplet_notes.value(),
+      self.params.five_sixteenth_notes.value(),
+      self.params.quarter_notes.value(),
+      self.params.three_sixteenth_notes.value(),
+      self.params.quarter_triplet_notes.value(),
+      self.params.eighth_notes.value(),
+      self.params.eighth_triplet_notes.value(),
+      self.params.sixteenth_notes.value(),
+      self.params.sixteenth_triplet_notes.value(),
+      self.params.thirty_second_notes.value(),
+      self.params.thirty_second_triplet_notes.value(),
+      self.params.sixty_fourth_notes.value(),
+    );
+
     buffer.iter_samples().for_each(|mut channel_samples| {
       let sample = channel_samples.iter_mut().next().unwrap();
       let stutter_output = self
