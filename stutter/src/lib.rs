@@ -84,11 +84,7 @@ impl Stutter {
     duration: f32,
     chance: f32,
   ) -> f32 {
-    let manual_trigger = if !auto_trigger {
-      self.manual_trigger.process(manual_trigger, on)
-    } else {
-      false
-    };
+    let manual_trigger = self.manual_trigger.process(manual_trigger, on);
     let trigger = self.phasor.get_trigger();
     let flip_flop = if self.phasor.get_flip_flop() { 1. } else { 0. };
     let any_trigger = trigger.0 || trigger.1;

@@ -1,49 +1,279 @@
-<div class="mod-pedal mod-pedal-boxy{{{cns}}} mod-six-knobs mod-{{color}} {{color}}">
-    <div mod-role="drag-handle" class="mod-drag-handle"></div>
-    <div class="mod-plugin-brand"><h1>{{brand}}</h1></div>
-    <div class="mod-plugin-name"><h1>{{label}}</h1></div>
-    <div class="mod-light on" mod-role="bypass-light"></div>
-    <div class="mod-control-group mod-{{knob}} clearfix">
-        {{#controls}}
-        <div class="mod-knob" title="{{comment}}">
-            <div class="mod-knob-image" mod-role="input-control-port" mod-port-symbol="{{symbol}}"></div>
-            <span class="mod-knob-title">{{name}}</span>
+<div
+  class="mod-pedal mod-pedal-boxy{{{cns}}} mod-twelve-sliders mod-boxy100 mod-{{color}} {{color}}"
+>
+  <div mod-role="drag-handle" class="mod-drag-handle"></div>
+
+  <div id="flex-container">
+    <div id="left-side">
+      <div id="controls">
+        <div class="mod-control-group mod-steel clearfix">
+          <div class="mod-knob toggle">
+            <div
+              class="mod-toggle-image mod-port"
+              mod-role="input-control-port"
+              mod-port-symbol="on"
+            >
+              <div class="mod-toggle-light" />
+            </div>
+            <span class="mod-knob-title">On</span>
+          </div>
+          <div class="mod-knob toggle">
+            <div
+              class="mod-toggle-image mod-port"
+              mod-role="input-control-port"
+              mod-port-symbol="auto"
+            >
+              <div class="mod-toggle-light" />
+            </div>
+            <span class="mod-knob-title">Auto</span>
+          </div>
+          <div class="mod-knob toggle">
+            <div
+              class="mod-toggle-image center mod-port"
+              mod-role="input-control-port"
+              mod-port-symbol="trigger"
+            ></div>
+            <span class="mod-knob-title">Trigger</span>
+          </div>
         </div>
-        {{/controls}}
+
+        <div class="mod-control-group mod-steel clearfix">
+          <div class="mod-knob">
+            <div
+              class="mod-knob-image"
+              mod-role="input-control-port"
+              mod-port-symbol="pulse"
+            ></div>
+            <span class="mod-knob-title">Pulse</span>
+          </div>
+          <div class="mod-knob">
+            <div
+              class="mod-knob-image"
+              mod-role="input-control-port"
+              mod-port-symbol="duration"
+            ></div>
+            <span class="mod-knob-title">Duration</span>
+          </div>
+          <div class="mod-knob">
+            <div
+              class="mod-knob-image"
+              mod-role="input-control-port"
+              mod-port-symbol="chance"
+            ></div>
+            <span class="mod-knob-title">Chance</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="brand">
+        <div class="mod-plugin-brand"><h1>{{brand}}</h1></div>
+        <div class="mod-plugin-name"><h1>{{label}}</h1></div>
+        <div class="mod-light on" mod-role="bypass-light"></div>
+        <div class="mod-footswitch" mod-role="bypass"></div>
+      </div>
     </div>
-    <div class="mod-footswitch" mod-role="bypass"></div>
+    <hr />
+    <div id="right-side">
+      <p>Note probability</p>
+      <div id="sliders">
+        {{#controls.6}}
+        <div class="mod-slider" mod-role="icon-button" mod-button-type="slider">
+          <span class="mod-slider-title">{{name}}</span>
+          <div
+            class="mod-slider-image"
+            mod-role="input-control-port"
+            mod-port-symbol="{{symbol}}"
+          ></div>
+        </div>
+        {{/controls.6}} {{#controls.7}}
+        <div class="mod-slider" mod-role="icon-button" mod-button-type="slider">
+          <span class="mod-slider-title">{{name}}</span>
+          <div
+            class="mod-slider-image"
+            mod-role="input-control-port"
+            mod-port-symbol="{{symbol}}"
+          ></div>
+        </div>
+        {{/controls.7}} {{#controls.8}}
+        <div class="mod-slider" mod-role="icon-button" mod-button-type="slider">
+          <span class="mod-slider-title">{{name}}</span>
+          <div
+            class="mod-slider-image"
+            mod-role="input-control-port"
+            mod-port-symbol="{{symbol}}"
+          ></div>
+        </div>
+        {{/controls.8}} {{#controls.9}}
+        <div class="mod-slider" mod-role="icon-button" mod-button-type="slider">
+          <span class="mod-slider-title">{{name}}</span>
+          <div
+            class="mod-slider-image"
+            mod-role="input-control-port"
+            mod-port-symbol="{{symbol}}"
+          ></div>
+        </div>
+        {{/controls.9}} {{#controls.10}}
+        <div class="mod-slider" mod-role="icon-button" mod-button-type="slider">
+          <span class="mod-slider-title">{{name}}</span>
+          <div
+            class="mod-slider-image"
+            mod-role="input-control-port"
+            mod-port-symbol="{{symbol}}"
+          ></div>
+        </div>
+        {{/controls.10}} {{#controls.11}}
+        <div class="mod-slider" mod-role="icon-button" mod-button-type="slider">
+          <span class="mod-slider-title">{{name}}</span>
+          <div
+            class="mod-slider-image"
+            mod-role="input-control-port"
+            mod-port-symbol="{{symbol}}"
+          ></div>
+        </div>
+        {{/controls.11}} {{#controls.12}}
+        <div class="mod-slider" mod-role="icon-button" mod-button-type="slider">
+          <span class="mod-slider-title">{{name}}</span>
+          <div
+            class="mod-slider-image"
+            mod-role="input-control-port"
+            mod-port-symbol="{{symbol}}"
+          ></div>
+        </div>
+        {{/controls.12}} {{#controls.13}}
+        <div class="mod-slider" mod-role="icon-button" mod-button-type="slider">
+          <span class="mod-slider-title">{{name}}</span>
+          <div
+            class="mod-slider-image"
+            mod-role="input-control-port"
+            mod-port-symbol="{{symbol}}"
+          ></div>
+        </div>
+        {{/controls.13}} {{#controls.14}}
+        <div class="mod-slider" mod-role="icon-button" mod-button-type="slider">
+          <span class="mod-slider-title">{{name}}</span>
+          <div
+            class="mod-slider-image"
+            mod-role="input-control-port"
+            mod-port-symbol="{{symbol}}"
+          ></div>
+        </div>
+        {{/controls.14}} {{#controls.15}}
+        <div class="mod-slider" mod-role="icon-button" mod-button-type="slider">
+          <span class="mod-slider-title">{{name}}</span>
+          <div
+            class="mod-slider-image"
+            mod-role="input-control-port"
+            mod-port-symbol="{{symbol}}"
+          ></div>
+        </div>
+        {{/controls.15}} {{#controls.16}}
+        <div class="mod-slider" mod-role="icon-button" mod-button-type="slider">
+          <span class="mod-slider-title">{{name}}</span>
+          <div
+            class="mod-slider-image"
+            mod-role="input-control-port"
+            mod-port-symbol="{{symbol}}"
+          ></div>
+        </div>
+        {{/controls.16}} {{#controls.17}}
+        <div class="mod-slider" mod-role="icon-button" mod-button-type="slider">
+          <span class="mod-slider-title">{{name}}</span>
+          <div
+            class="mod-slider-image"
+            mod-role="input-control-port"
+            mod-port-symbol="{{symbol}}"
+          ></div>
+        </div>
+        {{/controls.17}} {{#controls.18}}
+        <div class="mod-slider" mod-role="icon-button" mod-button-type="slider">
+          <span class="mod-slider-title">{{name}}</span>
+          <div
+            class="mod-slider-image"
+            mod-role="input-control-port"
+            mod-port-symbol="{{symbol}}"
+          ></div>
+        </div>
+        {{/controls.18}} {{#controls.19}}
+        <div class="mod-slider" mod-role="icon-button" mod-button-type="slider">
+          <span class="mod-slider-title">{{name}}</span>
+          <div
+            class="mod-slider-image"
+            mod-role="input-control-port"
+            mod-port-symbol="{{symbol}}"
+          ></div>
+        </div>
+        {{/controls.19}} {{#controls.20}}
+        <div class="mod-slider" mod-role="icon-button" mod-button-type="slider">
+          <span class="mod-slider-title">{{name}}</span>
+          <div
+            class="mod-slider-image"
+            mod-role="input-control-port"
+            mod-port-symbol="{{symbol}}"
+          ></div>
+        </div>
+        {{/controls.20}}
+      </div>
+    </div>
+
     <div class="mod-pedal-input">
-        {{#effect.ports.audio.input}}
-        <div class="mod-input mod-input-disconnected" title="{{name}}" mod-role="input-audio-port" mod-port-symbol="{{symbol}}">
-            <div class="mod-pedal-input-image"></div>
-        </div>
-        {{/effect.ports.audio.input}}
-        {{#effect.ports.midi.input}}
-        <div class="mod-input mod-input-disconnected" title="{{name}}" mod-role="input-midi-port" mod-port-symbol="{{symbol}}">
-            <div class="mod-pedal-input-image"></div>
-        </div>
-        {{/effect.ports.midi.input}}
-        {{#effect.ports.cv.input}}
-        <div class="mod-input mod-input-disconnected" title="{{name}}" mod-role="input-cv-port" mod-port-symbol="{{symbol}}">
-            <div class="mod-pedal-input-image"></div>
-        </div>
-        {{/effect.ports.cv.input}}
+      {{#effect.ports.audio.input}}
+      <div
+        class="mod-input mod-input-disconnected"
+        title="{{name}}"
+        mod-role="input-audio-port"
+        mod-port-symbol="{{symbol}}"
+      >
+        <div class="mod-pedal-input-image"></div>
+      </div>
+      {{/effect.ports.audio.input}} {{#effect.ports.midi.input}}
+      <div
+        class="mod-input mod-input-disconnected"
+        title="{{name}}"
+        mod-role="input-midi-port"
+        mod-port-symbol="{{symbol}}"
+      >
+        <div class="mod-pedal-input-image"></div>
+      </div>
+      {{/effect.ports.midi.input}} {{#effect.ports.cv.input}}
+      <div
+        class="mod-input mod-input-disconnected"
+        title="{{name}}"
+        mod-role="input-cv-port"
+        mod-port-symbol="{{symbol}}"
+      >
+        <div class="mod-pedal-input-image"></div>
+      </div>
+      {{/effect.ports.cv.input}}
     </div>
     <div class="mod-pedal-output">
-        {{#effect.ports.audio.output}}
-        <div class="mod-output mod-output-disconnected" title="{{name}}" mod-role="output-audio-port" mod-port-symbol="{{symbol}}">
-            <div class="mod-pedal-output-image"></div>
-        </div>
-        {{/effect.ports.audio.output}}
-        {{#effect.ports.midi.output}}
-        <div class="mod-output mod-output-disconnected" title="{{name}}" mod-role="output-midi-port" mod-port-symbol="{{symbol}}">
-            <div class="mod-pedal-output-image"></div>
-        </div>
-        {{/effect.ports.midi.output}}
-        {{#effect.ports.cv.output}}
-        <div class="mod-output mod-output-disconnected" title="{{name}}" mod-role="output-cv-port" mod-port-symbol="{{symbol}}">
-            <div class="mod-pedal-output-image"></div>
-        </div>
-        {{/effect.ports.cv.output}}
+      {{#effect.ports.audio.output}}
+      <div
+        class="mod-output mod-output-disconnected"
+        title="{{name}}"
+        mod-role="output-audio-port"
+        mod-port-symbol="{{symbol}}"
+      >
+        <div class="mod-pedal-output-image"></div>
+      </div>
+      {{/effect.ports.audio.output}} {{#effect.ports.midi.output}}
+      <div
+        class="mod-output mod-output-disconnected"
+        title="{{name}}"
+        mod-role="output-midi-port"
+        mod-port-symbol="{{symbol}}"
+      >
+        <div class="mod-pedal-output-image"></div>
+      </div>
+      {{/effect.ports.midi.output}} {{#effect.ports.cv.output}}
+      <div
+        class="mod-output mod-output-disconnected"
+        title="{{name}}"
+        mod-role="output-cv-port"
+        mod-port-symbol="{{symbol}}"
+      >
+        <div class="mod-pedal-output-image"></div>
+      </div>
+      {{/effect.ports.cv.output}}
     </div>
+  </div>
 </div>

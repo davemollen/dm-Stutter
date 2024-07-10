@@ -9,27 +9,65 @@
 .mod-pedal-boxy{{{cns}}} {
     background-position:center center;
     background-repeat:no-repeat;
-    background-size:230px 431px;
-    height:431px;
+    background-size:584px 584px;
+    height:584px;
     position:absolute;
-    width:230px;
+    width:584px;
     border-radius: 21px;
 }
 
-/* PORTS
-================================================ */
-
-.mod-pedal-boxy{{{cns}}}.mod-boxy50 .mod-pedal-input,
-.mod-pedal-boxy{{{cns}}}.mod-boxy50 .mod-pedal-output {
-    top: 66px;
+.mod-pedal-boxy{{{cns}}} #flex-container {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    height: 100%;
+    padding: 32px;
 }
+
+.mod-pedal-boxy{{{cns}}} #left-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+}
+
+.mod-pedal-boxy{{{cns}}} #left-side > #controls {
+    padding-bottom: 32px;
+}
+
+.mod-pedal-boxy{{{cns}}} hr {
+    border: 2px solid black;
+    border-radius: 2px;
+}
+
+.mod-pedal-boxy{{{cns}}} #right-side {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    align-items: flex-end;
+}
+
+.mod-pedal-boxy{{{cns}}} #right-side > p {
+    color: white;
+    font-weight: bold;
+    margin-right: 16px;
+}
+
+.mod-pedal-boxy{{{cns}}} #brand {
+    position: relative;
+}
+
+.mod-pedal-boxy{{{cns}}} #sliders {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
 
 /* = PLUGIN'S AUTHOR
 ================================================ */
 .mod-pedal-boxy{{{cns}}} .mod-plugin-brand {
-    left:0;
-    position:absolute;
-    right:0;
     text-align:center;
     text-transform:uppercase;
     top:160px;
@@ -46,30 +84,18 @@
     padding:3px 9px 0;
 }
 
-.mod-pedal-boxy{{{cns}}}.mod-six-knobs .mod-plugin-brand {
-    top:190px;
-}
-
 
 /* = PLUGIN'S NAME
 ================================================ */
 .mod-pedal-boxy{{{cns}}} .mod-plugin-name {
-    left:30px;
     overflow:hidden;
-    position:absolute;
-    right:30px;
     text-align:center;
-    top:340px;
 }
 
 .mod-pedal-boxy{{{cns}}} .mod-plugin-name h1 {
     font-family:"Questrial";
     font-size:21px;
     line-height:1;
-}
-
-.mod-pedal-boxy{{{cns}}}.mod-six-knobs .mod-plugin-name {
-    top:350px;
 }
 
 
@@ -79,14 +105,6 @@
     background-position:center center;
     background-repeat:no-repeat;
     height:32px;
-    left:10px;
-    position:absolute;
-    right:10px;
-    top:235px;
-}
-
-.mod-pedal-boxy{{{cns}}}.mod-six-knobs .mod-light {
-    top:253px;
 }
 
 
@@ -97,28 +115,23 @@
     background-position:bottom center;
     background-repeat:no-repeat;
     background-size:auto 132px;
-    bottom: 95px;
-    left: 13px;
-    right: 13px;
     cursor:pointer;
     height:66px;
     width: 66px;
     margin: auto;
     position:absolute !important;
+    left: 50%;
+    transform: translateX(-50%);
 }
 .mod-pedal-boxy{{{cns}}} .mod-footswitch.on {
     background-position-y: top !important
-}
-
-.mod-pedal-boxy{{{cns}}}.mod-six-knobs .mod-footswitch {
-    top:285px;
 }
 
 
 /* = KNOBS
 ================================================ */
 .mod-pedal-boxy{{{cns}}} .mod-control-group {
-    margin:20px !important;
+    margin:8px !important;
     position:relative;
     text-align:center;
     z-index:30;
@@ -127,18 +140,17 @@
     margin-top:0px !important;
 }
 
-.mod-pedal-boxy{{{cns}}}.mod-one-footswitch-presets .mod-control-group {
-    margin:10px !important;
-    top:75px;
-}
-
-.mod-pedal-boxy{{{cns}}}.mod-one-footswitch-presets .mod-control-group > select {
-    width:100%;
-}
-
 .mod-pedal-boxy{{{cns}}} .mod-control-group .mod-knob {
     overflow:hidden;
     position:relative;
+}
+
+.mod-pedal-boxy{{{cns}}} .mod-knob:has(> .mod-knob-image.disabled) {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.mod-pedal-boxy{{{cns}}} .mod-knob-image.disabled {
+    pointer-events: none;
 }
 
 .mod-pedal-boxy{{{cns}}} .mod-control-group .mod-knob > span.mod-knob-title {
@@ -157,7 +169,7 @@
     text-transform:uppercase;
 }
 
-.mod-pedal-boxy{{{cns}}}.mod-six-knobs .mod-control-group .mod-knob .mod-knob-image {
+.mod-pedal-boxy{{{cns}}}.mod-twelve-sliders .mod-control-group .mod-knob .mod-knob-image {
     background-image:url(/resources/knobs/lata/lata.png{{{ns}}});
     background-repeat:no-repeat;
     background-size:auto 60px;
@@ -165,34 +177,119 @@
     width:60px;
     margin:0 auto;
 }
-.mod-pedal-boxy{{{cns}}}.mod-six-knobs .mod-control-group .mod-knob {
+.mod-pedal-boxy{{{cns}}}.mod-twelve-sliders .mod-control-group .mod-knob {
     display:inline-block;
     height:73px;
 }
 
+/* SLIDER
+================================================ */
+.mod-pedal-boxy{{{cns}}} .mod-slider {
+    color:white;
+    font-size:11px;
+    height:140px;
+    position:relative;
+    text-align:center;
+    width:32px;
+    overflow: visible;
+}
+
+.mod-pedal-boxy{{{cns}}} .mod-slider .mod-slider-title {
+    display:flex;
+    font-size:11px;
+    font-weight:bold;
+    line-height:1;
+    margin-bottom: 4px;
+    overflow:hidden;
+    height: 32px;
+    justify-content: center;
+    align-items: end;
+}
+
+.mod-pedal-boxy{{{cns}}} .mod-slider .mod-slider-image {
+    background-image:url(/resources/pedals/slider.png{{{ns}}});
+    background-repeat:no-repeat;
+    background-size:auto 110px;
+    height:110px;
+    margin:0 auto;
+    width:44px;
+    position: absolute;
+    z-index: 30;
+}
+
+.mod-pedal-boxy{{{cns}}} .mod-slider .mod-slider-image:hover {
+    cursor:pointer;
+}
+
+.mod-pedal-boxy{{{cns}}}.mod-twelve-sliders .mod-slider .mod-slider-image {
+    margin-left:-5px;
+}
+
+/* TOGGLE */
+.mod-pedal-boxy{{{cns}}} .mod-control-group .mod-knob .mod-toggle-image {
+    background-image:url(/resources/pedals/toggle.png{{{ns}}});
+    background-position: right bottom !important;
+    background-repeat:no-repeat;
+    background-size:33px 96px;
+    cursor:pointer;
+    width: 60px;
+    height: 48px;
+}
+
+.mod-pedal-boxy{{{cns}}} .mod-control-group .mod-knob .mod-toggle-image.on {
+    background-position-y: top !important;
+}
+
+.mod-pedal-boxy{{{cns}}} .mod-knob.toggle > span.mod-knob-title {
+    bottom: 8px;
+}
+
+/* TOGGLE LIGHT */
+.mod-pedal-boxy{{{cns}}} .mod-control-group .mod-knob .mod-toggle-light {
+    background-image:url(/resources/pedals/red-light-off.png{{{ns}}});
+    background-position-y: bottom;
+    background-repeat:no-repeat;
+    background-size:20px 20px;
+    height:20px;
+    width:20px;
+    top: 12px;
+    left: 8px;
+    position: absolute;
+}
+
+.mod-pedal-boxy{{{cns}}} .mod-control-group .mod-knob .mod-toggle-image.on > .mod-toggle-light {
+    background-image:url(/resources/pedals/red-light-on.png{{{ns}}});
+}
+
+.mod-pedal-boxy{{{cns}}} .mod-control-group .mod-knob .center {
+    background-position: center bottom !important;
+}
+
+
 
 /* = BACKGROUND IMAGES - Color of the pedal
 ================================================ */
-.mod-pedal-boxy{{{cns}}}.mod-cream {
-    background-image:url(/resources/pedals/boxy/cream.png{{{ns}}});
+.mod-pedal-boxy{{{cns}}}.mod-boxy100.mod-darkblue {
+    background-image:url(/resources/pedals/boxy100/darkblue.png{{{ns}}});
 }
 
 
 /* = COLORS - Color of the pedals labels
 ================================================ */
-.mod-pedal-boxy{{{cns}}}.mod-cream h1,
-.mod-pedal-boxy{{{cns}}}.mod-cream .mod-control-group .mod-knob > span.mod-knob-title
+.mod-pedal-boxy{{{cns}}}.mod-darkblue h1,
+.mod-pedal-boxy{{{cns}}}.mod-darkblue .mod-enumerated,
+.mod-pedal-boxy{{{cns}}}.mod-darkblue .mod-control-group .mod-knob > span.mod-knob-title
 {
-    color:black;
+    color:white;
 }
-.mod-pedal-boxy{{{cns}}}.mod-cream h1
+.mod-pedal-boxy{{{cns}}}.mod-darkblue h1
 {
-    border-color:black;
+    border-color:white;
 }
 
 
 /* = KNOBS
 ================================================ */
-.mod-pedal-boxy{{{cns}}} .mod-control-group.mod-black .mod-knob .mod-knob-image {
-    background-image:url(/resources/knobs/boxy/black.png{{{ns}}});
+.mod-pedal-boxy{{{cns}}} .mod-control-group.mod-steel .mod-knob .mod-knob-image {
+    background-image:url(/resources/knobs/boxy/steel.png{{{ns}}});
 }

@@ -26,7 +26,7 @@ impl Phasor {
       }
     }
 
-    if !auto_trigger && manual_trigger {
+    if manual_trigger {
       self.phase = 0.;
     }
   }

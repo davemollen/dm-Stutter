@@ -80,7 +80,6 @@ pub(crate) fn create(
               |params| &params.trigger,
               |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
             )
-            .disabled(UiData::params.map(|params| params.auto.value()))
             .width(Pixels(56.0))
             .height(Pixels(92.0));
           })
@@ -99,10 +98,10 @@ pub(crate) fn create(
 
             ParamKnob::new(
               cx,
-              params.chance.name(),
+              params.duration.name(),
               UiData::params,
-              params.chance.as_ptr(),
-              |params| &params.chance,
+              params.duration.as_ptr(),
+              |params| &params.duration,
               |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
               ParamKnobSize::Regular,
             )
@@ -110,10 +109,10 @@ pub(crate) fn create(
 
             ParamKnob::new(
               cx,
-              params.duration.name(),
+              params.chance.name(),
               UiData::params,
-              params.duration.as_ptr(),
-              |params| &params.duration,
+              params.chance.as_ptr(),
+              |params| &params.chance,
               |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
               ParamKnobSize::Regular,
             )
