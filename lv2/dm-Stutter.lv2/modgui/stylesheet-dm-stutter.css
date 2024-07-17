@@ -29,6 +29,7 @@
     flex-direction: column;
     justify-content: center;
     flex: 1;
+    margin-bottom: 40px;
 }
 
 .mod-pedal-boxy{{{cns}}} #left-side > #controls {
@@ -36,8 +37,12 @@
 }
 
 .mod-pedal-boxy{{{cns}}} hr {
-    border: 2px solid black;
-    border-radius: 2px;
+    border: 1.5px solid white;
+    opacity: 0.75;
+    border-radius: 1.5px;
+    height: 472px;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 .mod-pedal-boxy{{{cns}}} #right-side {
