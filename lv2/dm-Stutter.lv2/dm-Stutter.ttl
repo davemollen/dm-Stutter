@@ -73,7 +73,7 @@ A stuttering effect written in Rust.
 		lv2:index 5 ;
 		lv2:symbol "chance" ;
 		lv2:name "Chance" ;
-		lv2:default 0.5 ;
+		lv2:default 0.75 ;
 		lv2:minimum 0.0 ;
 		lv2:maximum 1.0 
 	] , [
@@ -121,7 +121,7 @@ A stuttering effect written in Rust.
 		lv2:index 11 ;
 		lv2:symbol "quarter_notes" ;
 		lv2:name "1/4" ;
-		lv2:default 0.25 ;
+		lv2:default 1.0 ;
 		lv2:minimum 0.0 ;
 		lv2:maximum 1.0 
 	] , [
@@ -129,7 +129,7 @@ A stuttering effect written in Rust.
 		lv2:index 12 ;
 		lv2:symbol "three_sixteenth_notes" ;
 		lv2:name "3/16" ;
-		lv2:default 0.25 ;
+		lv2:default 0.0 ;
 		lv2:minimum 0.0 ;
 		lv2:maximum 1.0 
 	] , [
@@ -145,7 +145,7 @@ A stuttering effect written in Rust.
 		lv2:index 14 ;
 		lv2:symbol "eighth_notes" ;
 		lv2:name "1/8" ;
-		lv2:default 0.25 ;
+		lv2:default 0.0 ;
 		lv2:minimum 0.0 ;
 		lv2:maximum 1.0 
 	] , [
@@ -161,7 +161,7 @@ A stuttering effect written in Rust.
 		lv2:index 16 ;
 		lv2:symbol "sixteenth_notes" ;
 		lv2:name "1/16" ;
-		lv2:default 0.25 ;
+		lv2:default 0.0 ;
 		lv2:minimum 0.0 ;
 		lv2:maximum 1.0 
 	] , [
