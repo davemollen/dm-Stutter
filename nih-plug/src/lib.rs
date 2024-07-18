@@ -28,8 +28,8 @@ impl Plugin for DmStutter {
   const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 
   const AUDIO_IO_LAYOUTS: &'static [AudioIOLayout] = &[AudioIOLayout {
-    main_input_channels: NonZeroU32::new(1),
-    main_output_channels: NonZeroU32::new(1),
+    main_input_channels: NonZeroU32::new(2),
+    main_output_channels: NonZeroU32::new(2),
     ..AudioIOLayout::const_default()
   }];
   const MIDI_INPUT: MidiConfig = MidiConfig::None;
@@ -91,11 +91,19 @@ impl Plugin for DmStutter {
     );
 
     buffer.iter_samples().for_each(|mut channel_samples| {
-      let sample = channel_samples.iter_mut().next().unwrap();
-      let stutter_output = self
-        .stutter
-        .process(*sample, on, auto, trigger, pulse, duration, chance);
-      *sample = stutter_output;
+      let channel_iterator = &mut channel_samples.iter_mut();
+      let left_channel = channel_iterator.next().unwrap();
+      let right_channel = channel_iterator.next().unwrap();
+
+      (*left_channel, *right_channel) = self.stutter.process(
+        (*left_channel, *right_channel),
+        on,
+        auto,
+        trigger,
+        pulse,
+        duration,
+        chance,
+      );
     });
     ProcessStatus::Normal
   }

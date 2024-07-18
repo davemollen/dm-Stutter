@@ -21,6 +21,7 @@
 	rdfs:comment """
 A stuttering effect written in Rust.
 """ ;
+	lv2:requiredFeature lv2:inPlaceBroken ;
 	lv2:optionalFeature lv2:hardRTCapable ;
 	lv2:port [
 		a lv2:InputPort, lv2:ControlPort ;
@@ -198,11 +199,21 @@ A stuttering effect written in Rust.
 	], [
 		a lv2:AudioPort, lv2:InputPort ;
 		lv2:index 21 ;
-		lv2:symbol "input" ;
-		lv2:name "Input"
+		lv2:symbol "input_left" ;
+		lv2:name "Input L"
+	], [
+		a lv2:AudioPort, lv2:InputPort ;
+		lv2:index 22 ;
+		lv2:symbol "input_right" ;
+		lv2:name "Input R"
 	], [
 		a lv2:AudioPort, lv2:OutputPort ;
-		lv2:index 22 ;
-		lv2:symbol "output" ;
-		lv2:name "Output"
+		lv2:index 23 ;
+		lv2:symbol "output_left" ;
+		lv2:name "Output L"
+	], [
+		a lv2:AudioPort, lv2:OutputPort ;
+		lv2:index 24 ;
+		lv2:symbol "output_right" ;
+		lv2:name "Output R"
 	] .

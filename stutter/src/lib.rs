@@ -1,17 +1,19 @@
 mod activator;
 mod crossfade;
 mod delay;
-mod delay_line;
 mod duration_generator;
 mod manual_trigger;
 mod phasor;
+mod stereo_delay_line;
 mod time_fraction_generator;
 mod shared {
   pub mod float_ext;
+  pub mod tuple_ext;
 }
 use {
   activator::Activator, crossfade::Crossfade, delay::Delay, duration_generator::DurationGenerator,
-  manual_trigger::ManualTrigger, phasor::Phasor, time_fraction_generator::TimeFractionGenerator,
+  manual_trigger::ManualTrigger, phasor::Phasor, shared::tuple_ext::TupleExt,
+  time_fraction_generator::TimeFractionGenerator,
 };
 
 pub struct Stutter {
@@ -76,14 +78,14 @@ impl Stutter {
 
   pub fn process(
     &mut self,
-    input: f32,
+    input: (f32, f32),
     on: bool,
     auto_trigger: bool,
     manual_trigger: bool,
     pulse: f32,
     duration: f32,
     chance: f32,
-  ) -> f32 {
+  ) -> (f32, f32) {
     let manual_trigger = self.manual_trigger.process(manual_trigger, on);
     let trigger = self.phasor.get_trigger();
     let flip_flop = if self.phasor.get_flip_flop() { 1. } else { 0. };
@@ -104,8 +106,9 @@ impl Stutter {
     let (delay_fade_a, delay_fade_b) = self
       .delay_crossfade
       .process(flip_flop, 20_f32.min(delay_time / 2.));
-    let delay_out = self.delay[0].process(input, trigger.0, delay_time, delay_fade_a, delay_fade_b)
-      + self.delay[1].process(input, trigger.1, delay_time, delay_fade_b, delay_fade_a);
+    let delay_out = self.delay[0]
+      .process(input, trigger.0, delay_time, delay_fade_a, delay_fade_b)
+      .add(self.delay[1].process(input, trigger.1, delay_time, delay_fade_b, delay_fade_a));
 
     self.activator.process(
       input,

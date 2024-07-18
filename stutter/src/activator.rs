@@ -1,4 +1,4 @@
-use crate::crossfade::Crossfade;
+use crate::{crossfade::Crossfade, shared::tuple_ext::TupleExt};
 
 pub struct Activator {
   is_active: bool,
@@ -15,14 +15,14 @@ impl Activator {
 
   pub fn process(
     &mut self,
-    dry_signal: f32,
-    wet_signal: f32,
+    dry_signal: (f32, f32),
+    wet_signal: (f32, f32),
     on: bool,
     time_fraction: Option<f32>,
     chance: f32,
     auto_trigger: bool,
     trigger: bool,
-  ) -> f32 {
+  ) -> (f32, f32) {
     if trigger {
       if auto_trigger {
         let random = fastrand::f32();
@@ -36,6 +36,8 @@ impl Activator {
       .crossfade
       .process(if on && self.is_active { 1. } else { 0. }, 20.);
 
-    wet_signal * activity_fade_a + dry_signal * activity_fade_b
+    wet_signal
+      .multiply_with(activity_fade_a)
+      .add(dry_signal.multiply_with(activity_fade_b))
   }
 }

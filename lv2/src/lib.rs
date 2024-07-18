@@ -26,8 +26,10 @@ struct Ports {
   thirty_second_notes: InputPort<Control>,
   thirty_second_triplet_notes: InputPort<Control>,
   sixty_fourth_notes: InputPort<Control>,
-  input: InputPort<Audio>,
-  output: OutputPort<Audio>,
+  input_left: InputPort<Audio>,
+  input_right: InputPort<Audio>,
+  output_left: OutputPort<Audio>,
+  output_right: OutputPort<Audio>,
 }
 
 #[uri("https://github.com/davemollen/dm-Stutter")]
@@ -78,10 +80,24 @@ impl Plugin for DmStutter {
       *ports.sixty_fourth_notes,
     );
 
-    for (input, output) in ports.input.iter().zip(ports.output.iter_mut()) {
-      *output = self
-        .stutter
-        .process(*input, on, auto, trigger, pulse, duration, chance);
+    let input_channels = ports.input_left.iter().zip(ports.input_right.iter());
+    let output_channels = ports
+      .output_left
+      .iter_mut()
+      .zip(ports.output_right.iter_mut());
+
+    for ((input_left, input_right), (output_left, output_right)) in
+      input_channels.zip(output_channels)
+    {
+      (*output_left, *output_right) = self.stutter.process(
+        (*input_left, *input_right),
+        on,
+        auto,
+        trigger,
+        pulse,
+        duration,
+        chance,
+      );
     }
   }
 }
