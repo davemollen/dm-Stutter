@@ -1,6 +1,6 @@
 ## dm-Stutter
 
-A mono stuttering effect written in Rust. NB: this is still very much a work in progress.
+A stereo stuttering effect written in Rust.
 
 The effect can be compiled to a [MOD devices](https://moddevices.com/), VST3 or CLAP plugin.
 VST is a trademark of Steinberg Media Technologies GmbH, registered in Europe and other countries.
