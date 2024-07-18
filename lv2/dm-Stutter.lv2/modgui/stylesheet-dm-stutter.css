@@ -14,6 +14,7 @@
     position:absolute;
     width:584px;
     border-radius: 21px;
+    background-image:url(/resources/pedals/boxy100/stutter-bg.png{{{ns}}});
 }
 
 .mod-pedal-boxy{{{cns}}} #flex-container {
@@ -271,23 +272,15 @@
 }
 
 
-
-/* = BACKGROUND IMAGES - Color of the pedal
-================================================ */
-.mod-pedal-boxy{{{cns}}}.mod-boxy100.mod-beige {
-    background-image:url(/resources/pedals/boxy100/stutter-bg.png{{{ns}}});
-}
-
-
 /* = COLORS - Color of the pedals labels
 ================================================ */
-.mod-pedal-boxy{{{cns}}}.mod-beige h1,
-.mod-pedal-boxy{{{cns}}}.mod-beige .mod-enumerated,
-.mod-pedal-boxy{{{cns}}}.mod-beige .mod-control-group .mod-knob > span.mod-knob-title
+.mod-pedal-boxy{{{cns}}} h1,
+.mod-pedal-boxy{{{cns}}} .mod-enumerated,
+.mod-pedal-boxy{{{cns}}} .mod-control-group .mod-knob > span.mod-knob-title
 {
     color:white;
 }
-.mod-pedal-boxy{{{cns}}}.mod-beige h1
+.mod-pedal-boxy{{{cns}}} h1
 {
     border-color:white;
 }
