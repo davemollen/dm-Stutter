@@ -13,7 +13,7 @@
         modgui:label "Stutter" ;
         modgui:model "boxy" ;
         modgui:panel "12-sliders" ;
-        modgui:color "darkblue" ;
+        modgui:color "beige" ;
         modgui:knob "steel" ;
         modgui:port [
             lv2:index 0 ;
