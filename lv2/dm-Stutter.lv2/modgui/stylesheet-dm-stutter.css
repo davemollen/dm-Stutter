@@ -38,7 +38,7 @@
 }
 
 .mod-pedal-boxy{{{cns}}} hr {
-    border: 1.5px solid white;
+    border: 1.5px solid black;
     opacity: 0.75;
     border-radius: 1.5px;
     height: 472px;
@@ -54,7 +54,7 @@
 }
 
 .mod-pedal-boxy{{{cns}}} #right-side > p {
-    color: white;
+    color: black;
     font-weight: bold;
     margin-right: 16px;
 }
@@ -191,7 +191,7 @@
 /* SLIDER
 ================================================ */
 .mod-pedal-boxy{{{cns}}} .mod-slider {
-    color:white;
+    color:black;
     font-size:11px;
     height:140px;
     position:relative;
@@ -278,11 +278,11 @@
 .mod-pedal-boxy{{{cns}}} .mod-enumerated,
 .mod-pedal-boxy{{{cns}}} .mod-control-group .mod-knob > span.mod-knob-title
 {
-    color:white;
+    color:black;
 }
 .mod-pedal-boxy{{{cns}}} h1
 {
-    border-color:white;
+    border-color:black;
 }
 
 
