@@ -105,32 +105,39 @@
 }
 
 
-/* = LIGHT ON/OFF
-================================================ */
-.mod-pedal-boxy{{{cns}}} .mod-light {
-    background-position:center center;
-    background-repeat:no-repeat;
-    height:32px;
-}
-
-
 /* = FOOTSWITCH
 ================================================ */
 .mod-pedal-boxy{{{cns}}} .mod-footswitch {
     background-image:url(/resources/pedals/footswitch.png{{{ns}}});
-    background-position:bottom center;
+    background-position:top center !important;
     background-repeat:no-repeat;
     background-size:auto 132px;
     cursor:pointer;
     height:66px;
     width: 66px;
     margin: auto;
+    margin-top: 32px;
     position:absolute !important;
     left: 50%;
     transform: translateX(-50%);
 }
 .mod-pedal-boxy{{{cns}}} .mod-footswitch.on {
-    background-position-y: top !important
+    background-position-y: bottom !important;
+}
+.mod-pedal-boxy{{{cns}}} .mod-footswitch .mod-light {
+    background-image:url(/resources/pedals/red-light-off.png{{{ns}}});
+    background-position-y: bottom;
+    background-repeat:no-repeat;
+    background-size:32px 32px;
+    height:32px;
+    width:32px;
+    position: absolute;
+    top: -32px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.mod-pedal-boxy{{{cns}}} .mod-footswitch.on > .mod-light {
+    background-image:url(/resources/pedals/red-light-on.png{{{ns}}});
 }
 
 
@@ -152,7 +159,7 @@
 }
 
 .mod-pedal-boxy{{{cns}}} .mod-knob:has(> .mod-knob-image.disabled) {
-    opacity: 0.5;
+    opacity: 0.75;
     cursor: not-allowed;
 }
 .mod-pedal-boxy{{{cns}}} .mod-knob-image.disabled {

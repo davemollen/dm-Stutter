@@ -11,16 +11,6 @@
             <div
               class="mod-toggle-image mod-port"
               mod-role="input-control-port"
-              mod-port-symbol="on"
-            >
-              <div class="mod-toggle-light" />
-            </div>
-            <span class="mod-knob-title">On</span>
-          </div>
-          <div class="mod-knob toggle">
-            <div
-              class="mod-toggle-image mod-port"
-              mod-role="input-control-port"
               mod-port-symbol="auto"
             >
               <div class="mod-toggle-light" />
@@ -68,8 +58,9 @@
       <div id="brand">
         <div class="mod-plugin-brand"><h1>{{brand}}</h1></div>
         <div class="mod-plugin-name"><h1>{{label}}</h1></div>
-        <div class="mod-light on" mod-role="bypass-light"></div>
-        <div class="mod-footswitch" mod-role="bypass"></div>
+        <div class="mod-footswitch" mod-role="input-control-port" mod-port-symbol="on">
+          <div class="mod-light"></div>
+        </div>
       </div>
     </div>
     <hr />
