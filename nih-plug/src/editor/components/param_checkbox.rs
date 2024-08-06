@@ -2,7 +2,7 @@ use nih_plug::prelude::{Param, ParamPtr};
 use nih_plug_vizia::vizia::{
   binding::Lens,
   layout::Units::Auto,
-  modifiers::{StyleModifiers, TextModifiers},
+  modifiers::TextModifiers,
   prelude::{
     ActionModifiers, Context, EmitContext, LayoutModifiers, LensExt,
     Units::{Pixels, Stretch},
