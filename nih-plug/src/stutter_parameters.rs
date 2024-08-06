@@ -100,7 +100,7 @@ impl Default for StutterParameters {
       .with_unit(" ms")
       .with_value_to_string(v2s_f32_digits(2)),
 
-      chance: FloatParam::new("Chance", 0.75, FloatRange::Linear { min: 0., max: 1. })
+      chance: FloatParam::new("Chance", 0.5, FloatRange::Linear { min: 0., max: 1. })
         .with_unit(" %")
         .with_value_to_string(v2s_f32_percentage(2))
         .with_string_to_value(s2v_f32_percentage()),
@@ -120,7 +120,7 @@ impl Default for StutterParameters {
         .with_value_to_string(v2s_f32_percentage(0))
         .with_string_to_value(s2v_f32_percentage()),
 
-      six_sixteenth_notes: FloatParam::new("3/8", 0., FloatRange::Linear { min: 0., max: 1. })
+      six_sixteenth_notes: FloatParam::new("3/8", 0.25, FloatRange::Linear { min: 0., max: 1. })
         .with_unit(" %")
         .with_value_to_string(v2s_f32_percentage(0))
         .with_string_to_value(s2v_f32_percentage()),
@@ -139,7 +139,7 @@ impl Default for StutterParameters {
         .with_value_to_string(v2s_f32_percentage(0))
         .with_string_to_value(s2v_f32_percentage()),
 
-      quarter_notes: FloatParam::new("1/4", 1., FloatRange::Linear { min: 0., max: 1. })
+      quarter_notes: FloatParam::new("1/4", 0.25, FloatRange::Linear { min: 0., max: 1. })
         .with_unit(" %")
         .with_value_to_string(v2s_f32_percentage(0))
         .with_string_to_value(s2v_f32_percentage()),
@@ -158,7 +158,7 @@ impl Default for StutterParameters {
       .with_value_to_string(v2s_f32_percentage(0))
       .with_string_to_value(s2v_f32_percentage()),
 
-      eighth_notes: FloatParam::new("1/8", 0., FloatRange::Linear { min: 0., max: 1. })
+      eighth_notes: FloatParam::new("1/8", 0.25, FloatRange::Linear { min: 0., max: 1. })
         .with_unit(" %")
         .with_value_to_string(v2s_f32_percentage(0))
         .with_string_to_value(s2v_f32_percentage()),
@@ -186,7 +186,7 @@ impl Default for StutterParameters {
       .with_value_to_string(v2s_f32_percentage(0))
       .with_string_to_value(s2v_f32_percentage()),
 
-      thirty_second_notes: FloatParam::new("1/32", 0., FloatRange::Linear { min: 0., max: 1. })
+      thirty_second_notes: FloatParam::new("1/32", 0.25, FloatRange::Linear { min: 0., max: 1. })
         .with_unit(" %")
         .with_value_to_string(v2s_f32_percentage(0))
         .with_string_to_value(s2v_f32_percentage()),
