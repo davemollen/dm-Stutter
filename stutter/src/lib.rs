@@ -6,6 +6,7 @@ mod manual_trigger;
 mod phasor;
 mod stereo_delay_line;
 mod time_fraction_generator;
+mod toggle_trigger;
 mod shared {
   pub mod float_ext;
   pub mod tuple_ext;
@@ -13,14 +14,17 @@ mod shared {
 use {
   activator::Activator, crossfade::Crossfade, delay::Delay, duration_generator::DurationGenerator,
   manual_trigger::ManualTrigger, phasor::Phasor, shared::tuple_ext::TupleExt,
-  time_fraction_generator::TimeFractionGenerator,
+  time_fraction_generator::TimeFractionGenerator, toggle_trigger::ToggleTrigger,
 };
 
 pub struct Stutter {
   time_fraction_generator: TimeFractionGenerator,
   duration_generator: DurationGenerator,
   manual_trigger: ManualTrigger,
+  toggle_trigger: ToggleTrigger,
+  duration: f32,
   phasor: Phasor,
+  flip_flop: f32,
   delay_crossfade: Crossfade,
   delay: [Delay; 2],
   activator: Activator,
@@ -29,10 +33,13 @@ pub struct Stutter {
 impl Stutter {
   pub fn new(sample_rate: f32) -> Self {
     Self {
-      manual_trigger: ManualTrigger::new(),
       time_fraction_generator: TimeFractionGenerator::new(),
       duration_generator: DurationGenerator::new(),
+      manual_trigger: ManualTrigger::new(),
+      toggle_trigger: ToggleTrigger::new(),
+      duration: 0.,
       phasor: Phasor::new(sample_rate),
+      flip_flop: 0.,
       delay_crossfade: Crossfade::new(sample_rate),
       delay: [Delay::new(sample_rate), Delay::new(sample_rate)],
       activator: Activator::new(sample_rate),
@@ -86,38 +93,57 @@ impl Stutter {
     duration: f32,
     chance: f32,
   ) -> (f32, f32) {
-    let manual_trigger = self.manual_trigger.process(manual_trigger, on);
-    let trigger = self.phasor.get_trigger();
-    let flip_flop = if self.phasor.get_flip_flop() { 1. } else { 0. };
-    let any_trigger = trigger.0 || trigger.1;
+    let manual_trigger = self.manual_trigger.process(manual_trigger);
+    let reset = self.toggle_trigger.process(on) || manual_trigger;
+    if reset {
+      self.phasor.reset();
+    }
+    let (trigger, (trigger_a, trigger_b)) = self.get_triggers(auto_trigger, reset);
 
-    let time_fraction = self.time_fraction_generator.process(any_trigger);
+    let time_fraction = self.time_fraction_generator.process(trigger);
     let fraction = match time_fraction {
       Some(f) => f,
       None => 1.,
     };
     let delay_time = pulse * fraction;
-    let duration = self
+    self.duration = self
       .duration_generator
-      .process(delay_time, fraction, duration, any_trigger);
-
-    self.phasor.process(duration, auto_trigger, manual_trigger);
+      .process(delay_time, fraction, duration, trigger);
 
     let (delay_fade_a, delay_fade_b) = self
       .delay_crossfade
-      .process(flip_flop, 20_f32.min(delay_time / 2.));
+      .process(self.flip_flop, 20_f32.min(delay_time * 0.5));
     let delay_out = self.delay[0]
-      .process(input, trigger.0, delay_time, delay_fade_a, delay_fade_b)
-      .add(self.delay[1].process(input, trigger.1, delay_time, delay_fade_b, delay_fade_a));
+      .process(input, trigger_a, delay_time, delay_fade_a, delay_fade_b)
+      .add(self.delay[1].process(input, trigger_b, delay_time, delay_fade_b, delay_fade_a));
 
     self.activator.process(
       input,
       delay_out,
       on,
-      time_fraction,
       chance,
       auto_trigger,
-      any_trigger,
+      trigger,
+      manual_trigger,
+    )
+  }
+
+  fn get_triggers(&mut self, auto_trigger: bool, reset: bool) -> (bool, (bool, bool)) {
+    let trigger = reset || (auto_trigger && self.phasor.process(self.duration));
+
+    (
+      trigger,
+      match (trigger, self.flip_flop == 1.) {
+        (true, false) => {
+          self.flip_flop = 1.;
+          (true, false)
+        }
+        (true, true) => {
+          self.flip_flop = 0.;
+          (false, true)
+        }
+        _ => (false, false),
+      },
     )
   }
 }

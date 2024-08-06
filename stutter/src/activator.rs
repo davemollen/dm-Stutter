@@ -18,15 +18,15 @@ impl Activator {
     dry_signal: (f32, f32),
     wet_signal: (f32, f32),
     on: bool,
-    time_fraction: Option<f32>,
     chance: f32,
     auto_trigger: bool,
     trigger: bool,
+    manual_trigger: bool,
   ) -> (f32, f32) {
     if trigger {
-      if auto_trigger {
+      if auto_trigger && !manual_trigger {
         let random = fastrand::f32();
-        self.is_active = time_fraction.is_some() && random <= chance
+        self.is_active = random <= chance
       } else {
         self.is_active = true;
       }
