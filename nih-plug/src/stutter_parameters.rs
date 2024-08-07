@@ -93,7 +93,7 @@ impl Default for StutterParameters {
         500.,
         FloatRange::Skewed {
           min: 10.,
-          max: 2000.,
+          max: 3000.,
           factor: 0.333333,
         },
       )

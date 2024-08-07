@@ -1,10 +1,10 @@
- @prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
 @prefix foaf:  <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix pprops:   <http://lv2plug.in/ns/ext/port-props#> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix units: <http://lv2plug.in/ns/extensions/units#> .
-@prefix epp:   <http://lv2plug.in/ns/ext/port-props#> .
 @prefix mod:   <http://moddevices.com/ns/mod#> .
 
 <https://github.com/davemollen/dm-Stutter>
@@ -55,10 +55,10 @@ A stuttering effect written in Rust.
 		lv2:index 3 ;
 		lv2:symbol "pulse" ;
 		lv2:name "Pulse" ;
-		lv2:portProperty mod:tempoRelatedDynamicScalePoints ;
+		lv2:portProperty pprops:logarithmic, mod:tempoRelatedDynamicScalePoints;
 		lv2:default 500.0 ;
 		lv2:minimum 10.0 ;
-		lv2:maximum 2000.0 ;
+		lv2:maximum 3000.0 ;
 		units:unit units:ms
 	], [
 		a lv2:InputPort, lv2:ControlPort ;

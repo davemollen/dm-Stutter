@@ -12,7 +12,7 @@ impl Delay {
   pub fn new(sample_rate: f32) -> Self {
     Self {
       delay_time: 1.,
-      delay_line: StereoDelayLine::new((sample_rate * 2.) as usize, sample_rate),
+      delay_line: StereoDelayLine::new((sample_rate * 6.) as usize, sample_rate),
     }
   }
 
