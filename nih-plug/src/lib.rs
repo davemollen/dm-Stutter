@@ -63,12 +63,17 @@ impl Plugin for DmStutter {
     &mut self,
     buffer: &mut Buffer,
     _aux: &mut AuxiliaryBuffers,
-    _context: &mut impl ProcessContext<Self>,
+    context: &mut impl ProcessContext<Self>,
   ) -> ProcessStatus {
     let on = self.params.on.value();
     let auto = self.params.auto.value();
     let trigger = self.params.trigger.value();
-    let pulse = self.params.pulse.value();
+    let pulse = if self.params.sync.value() {
+      let beat_time = 60000. / context.transport().tempo.unwrap_or(120.) as f32;
+      beat_time * self.params.tempo_factor.value()
+    } else {
+      self.params.pulse.value()
+    };
     let duration = self.params.duration.value();
     let chance = self.params.chance.value();
 

@@ -53,3 +53,7 @@ textbox:hover {
 .hide {
   display: none;
 }
+
+.show {
+  display: block;
+}

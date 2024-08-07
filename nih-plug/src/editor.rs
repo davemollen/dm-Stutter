@@ -82,10 +82,35 @@ pub(crate) fn create(
             )
             .width(Pixels(56.0))
             .height(Pixels(92.0));
+
+            ParamCheckbox::new(
+              cx,
+              params.sync.name(),
+              UiData::params,
+              params.sync.as_ptr(),
+              |params| &params.sync,
+              |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
+            )
+            .width(Pixels(56.0))
+            .height(Pixels(92.0));
           })
           .child_space(Stretch(1.0));
 
           HStack::new(cx, |cx| {
+            // show when sync is on
+            ParamKnob::new(
+              cx,
+              params.tempo_factor.name(),
+              UiData::params,
+              params.tempo_factor.as_ptr(),
+              |params| &params.tempo_factor,
+              |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
+              ParamKnobSize::Regular,
+            )
+            .class("show")
+            .toggle_class("hide", UiData::params.map(|p| !p.sync.value()));
+
+            // show when sync is off
             ParamKnob::new(
               cx,
               params.pulse.name(),
@@ -94,7 +119,9 @@ pub(crate) fn create(
               |params| &params.pulse,
               |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
               ParamKnobSize::Regular,
-            );
+            )
+            .class("show")
+            .toggle_class("hide", UiData::params.map(|p| p.sync.value()));
 
             ParamKnob::new(
               cx,
