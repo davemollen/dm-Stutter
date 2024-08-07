@@ -3,12 +3,27 @@ extern crate stutter;
 use lv2::prelude::*;
 use stutter::Stutter;
 
+#[derive(URIDCollection)]
+struct URIDs {
+  atom: AtomURIDCollection,
+  unit: UnitURIDCollection,
+  time: TimeURIDCollection,
+}
+
+#[derive(FeatureCollection)]
+pub struct Features<'a> {
+  map: LV2Map<'a>,
+}
+
 #[derive(PortCollection)]
 struct Ports {
+  control: InputPort<AtomPort>,
   on: InputPort<Control>,
   auto: InputPort<Control>,
   trigger: InputPort<Control>,
+  sync: InputPort<Control>,
   pulse: InputPort<Control>,
+  tempo_factor: InputPort<Control>,
   duration: InputPort<Control>,
   chance: InputPort<Control>,
   half_notes: InputPort<Control>,
@@ -35,6 +50,8 @@ struct Ports {
 #[uri("https://github.com/davemollen/dm-Stutter")]
 struct DmStutter {
   stutter: Stutter,
+  urids: URIDs,
+  bpm: f32,
 }
 
 impl Plugin for DmStutter {
@@ -42,13 +59,15 @@ impl Plugin for DmStutter {
   type Ports = Ports;
 
   // We don't need any special host features; We can leave them out.
-  type InitFeatures = ();
+  type InitFeatures = Features<'static>;
   type AudioFeatures = ();
 
   // Create a new instance of the plugin; Trivial in this case.
-  fn new(_plugin_info: &PluginInfo, _features: &mut ()) -> Option<Self> {
+  fn new(_plugin_info: &PluginInfo, features: &mut Features<'static>) -> Option<Self> {
     Some(Self {
+      bpm: 120.,
       stutter: Stutter::new(_plugin_info.sample_rate() as f32),
+      urids: features.map.populate_collection()?,
     })
   }
 
@@ -58,7 +77,34 @@ impl Plugin for DmStutter {
     let on = *ports.on == 1.;
     let auto = *ports.auto == 1.;
     let trigger = *ports.trigger == 1.;
-    let pulse = *ports.pulse;
+
+    let pulse = if *ports.sync == 1. {
+      if let Some(control_sequence) = ports
+        .control
+        .read(self.urids.atom.sequence, self.urids.unit.beat)
+      {
+        for (_timestamp, atom) in control_sequence {
+          if let Some((object_header, object_reader)) = atom
+            .read(self.urids.atom.object, ())
+            .or_else(|| atom.read(self.urids.atom.blank, ()))
+          {
+            if object_header.otype == self.urids.time.position_class {
+              for (property_header, property) in object_reader {
+                if property_header.key == self.urids.time.beats_per_minute {
+                  if let Some(bpm) = property.read(self.urids.atom.float, ()) {
+                    self.bpm = bpm;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      60000. / self.bpm * *ports.tempo_factor
+    } else {
+      *ports.pulse
+    };
     let duration = *ports.duration;
     let chance = *ports.chance;
 

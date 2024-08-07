@@ -25,6 +25,16 @@
             ></div>
             <span class="mod-knob-title">Trigger</span>
           </div>
+          <div class="mod-knob toggle">
+            <div
+              class="mod-toggle-image mod-port"
+              mod-role="input-control-port"
+              mod-port-symbol="sync"
+            >
+              <div class="mod-toggle-light" />
+            </div>
+            <span class="mod-knob-title">Sync</span>
+          </div>
         </div>
 
         <div class="mod-control-group mod-steel clearfix">
@@ -67,16 +77,7 @@
     <div id="right-side">
       <p>Note probability</p>
       <div id="sliders">
-        {{#controls.6}}
-        <div class="mod-slider" mod-role="icon-button" mod-button-type="slider">
-          <span class="mod-slider-title">{{name}}</span>
-          <div
-            class="mod-slider-image"
-            mod-role="input-control-port"
-            mod-port-symbol="{{symbol}}"
-          ></div>
-        </div>
-        {{/controls.6}} {{#controls.7}}
+        {{#controls.7}}
         <div class="mod-slider" mod-role="icon-button" mod-button-type="slider">
           <span class="mod-slider-title">{{name}}</span>
           <div
@@ -202,7 +203,16 @@
             mod-port-symbol="{{symbol}}"
           ></div>
         </div>
-        {{/controls.20}}
+        {{/controls.20}} {{#controls.21}}
+        <div class="mod-slider" mod-role="icon-button" mod-button-type="slider">
+          <span class="mod-slider-title">{{name}}</span>
+          <div
+            class="mod-slider-image"
+            mod-role="input-control-port"
+            mod-port-symbol="{{symbol}}"
+          ></div>
+        </div>
+        {{/controls.21}}
       </div>
     </div>
 

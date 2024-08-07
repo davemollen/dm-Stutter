@@ -25,6 +25,7 @@ dependencies = [
  "lv2-atom",
  "lv2-core",
  "lv2-midi",
+ "lv2-time",
  "lv2-units",
  "lv2-urid",
  "urid",
@@ -81,6 +82,16 @@ name = "lv2-sys"
 version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9dd0f9e7de3649dcec348de51cbf611ab88688b97c0ce038f8c07b996b2a8e30"
+
+[[package]]
+name = "lv2-time"
+version = "0.1.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4c203737164e9734db8fb03921a35917a5775ce5721f920dbcadd8bd4f98f673"
+dependencies = [
+ "lv2-sys",
+ "urid",
+]
 
 [[package]]
 name = "lv2-units"
