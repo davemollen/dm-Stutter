@@ -101,14 +101,11 @@ impl Stutter {
     let (trigger, (trigger_a, trigger_b)) = self.get_triggers(auto_trigger, reset);
 
     let time_fraction = self.time_fraction_generator.process(trigger);
-    let fraction = match time_fraction {
-      Some(f) => f,
-      None => 1.,
-    };
-    let delay_time = pulse * fraction;
+    let delay_time = pulse * time_fraction;
+
     self.duration = self
       .duration_generator
-      .process(delay_time, fraction, duration, trigger);
+      .process(delay_time, time_fraction, duration, trigger);
 
     let (delay_fade_a, delay_fade_b) = self
       .delay_crossfade

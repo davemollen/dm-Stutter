@@ -1,12 +1,12 @@
 pub struct TimeFractionGenerator {
-  fraction: Option<f32>,
+  fraction: f32,
   probability: Vec<(f32, f32)>,
 }
 
 impl TimeFractionGenerator {
   pub fn new() -> Self {
     Self {
-      fraction: None,
+      fraction: 1.,
       probability: Vec::with_capacity(15),
     }
   }
@@ -26,7 +26,7 @@ impl TimeFractionGenerator {
       .collect();
   }
 
-  pub fn process(&mut self, trigger: bool) -> Option<f32> {
+  pub fn process(&mut self, trigger: bool) -> f32 {
     if trigger {
       let random_num = fastrand::f32();
       self.fraction = self.get_fraction(random_num);
@@ -35,10 +35,10 @@ impl TimeFractionGenerator {
     self.fraction
   }
 
-  fn get_fraction(&self, random_num: f32) -> Option<f32> {
+  fn get_fraction(&self, random_num: f32) -> f32 {
     match self.probability.iter().find(|item| random_num < item.0) {
-      Some(f) => Some(f.1),
-      None => None,
+      Some(f) => f.1,
+      None => 1.,
     }
   }
 }

@@ -21,6 +21,12 @@ pub fn map_tempo_factor(value: i32) -> f32 {
   }
 }
 
+impl DmStutter {
+  fn get_synced_pulse_time(&self) {
+    60000. / bpm * map_tempo_factor(self.params.tempo_factor.value())
+  }
+}
+
 impl Default for DmStutter {
   fn default() -> Self {
     let params = Arc::new(StutterParameters::default());
@@ -80,8 +86,8 @@ impl Plugin for DmStutter {
     let auto = self.params.auto.value();
     let trigger = self.params.trigger.value();
     let pulse = if self.params.sync.value() {
-      let beat_time = 60000. / context.transport().tempo.unwrap_or(120.) as f32;
-      beat_time * map_tempo_factor(self.params.tempo_factor.value())
+      let bpm = context.transport().tempo.unwrap_or(120.) as f32;
+      self.get_synced_pulse_time()
     } else {
       self.params.pulse.value()
     };

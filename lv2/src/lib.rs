@@ -55,8 +55,7 @@ struct DmStutter {
 }
 
 impl DmStutter {
-  fn get_synced_pulse_time(&mut self, ports: &mut Ports) -> f32 {
-    self.set_bpm(ports);
+  fn get_synced_pulse_time(&self, ports: &mut Ports) -> f32 {
     60000. / self.bpm * self.map_tempo_factor(*ports.tempo_factor)
   }
 
@@ -121,6 +120,7 @@ impl Plugin for DmStutter {
     let trigger = *ports.trigger == 1.;
 
     let pulse = if *ports.sync == 1. {
+      self.set_bpm(ports);
       self.get_synced_pulse_time(ports)
     } else {
       *ports.pulse
