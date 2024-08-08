@@ -32,6 +32,21 @@ function(event) {
           trigger.removeClass("on");
         }
         break;
+      case "sync":
+        const sync = event.icon.find("[mod-port-symbol=sync]");
+        const pulse = event.icon.find("[mod-port-symbol=pulse]");
+        const tempo_factor = event.icon.find("[mod-port-symbol=tempo_factor]");
+
+        if(value == 1) {
+          sync.addClass("on");
+          pulse.addClass("hide");
+          tempo_factor.removeClass("hide");
+        } else {
+          sync.removeClass("on");
+          pulse.removeClass("hide");
+          tempo_factor.addClass("hide");
+        }
+        break;
       default:
         break;
     }

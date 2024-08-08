@@ -10,6 +10,17 @@ struct DmStutter {
   stutter: Stutter,
 }
 
+pub fn map_tempo_factor(value: i32) -> f32 {
+  match value {
+    0 => 0.25,
+    1 => 0.5,
+    2 => 1.,
+    3 => 2.,
+    4 => 4.,
+    _ => panic!("Unsupported value for tempo factor was found."),
+  }
+}
+
 impl Default for DmStutter {
   fn default() -> Self {
     let params = Arc::new(StutterParameters::default());
@@ -70,7 +81,7 @@ impl Plugin for DmStutter {
     let trigger = self.params.trigger.value();
     let pulse = if self.params.sync.value() {
       let beat_time = 60000. / context.transport().tempo.unwrap_or(120.) as f32;
-      beat_time * self.params.tempo_factor.value()
+      beat_time * map_tempo_factor(self.params.tempo_factor.value())
     } else {
       self.params.pulse.value()
     };

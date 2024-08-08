@@ -42,6 +42,11 @@
             <div
               class="mod-knob-image"
               mod-role="input-control-port"
+              mod-port-symbol="tempo_factor"
+            ></div>
+            <div
+              class="mod-knob-image"
+              mod-role="input-control-port"
               mod-port-symbol="pulse"
             ></div>
             <span class="mod-knob-title">Pulse</span>
@@ -77,16 +82,7 @@
     <div id="right-side">
       <p>Note probability</p>
       <div id="sliders">
-        {{#controls.7}}
-        <div class="mod-slider" mod-role="icon-button" mod-button-type="slider">
-          <span class="mod-slider-title">{{name}}</span>
-          <div
-            class="mod-slider-image"
-            mod-role="input-control-port"
-            mod-port-symbol="{{symbol}}"
-          ></div>
-        </div>
-        {{/controls.7}} {{#controls.8}}
+        {{#controls.8}}
         <div class="mod-slider" mod-role="icon-button" mod-button-type="slider">
           <span class="mod-slider-title">{{name}}</span>
           <div
@@ -212,7 +208,16 @@
             mod-port-symbol="{{symbol}}"
           ></div>
         </div>
-        {{/controls.21}}
+        {{/controls.21}} {{#controls.22}}
+        <div class="mod-slider" mod-role="icon-button" mod-button-type="slider">
+          <span class="mod-slider-title">{{name}}</span>
+          <div
+            class="mod-slider-image"
+            mod-role="input-control-port"
+            mod-port-symbol="{{symbol}}"
+          ></div>
+        </div>
+        {{/controls.22}}
       </div>
     </div>
 

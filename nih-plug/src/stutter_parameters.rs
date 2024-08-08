@@ -1,12 +1,13 @@
 use crate::editor;
 use nih_plug::{
   formatters::{s2v_f32_percentage, v2s_f32_percentage},
-  prelude::{BoolParam, FloatParam, FloatRange, Params},
+  params::IntParam,
+  prelude::{BoolParam, FloatParam, FloatRange, IntRange, Params},
 };
 use nih_plug_vizia::ViziaState;
 use std::sync::Arc;
 mod custom_formatters;
-use custom_formatters::{s2v_f32_tempo_multiplier, v2s_f32_digits, v2s_f32_tempo_multiplier};
+use custom_formatters::{s2v_f32_tempo_factor, v2s_f32_digits, v2s_f32_tempo_factor};
 
 #[derive(Params)]
 pub struct StutterParameters {
@@ -29,7 +30,7 @@ pub struct StutterParameters {
   pub pulse: FloatParam,
 
   #[id = "tempo_factor"]
-  pub tempo_factor: FloatParam,
+  pub tempo_factor: IntParam,
 
   #[id = "chance"]
   pub chance: FloatParam,
@@ -108,11 +109,10 @@ impl Default for StutterParameters {
       .with_unit(" ms")
       .with_value_to_string(v2s_f32_digits(2)),
 
-      tempo_factor: FloatParam::new("Pulse", 0.5, FloatRange::Linear { min: 0., max: 1. })
+      tempo_factor: IntParam::new("Pulse", 2, IntRange::Linear { min: 0, max: 4 })
         .with_unit(" x")
-        .with_step_size(0.125)
-        .with_value_to_string(v2s_f32_tempo_multiplier(2))
-        .with_string_to_value(s2v_f32_tempo_multiplier()),
+        .with_value_to_string(v2s_f32_tempo_factor())
+        .with_string_to_value(s2v_f32_tempo_factor()),
 
       chance: FloatParam::new("Chance", 0.5, FloatRange::Linear { min: 0., max: 1. })
         .with_unit(" %")

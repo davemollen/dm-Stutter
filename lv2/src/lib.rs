@@ -54,6 +54,48 @@ struct DmStutter {
   bpm: f32,
 }
 
+impl DmStutter {
+  fn get_synced_pulse_time(&mut self, ports: &mut Ports) -> f32 {
+    self.set_bpm(ports);
+    60000. / self.bpm * self.map_tempo_factor(*ports.tempo_factor)
+  }
+
+  fn set_bpm(&mut self, ports: &mut Ports) {
+    if let Some(control_sequence) = ports
+      .control
+      .read(self.urids.atom.sequence, self.urids.unit.beat)
+    {
+      for (_timestamp, atom) in control_sequence {
+        if let Some((object_header, object_reader)) = atom
+          .read(self.urids.atom.object, ())
+          .or_else(|| atom.read(self.urids.atom.blank, ()))
+        {
+          if object_header.otype == self.urids.time.position_class {
+            for (property_header, property) in object_reader {
+              if property_header.key == self.urids.time.beats_per_minute {
+                if let Some(bpm) = property.read(self.urids.atom.float, ()) {
+                  self.bpm = bpm;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  fn map_tempo_factor(tempo_factor: f32) -> f32 {
+    match tempo_factor {
+      0. => 0.25,
+      1. => 0.5,
+      2. => 1.,
+      3. => 2.,
+      4. => 4.,
+      _ => panic!("Unsupported value for tempo factor was found."),
+    }
+  }
+}
+
 impl Plugin for DmStutter {
   // Tell the framework which ports this plugin has.
   type Ports = Ports;
@@ -79,29 +121,7 @@ impl Plugin for DmStutter {
     let trigger = *ports.trigger == 1.;
 
     let pulse = if *ports.sync == 1. {
-      if let Some(control_sequence) = ports
-        .control
-        .read(self.urids.atom.sequence, self.urids.unit.beat)
-      {
-        for (_timestamp, atom) in control_sequence {
-          if let Some((object_header, object_reader)) = atom
-            .read(self.urids.atom.object, ())
-            .or_else(|| atom.read(self.urids.atom.blank, ()))
-          {
-            if object_header.otype == self.urids.time.position_class {
-              for (property_header, property) in object_reader {
-                if property_header.key == self.urids.time.beats_per_minute {
-                  if let Some(bpm) = property.read(self.urids.atom.float, ()) {
-                    self.bpm = bpm;
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-
-      60000. / self.bpm * *ports.tempo_factor
+      self.get_synced_pulse_time(ports)
     } else {
       *ports.pulse
     };

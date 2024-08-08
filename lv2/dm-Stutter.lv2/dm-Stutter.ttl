@@ -84,9 +84,26 @@ A stuttering effect written in Rust.
 		lv2:index 6 ;
 		lv2:symbol "tempo_factor" ;
 		lv2:name "Tempo factor" ;
-		lv2:default 1.0 ;
-		lv2:minimum 0.0625 ;
-		lv2:maximum 16.0 ;
+		lv2:default 2 ;
+        lv2:minimum 0 ;
+        lv2:maximum 4 ;
+        lv2:portProperty lv2:enumeration , lv2:integer ;
+        lv2:scalePoint [
+            rdfs:label "0.25 x" ;
+            rdf:value 0
+        ] , [
+            rdfs:label "0.5 x" ;
+            rdf:value 1
+        ] , [
+            rdfs:label "1 x" ;
+            rdf:value 2
+        ] , [
+            rdfs:label "2 x" ;
+            rdf:value 3
+        ] , [
+            rdfs:label "4 x" ;
+            rdf:value 4
+        ]
 	], [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 7 ;
