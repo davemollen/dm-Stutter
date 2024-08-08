@@ -22,7 +22,7 @@ pub fn map_tempo_factor(value: i32) -> f32 {
 }
 
 impl DmStutter {
-  fn get_synced_pulse_time(&self) {
+  fn get_synced_pulse_time(&self, bpm: f32) -> f32 {
     60000. / bpm * map_tempo_factor(self.params.tempo_factor.value())
   }
 }
@@ -87,7 +87,7 @@ impl Plugin for DmStutter {
     let trigger = self.params.trigger.value();
     let pulse = if self.params.sync.value() {
       let bpm = context.transport().tempo.unwrap_or(120.) as f32;
-      self.get_synced_pulse_time()
+      self.get_synced_pulse_time(bpm)
     } else {
       self.params.pulse.value()
     };
