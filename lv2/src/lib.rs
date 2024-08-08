@@ -56,7 +56,7 @@ struct DmStutter {
 
 impl DmStutter {
   fn get_synced_pulse_time(&self, ports: &mut Ports) -> f32 {
-    60000. / self.bpm * self.map_tempo_factor(*ports.tempo_factor)
+    60000. / self.bpm * Self::map_tempo_factor(*ports.tempo_factor)
   }
 
   fn set_bpm(&mut self, ports: &mut Ports) {
