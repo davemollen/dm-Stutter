@@ -22,7 +22,7 @@
 	mod:brand "DM" ;
 	mod:label "Stutter" ;
 	rdfs:comment """
-A stuttering effect written in Rust.
+A stereo stutter effect.
 """ ;
 	lv2:requiredFeature urid:map , lv2:inPlaceBroken ;
 	lv2:optionalFeature lv2:hardRTCapable ;
