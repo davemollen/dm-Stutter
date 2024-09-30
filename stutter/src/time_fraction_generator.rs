@@ -133,8 +133,8 @@ mod tests {
         (1., 16_f32.recip()),
       ]
     );
-    assert_eq!(fraction_gen.get_fraction(0.2), Some(1.75));
-    assert_eq!(fraction_gen.get_fraction(0.4), Some(1.5));
-    assert_eq!(fraction_gen.get_fraction(0.7), Some(1.3333334));
+    assert_eq!(fraction_gen.get_fraction(0.2), 1.75);
+    assert_eq!(fraction_gen.get_fraction(0.4), 1.5);
+    assert_eq!(fraction_gen.get_fraction(0.7), 1.3333334);
   }
 }

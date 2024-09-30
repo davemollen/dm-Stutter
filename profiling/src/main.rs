@@ -8,7 +8,7 @@ fn main() {
   let mut stutter = Stutter::new(44100.);
 
   loop {
-    let input = generate_signal();
+    let input = (generate_signal(), generate_signal());
     stutter.process(input, true, true, false, 200., 0.5, 1.);
   }
 }
