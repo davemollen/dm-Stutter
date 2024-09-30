@@ -50,6 +50,21 @@ textbox:hover {
   outline-color: none;
 }
 
+button {
+  background-color: #363636;
+  border-width: 0px;
+}
+
+button:hover {
+  background-color: #e1d9d1;
+  border-width: 0px;
+}
+
+button:active {
+  background-color: #51afef;
+  border-width: 0px;
+}
+
 .hide {
   display: none;
 }
