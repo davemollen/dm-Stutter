@@ -28,13 +28,8 @@
 .mod-pedal-boxy{{{cns}}} #left-side {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-end;
     flex: 1;
-    margin-bottom: 40px;
-}
-
-.mod-pedal-boxy{{{cns}}} #left-side > #controls {
-    padding-bottom: 32px;
 }
 
 .mod-pedal-boxy{{{cns}}} hr {
@@ -70,13 +65,21 @@
     flex-wrap: wrap;
 }
 
+.mod-pedal-boxy{{{cns}}} #footswitches {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+    flex: 1;
+    justify-content: center;
+}
 
 /* = PLUGIN'S AUTHOR
 ================================================ */
 .mod-pedal-boxy{{{cns}}} .mod-plugin-brand {
     text-align:center;
     text-transform:uppercase;
-    top:160px;
 }
 
 .mod-pedal-boxy{{{cns}}} .mod-plugin-brand h1 {
@@ -102,12 +105,14 @@
     font-family:"Questrial";
     font-size:21px;
     line-height:1;
+    margin: 0px;
 }
 
 
 /* = FOOTSWITCH
 ================================================ */
 .mod-pedal-boxy{{{cns}}} .mod-footswitch {
+    position: relative;
     background-image:url(/resources/pedals/footswitch.png{{{ns}}});
     background-position:top center !important;
     background-repeat:no-repeat;
@@ -115,11 +120,6 @@
     cursor:pointer;
     height:66px;
     width: 66px;
-    margin: auto;
-    margin-top: 32px;
-    position:absolute !important;
-    left: 50%;
-    transform: translateX(-50%);
 }
 .mod-pedal-boxy{{{cns}}} .mod-footswitch.on {
     background-position-y: bottom !important;
@@ -128,16 +128,32 @@
     background-image:url(/resources/pedals/red-light-off.png{{{ns}}});
     background-position-y: bottom;
     background-repeat:no-repeat;
-    background-size:32px 32px;
-    height:32px;
-    width:32px;
+    background-size:28px 28px;
+    height:28px;
+    width:28px;
     position: absolute;
-    top: -32px;
+    top: -28px;
     left: 50%;
     transform: translateX(-50%);
 }
 .mod-pedal-boxy{{{cns}}} .mod-footswitch.on > .mod-light {
     background-image:url(/resources/pedals/red-light-on.png{{{ns}}});
+}
+
+.mod-pedal-boxy{{{cns}}} .mod-footswitch > span.mod-knob-title {
+    bottom:-16px;
+    display:block;
+    font-size:11px;
+    font-weight:bold;
+    height:12px;
+    left: 50%;
+    transform: translateX(-50%);
+    line-height:1;
+    margin:0;
+    padding:0;
+    position:absolute;
+    text-transform:uppercase;
+    color: black;
 }
 
 
@@ -193,6 +209,7 @@
     display:inline-block;
     height:73px;
 }
+
 
 /* SLIDER
 ================================================ */

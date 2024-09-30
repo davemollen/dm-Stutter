@@ -57,21 +57,21 @@ pub(crate) fn create(
               |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
             );
 
-            ParamCheckbox::new(
-              cx,
-              params.auto.name(),
-              UiData::params,
-              params.auto.as_ptr(),
-              |params| &params.auto,
-              |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
-            );
-
             ParamTrigger::new(
               cx,
               params.trigger.name(),
               UiData::params,
               params.trigger.as_ptr(),
               |params| &params.trigger,
+              |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
+            );
+            
+            ParamCheckbox::new(
+              cx,
+              params.auto.name(),
+              UiData::params,
+              params.auto.as_ptr(),
+              |params| &params.auto,
               |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
             );
 
@@ -84,7 +84,7 @@ pub(crate) fn create(
               |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
             );
           })
-          .size(Auto).col_between(Pixels(16.0));
+          .size(Auto).col_between(Pixels(16.0)).child_bottom(Pixels(8.0));
 
           HStack::new(cx, |cx| {
             // show when sync is on
@@ -152,6 +152,7 @@ pub(crate) fn create(
           })
           .size(Auto);
         })
+        .height(Auto)
         .row_between(Pixels(8.0))
         .child_space(Stretch(1.0))
         .top(Stretch(1.0));

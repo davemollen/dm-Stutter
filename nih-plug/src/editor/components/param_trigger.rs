@@ -44,12 +44,12 @@ impl ParamTrigger {
         },
         |cx| Element::new(cx),
       )
-      .size(Pixels(30.0))
-      .border_radius(Pixels(30.0));
+      .size(Pixels(29.0))
+      .border_radius(Pixels(29.0));
     })
     .size(Auto)
     .child_left(Stretch(1.0))
     .child_right(Stretch(1.0))
-    .row_between(Pixels(10.0))
+    .row_between(Pixels(9.0))
   }
 }

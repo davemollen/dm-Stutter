@@ -17,11 +17,11 @@ pub struct StutterParameters {
   #[id = "on"]
   pub on: BoolParam,
 
-  #[id = "auto"]
-  pub auto: BoolParam,
-
   #[id = "trigger"]
   pub trigger: BoolParam,
+
+  #[id = "auto"]
+  pub auto: BoolParam,
 
   #[id = "sync"]
   pub sync: BoolParam,
@@ -91,9 +91,9 @@ impl Default for StutterParameters {
 
       on: BoolParam::new("On", false),
 
-      auto: BoolParam::new("Auto", true),
-
       trigger: BoolParam::new("Trigger", false),
+
+      auto: BoolParam::new("Auto", true),
 
       sync: BoolParam::new("Sync", true),
 

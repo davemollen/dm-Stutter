@@ -20,12 +20,12 @@
             lv2:name "On" ;
         ] , [
             lv2:index 1 ;
-            lv2:symbol "auto" ;
-            lv2:name "Auto" ;
-        ] , [
-            lv2:index 2 ;
             lv2:symbol "trigger" ;
             lv2:name "Trigger" ;
+        ] , [
+            lv2:index 2 ;
+            lv2:symbol "auto" ;
+            lv2:name "Auto" ;
         ] , [
             lv2:index 3 ;
             lv2:symbol "sync" ;

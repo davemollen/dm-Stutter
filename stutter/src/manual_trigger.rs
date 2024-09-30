@@ -7,8 +7,12 @@ impl ManualTrigger {
     Self { prev: false }
   }
 
-  pub fn process(&mut self, next: bool) -> bool {
-    let output = next != self.prev;
+  pub fn process(&mut self, next: bool, is_momentary_trigger: bool) -> bool {
+    let output = if is_momentary_trigger {
+      next && !self.prev
+    } else { 
+      next != self.prev
+    };
     self.prev = next;
     output
   }

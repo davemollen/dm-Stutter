@@ -19,8 +19,8 @@ pub struct Features<'a> {
 struct Ports {
   control: InputPort<AtomPort>,
   on: InputPort<Control>,
-  auto: InputPort<Control>,
   trigger: InputPort<Control>,
+  auto: InputPort<Control>,
   sync: InputPort<Control>,
   pulse: InputPort<Control>,
   tempo_factor: InputPort<Control>,
@@ -126,8 +126,8 @@ impl Plugin for DmStutter {
   // iterates over.
   fn run(&mut self, ports: &mut Ports, _features: &mut (), _sample_count: u32) {
     let on = *ports.on == 1.;
-    let auto = *ports.auto == 1.;
     let trigger = *ports.trigger == 1.;
+    let auto = *ports.auto == 1.;
 
     let pulse = if *ports.sync == 1. {
       self.set_bpm(ports);
@@ -168,11 +168,12 @@ impl Plugin for DmStutter {
       (*output_left, *output_right) = self.stutter.process(
         (*input_left, *input_right),
         on,
-        auto,
         trigger,
+        auto,
         pulse,
         duration,
         chance,
+        true
       );
     }
   }

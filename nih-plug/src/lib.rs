@@ -83,8 +83,8 @@ impl Plugin for DmStutter {
     context: &mut impl ProcessContext<Self>,
   ) -> ProcessStatus {
     let on = self.params.on.value();
-    let auto = self.params.auto.value();
     let trigger = self.params.trigger.value();
+    let auto = self.params.auto.value();
     let pulse = if self.params.sync.value() {
       let bpm = context.transport().tempo.unwrap_or(120.) as f32;
       self.get_synced_pulse_time(bpm)
@@ -120,11 +120,12 @@ impl Plugin for DmStutter {
       (*left_channel, *right_channel) = self.stutter.process(
         (*left_channel, *right_channel),
         on,
-        auto,
         trigger,
+        auto,
         pulse,
         duration,
         chance,
+        false
       );
     });
     ProcessStatus::Normal

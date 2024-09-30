@@ -9,7 +9,7 @@
         <div class="mod-control-group mod-steel clearfix">
           <div class="mod-knob toggle">
             <div
-              class="mod-toggle-image mod-port"
+              class="mod-toggle-image mod-port on"
               mod-role="input-control-port"
               mod-port-symbol="auto"
             >
@@ -19,15 +19,7 @@
           </div>
           <div class="mod-knob toggle">
             <div
-              class="mod-toggle-image center mod-port"
-              mod-role="input-control-port"
-              mod-port-symbol="trigger"
-            ></div>
-            <span class="mod-knob-title">Trigger</span>
-          </div>
-          <div class="mod-knob toggle">
-            <div
-              class="mod-toggle-image mod-port"
+              class="mod-toggle-image mod-port on"
               mod-role="input-control-port"
               mod-port-symbol="sync"
             >
@@ -40,12 +32,12 @@
         <div class="mod-control-group mod-steel clearfix">
           <div class="mod-knob">
             <div
-              class="mod-knob-image hide"
+              class="mod-knob-image"
               mod-role="input-control-port"
               mod-port-symbol="tempo_factor"
             ></div>
             <div
-              class="mod-knob-image"
+              class="mod-knob-image hide"
               mod-role="input-control-port"
               mod-port-symbol="pulse"
             ></div>
@@ -73,8 +65,15 @@
       <div id="brand">
         <div class="mod-plugin-brand"><h1>{{brand}}</h1></div>
         <div class="mod-plugin-name"><h1>{{label}}</h1></div>
-        <div class="mod-footswitch" mod-role="input-control-port" mod-port-symbol="on">
-          <div class="mod-light"></div>
+        <div id="footswitches">
+          <div class="mod-footswitch" mod-role="input-control-port" mod-port-symbol="on">
+            <div class="mod-light"></div>
+            <span class="mod-knob-title">On</span>
+          </div>
+          <div class="mod-footswitch" mod-role="input-control-port" mod-port-symbol="trigger">
+            <div class="mod-light"></div>
+            <span class="mod-knob-title">Trigger</span>
+          </div>
         </div>
       </div>
     </div>

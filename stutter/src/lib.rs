@@ -87,13 +87,14 @@ impl Stutter {
     &mut self,
     input: (f32, f32),
     on: bool,
-    auto_trigger: bool,
     manual_trigger: bool,
+    auto_trigger: bool,
     pulse: f32,
     duration: f32,
     chance: f32,
+    is_momentary_trigger: bool,
   ) -> (f32, f32) {
-    let manual_trigger = self.manual_trigger.process(manual_trigger);
+    let manual_trigger = self.manual_trigger.process(manual_trigger, is_momentary_trigger);
     let reset = self.toggle_trigger.process(on) || manual_trigger;
     if reset {
       self.phasor.reset();
