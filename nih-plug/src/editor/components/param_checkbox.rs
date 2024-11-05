@@ -36,7 +36,6 @@ impl ParamCheckbox {
       Label::new(cx, name)
         .font_size(13.0)
         .font_weight(FontWeightKeyword::SemiBold)
-        .text_wrap(true)
         .child_space(Stretch(1.0));
 
       Checkbox::new(

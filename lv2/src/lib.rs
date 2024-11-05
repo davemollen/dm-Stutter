@@ -22,6 +22,7 @@ struct Ports {
   trigger: InputPort<Control>,
   auto: InputPort<Control>,
   sync: InputPort<Control>,
+  dry_thru: InputPort<Control>,
   pulse: InputPort<Control>,
   tempo_factor: InputPort<Control>,
   duration: InputPort<Control>,
@@ -128,6 +129,7 @@ impl Plugin for DmStutter {
     let on = *ports.on == 1.;
     let trigger = *ports.trigger == 1.;
     let auto = *ports.auto == 1.;
+    let dry_thru = *ports.dry_thru == 1.;
 
     let pulse = if *ports.sync == 1. {
       self.set_bpm(ports);
@@ -170,10 +172,11 @@ impl Plugin for DmStutter {
         on,
         trigger,
         auto,
+        dry_thru,
         pulse,
         duration,
         chance,
-        true
+        true,
       );
     }
   }

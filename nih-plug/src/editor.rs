@@ -14,7 +14,13 @@ mod ui_data;
 use nih_plug::params::Param;
 use nih_plug::prelude::Editor;
 use nih_plug_vizia::vizia::{
-  binding::LensExt, layout::Units::Auto, model::Model, modifiers::{LayoutModifiers, StyleModifiers, TextModifiers}, prelude::Units::{Pixels, Stretch}, style::FontWeightKeyword, views::{Element, HStack, Label, VStack}
+  binding::LensExt,
+  layout::Units::Auto,
+  model::Model,
+  modifiers::{LayoutModifiers, StyleModifiers, TextModifiers},
+  prelude::Units::{Pixels, Stretch},
+  style::FontWeightKeyword,
+  views::{Element, HStack, Label, VStack},
 };
 use nih_plug_vizia::{create_vizia_editor, ViziaState, ViziaTheming};
 use std::sync::Arc;
@@ -65,7 +71,7 @@ pub(crate) fn create(
               |params| &params.trigger,
               |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
             );
-            
+
             ParamCheckbox::new(
               cx,
               params.auto.name(),
@@ -83,8 +89,19 @@ pub(crate) fn create(
               |params| &params.sync,
               |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
             );
+
+            ParamCheckbox::new(
+              cx,
+              params.dry_thru.name(),
+              UiData::params,
+              params.dry_thru.as_ptr(),
+              |params| &params.dry_thru,
+              |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
+            );
           })
-          .size(Auto).col_between(Pixels(16.0)).child_bottom(Pixels(8.0));
+          .size(Auto)
+          .col_between(Pixels(16.0))
+          .child_bottom(Pixels(8.0));
 
           HStack::new(cx, |cx| {
             // show when sync is on

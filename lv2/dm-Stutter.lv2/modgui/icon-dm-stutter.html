@@ -27,6 +27,16 @@
             </div>
             <span class="mod-knob-title">Sync</span>
           </div>
+          <div class="mod-knob toggle">
+            <div
+              class="mod-toggle-image mod-port on"
+              mod-role="input-control-port"
+              mod-port-symbol="dry_thru"
+            >
+              <div class="mod-toggle-light" />
+            </div>
+            <span class="mod-knob-title">Dry Thru</span>
+          </div>
         </div>
 
         <div class="mod-control-group mod-steel clearfix">
@@ -81,16 +91,7 @@
     <div id="right-side">
       <p>Note probability</p>
       <div id="sliders">
-        {{#controls.8}}
-        <div class="mod-slider" mod-role="icon-button" mod-button-type="slider">
-          <span class="mod-slider-title">{{name}}</span>
-          <div
-            class="mod-slider-image"
-            mod-role="input-control-port"
-            mod-port-symbol="{{symbol}}"
-          ></div>
-        </div>
-        {{/controls.8}} {{#controls.9}}
+        {{#controls.9}}
         <div class="mod-slider" mod-role="icon-button" mod-button-type="slider">
           <span class="mod-slider-title">{{name}}</span>
           <div
@@ -216,7 +217,16 @@
             mod-port-symbol="{{symbol}}"
           ></div>
         </div>
-        {{/controls.22}}
+        {{/controls.22}} {{#controls.23}}
+        <div class="mod-slider" mod-role="icon-button" mod-button-type="slider">
+          <span class="mod-slider-title">{{name}}</span>
+          <div
+            class="mod-slider-image"
+            mod-role="input-control-port"
+            mod-port-symbol="{{symbol}}"
+          ></div>
+        </div>
+        {{/controls.23}}
       </div>
     </div>
 

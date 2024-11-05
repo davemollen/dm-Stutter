@@ -47,6 +47,14 @@ function(event) {
           tempo_factor.addClass("hide");
         }
         break;
+      case "dry_thru":
+        const dry_thru = event.icon.find("[mod-port-symbol=dry_thru]");
+        if(value == 1) {
+          dry_thru.addClass("on");
+        } else {
+          dry_thru.removeClass("on");
+        }
+        break;
       default:
         break;
     }

@@ -26,6 +26,9 @@ pub struct StutterParameters {
   #[id = "sync"]
   pub sync: BoolParam,
 
+  #[id = "dry_thru"]
+  pub dry_thru: BoolParam,
+
   #[id = "pulse"]
   pub pulse: FloatParam,
 
@@ -96,6 +99,8 @@ impl Default for StutterParameters {
       auto: BoolParam::new("Auto", true),
 
       sync: BoolParam::new("Sync", true),
+
+      dry_thru: BoolParam::new("Dry Thru", true),
 
       pulse: FloatParam::new(
         "Pulse",

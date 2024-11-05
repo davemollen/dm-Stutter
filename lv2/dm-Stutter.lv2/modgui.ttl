@@ -32,78 +32,82 @@
             lv2:name "Sync" ;
         ] , [
             lv2:index 4 ;
+            lv2:symbol "dry_thru" ;
+            lv2:name "Dry Thru" ;
+        ] , [
+            lv2:index 5 ;
             lv2:symbol "pulse" ;
             lv2:name "Pulse" ;
         ] , [
-            lv2:index 5 ;
+            lv2:index 6 ;
             lv2:symbol "tempo_factor" ;
             lv2:name "Tempo factor" ;
         ] , [
-            lv2:index 6 ;
+            lv2:index 7 ;
             lv2:symbol "duration" ;
             lv2:name "Duration" ;
         ] , [
-            lv2:index 7 ;
+            lv2:index 8 ;
             lv2:symbol "chance" ;
             lv2:name "Chance" ;
         ] , [
-            lv2:index 8 ;
+            lv2:index 9 ;
             lv2:symbol "half_notes" ;
             lv2:name "1/2" ;
         ] , [
-            lv2:index 9 ;
+            lv2:index 10 ;
             lv2:symbol "seven_sixteenth_notes" ;
             lv2:name "7/16" ;
         ] , [
-            lv2:index 10 ;
+            lv2:index 11 ;
             lv2:symbol "six_sixteenth_notes" ;
             lv2:name "3/8" ;
         ] , [
-            lv2:index 11 ;
+            lv2:index 12 ;
             lv2:symbol "half_triplet_notes" ;
             lv2:name "1/2 triplet" ;
         ] , [
-            lv2:index 12 ;
+            lv2:index 13 ;
             lv2:symbol "five_sixteenth_notes" ;
             lv2:name "5/16" ;
         ] , [
-            lv2:index 13 ;
+            lv2:index 14 ;
             lv2:symbol "quarter_notes" ;
             lv2:name "1/4" ;
         ] , [
-            lv2:index 14 ;
+            lv2:index 15 ;
             lv2:symbol "three_sixteenth_notes" ;
             lv2:name "3/16" ;
         ] , [
-            lv2:index 15 ;
+            lv2:index 16 ;
             lv2:symbol "quarter_triplet_notes" ;
             lv2:name "1/4 triplet" ;
         ] , [
-            lv2:index 16 ;
+            lv2:index 17 ;
             lv2:symbol "eighth_notes" ;
             lv2:name "1/8" ;
         ] , [
-            lv2:index 17 ;
+            lv2:index 18 ;
             lv2:symbol "eighth_triplet_notes" ;
             lv2:name "1/8 triplet" ;
         ] , [
-            lv2:index 18 ;
+            lv2:index 19 ;
             lv2:symbol "sixteenth_notes" ;
             lv2:name "1/16" ;
         ] , [
-            lv2:index 19 ;
+            lv2:index 20 ;
             lv2:symbol "sixteenth_triplet_notes" ;
             lv2:name "1/16 triplet" ;
         ] , [
-            lv2:index 20 ;
+            lv2:index 21 ;
             lv2:symbol "thirty_second_notes" ;
             lv2:name "1/32" ;
         ] , [
-            lv2:index 21 ;
+            lv2:index 22 ;
             lv2:symbol "thirty_second_triplet_notes" ;
             lv2:name "1/32 triplet" ;
         ] , [
-            lv2:index 22 ;
+            lv2:index 23 ;
             lv2:symbol "sixty_fourth_notes" ;
             lv2:name "1/64" ;
         ] ;

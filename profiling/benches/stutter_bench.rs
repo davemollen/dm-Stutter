@@ -6,7 +6,9 @@ fn generate_signal() -> f32 {
 }
 
 fn generate_signal_stream(length: usize) -> Vec<(f32, f32)> {
-  (0..length).map(|_| (generate_signal(), generate_signal()).collect()
+  (0..length)
+    .map(|_| (generate_signal(), generate_signal()))
+    .collect()
 }
 
 fn stutter_bench(c: &mut Criterion) {
@@ -16,7 +18,7 @@ fn stutter_bench(c: &mut Criterion) {
   c.bench_function("stutter", |b| {
     b.iter(|| {
       for signal in &signal_stream {
-        stutter.process(*signal, true, true, false, 200., 0.5, 1.);
+        stutter.process(*signal, true, true, false, true, 200., 0.5, 1., true);
       }
     })
   });
