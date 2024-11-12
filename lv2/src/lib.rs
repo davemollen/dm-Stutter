@@ -61,21 +61,22 @@ impl DmStutter {
   }
 
   fn set_bpm(&mut self, ports: &mut Ports) {
-    let control_sequence = match ports
-      .control
-      .read(self.urids.atom.sequence, self.urids.unit.beat)
-    {
-      Some(sequence) => sequence,
-      None => return,
+    let sequence_header_reader = match ports.control.read(self.urids.atom.sequence) {
+      Ok(sequence_header_reader) => sequence_header_reader,
+      Err(_) => return,
+    };
+    let sequence_iter = match sequence_header_reader.with_unit(self.urids.unit.beat) {
+      Ok(sequence_iter) => sequence_iter,
+      Err(_) => return,
     };
 
-    for (_timestamp, atom) in control_sequence {
+    for (_, atom) in sequence_iter {
       let (object_header, object_reader) = match atom
-        .read(self.urids.atom.object, ())
-        .or_else(|| atom.read(self.urids.atom.blank, ()))
+        .read(self.urids.atom.object)
+        .or_else(|_| atom.read(self.urids.atom.blank))
       {
-        Some(pair) => pair,
-        None => continue,
+        Ok(pair) => pair,
+        Err(_) => continue,
       };
 
       if object_header.otype != self.urids.time.position_class {
@@ -87,8 +88,8 @@ impl DmStutter {
           continue;
         }
 
-        if let Some(bpm) = property.read(self.urids.atom.float, ()) {
-          self.bpm = bpm;
+        if let Ok(bpm) = property.read(self.urids.atom.float) {
+          self.bpm = *bpm;
         }
       }
     }
