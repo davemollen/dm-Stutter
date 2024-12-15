@@ -82,7 +82,7 @@ impl Plugin for DmStutter {
     _aux: &mut AuxiliaryBuffers,
     context: &mut impl ProcessContext<Self>,
   ) -> ProcessStatus {
-    let on = self.params.on.value();
+    let on = self.params.on.value() && self.stutter.has_note_length_values();
     let trigger = self.params.trigger.value();
     let auto = self.params.auto.value();
     let dry_thru = self.params.dry_thru.value();

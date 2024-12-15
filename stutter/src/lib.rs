@@ -46,6 +46,10 @@ impl Stutter {
     }
   }
 
+  pub fn has_note_length_values(&self) -> bool {
+    self.time_fraction_generator.has_values()
+  }
+
   pub fn set_probability(
     &mut self,
     half_notes: f32,

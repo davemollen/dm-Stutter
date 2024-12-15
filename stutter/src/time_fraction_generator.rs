@@ -1,6 +1,7 @@
 pub struct TimeFractionGenerator {
   fraction: f32,
   probability: Vec<(f32, f32)>,
+  has_values: bool,
 }
 
 impl TimeFractionGenerator {
@@ -8,6 +9,7 @@ impl TimeFractionGenerator {
     Self {
       fraction: 1.,
       probability: Vec::with_capacity(15),
+      has_values: true
     }
   }
 
@@ -19,7 +21,17 @@ impl TimeFractionGenerator {
         (*acc).1 = value;
         Some(*acc)
       });
-    let total = accumulated_probability.clone().last().unwrap().0;
+    
+    let total = match accumulated_probability.clone().last() {
+      Some((total, _)) => {
+        total
+      },
+      None => {
+        0.
+      }
+    };
+    self.has_values = total > 0.;
+    
 
     self.probability = accumulated_probability
       .map(|(chance, value)| (chance / total, value))
@@ -35,9 +47,13 @@ impl TimeFractionGenerator {
     self.fraction
   }
 
+  pub fn has_values(&self) -> bool {
+    self.has_values
+  }
+
   fn get_fraction(&self, random_num: f32) -> f32 {
     match self.probability.iter().find(|item| random_num < item.0) {
-      Some(f) => f.1,
+      Some((_, fraction)) => *fraction,
       None => 1.,
     }
   }
@@ -136,5 +152,47 @@ mod tests {
     assert_eq!(fraction_gen.get_fraction(0.2), 1.75);
     assert_eq!(fraction_gen.get_fraction(0.4), 1.5);
     assert_eq!(fraction_gen.get_fraction(0.7), 1.3333334);
+  }
+
+  #[test]
+  fn get_has_values() {
+    let fraction_gen = &mut TimeFractionGenerator::new();
+    fraction_gen.set_probability([
+      (0., 2.),
+      (0., 1.75),
+      (0., 1.5),
+      (0., 1.33333333),
+      (0., 1.25),
+      (0., 1.),
+      (0., 0.75),
+      (0., 1.5_f32.recip()),
+      (0., 2_f32.recip()),
+      (0., 3_f32.recip()),
+      (0., 4_f32.recip()),
+      (0., 6_f32.recip()),
+      (0., 8_f32.recip()),
+      (0., 12_f32.recip()),
+      (0., 16_f32.recip()),
+    ]);
+    assert!(!fraction_gen.has_values());
+
+    fraction_gen.set_probability([
+      (0.1, 2.),
+      (0., 1.75),
+      (0., 1.5),
+      (0., 1.33333333),
+      (0., 1.25),
+      (0., 1.),
+      (0., 0.75),
+      (0., 1.5_f32.recip()),
+      (0., 2_f32.recip()),
+      (0., 3_f32.recip()),
+      (0., 4_f32.recip()),
+      (0., 6_f32.recip()),
+      (0., 8_f32.recip()),
+      (0., 12_f32.recip()),
+      (0., 16_f32.recip()),
+    ]);
+    assert!(fraction_gen.has_values());
   }
 }
