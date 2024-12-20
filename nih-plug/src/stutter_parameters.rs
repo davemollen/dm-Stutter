@@ -1,13 +1,23 @@
 use crate::editor;
 use nih_plug::{
   formatters::{s2v_f32_percentage, v2s_f32_percentage},
-  params::IntParam,
-  prelude::{BoolParam, FloatParam, FloatRange, IntRange, Params},
+  params::{EnumParam, IntParam},
+  prelude::{BoolParam, Enum, FloatParam, FloatRange, IntRange, Params},
 };
 use nih_plug_vizia::ViziaState;
 use std::sync::Arc;
 mod custom_formatters;
 use custom_formatters::{s2v_f32_tempo_factor, v2s_f32_digits, v2s_f32_tempo_factor};
+
+#[derive(Enum, PartialEq)]
+pub enum Mix {
+  #[name = "Dry or wet"]
+  DryOrWet,
+  #[name = "Dry and wet"]
+  DryAndWet,
+  #[name = "Wet only"]
+  WetOnly,
+}
 
 #[derive(Params)]
 pub struct StutterParameters {
@@ -26,8 +36,8 @@ pub struct StutterParameters {
   #[id = "sync"]
   pub sync: BoolParam,
 
-  #[id = "dry_thru"]
-  pub dry_thru: BoolParam,
+  #[id = "mix"]
+  pub mix: EnumParam<Mix>,
 
   #[id = "pulse"]
   pub pulse: FloatParam,
@@ -100,7 +110,7 @@ impl Default for StutterParameters {
 
       sync: BoolParam::new("Sync", true),
 
-      dry_thru: BoolParam::new("Dry Thru", true),
+      mix: EnumParam::new("Mix", Mix::DryOrWet),
 
       pulse: FloatParam::new(
         "Pulse",

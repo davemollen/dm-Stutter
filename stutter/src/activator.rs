@@ -22,7 +22,7 @@ impl Activator {
     auto_trigger: bool,
     trigger: bool,
     manual_trigger: bool,
-    dry_thru: bool,
+    mix: i32,
   ) -> (f32, f32) {
     if trigger {
       if auto_trigger && !manual_trigger {
@@ -37,12 +37,12 @@ impl Activator {
       .crossfade
       .process(if on && self.is_active { 1. } else { 0. }, 20.);
 
-    if dry_thru {
-      wet_signal
-        .multiply_with(activity_fade_a)
-        .add(dry_signal.multiply_with(activity_fade_b))
-    } else {
-      wet_signal.multiply_with(activity_fade_a)
+    match mix {
+      0 => wet_signal
+      .multiply_with(activity_fade_a)
+      .add(dry_signal.multiply_with(activity_fade_b)),
+      1 => wet_signal.multiply_with(activity_fade_a).add(dry_signal),
+      _ => wet_signal.multiply_with(activity_fade_a)
     }
   }
 }

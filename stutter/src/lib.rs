@@ -93,7 +93,7 @@ impl Stutter {
     on: bool,
     manual_trigger: bool,
     auto_trigger: bool,
-    dry_thru: bool,
+    mix: i32,
     pulse: f32,
     duration: f32,
     chance: f32,
@@ -130,7 +130,7 @@ impl Stutter {
       auto_trigger,
       trigger,
       manual_trigger,
-      dry_thru,
+      mix,
     )
   }
 

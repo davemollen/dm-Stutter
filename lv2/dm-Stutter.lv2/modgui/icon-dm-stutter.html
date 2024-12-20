@@ -1,6 +1,4 @@
-<div
-  class="mod-pedal mod-pedal-boxy{{{cns}}} mod-twelve-sliders mod-boxy100"
->
+<div class="mod-pedal mod-pedal-boxy{{{cns}}} mod-twelve-sliders mod-boxy100">
   <div mod-role="drag-handle" class="mod-drag-handle"></div>
 
   <div id="flex-container">
@@ -27,15 +25,24 @@
             </div>
             <span class="mod-knob-title">Sync</span>
           </div>
-          <div class="mod-knob toggle">
+          <div class="mod-enumeration">
             <div
-              class="mod-toggle-image mod-port on"
+              class="mod-enumerated"
               mod-role="input-control-port"
-              mod-port-symbol="dry_thru"
+              mod-port-symbol="mix"
+              mod-widget="custom-select"
             >
-              <div class="mod-toggle-light" />
+              <div mod-role="enumeration-option" mod-port-value="1">
+                Dry or Wet
+              </div>
+              <div mod-role="enumeration-option" mod-port-value="2">
+                Dry & Wet
+              </div>
+              <div mod-role="enumeration-option" mod-port-value="3">
+                Wet only
+              </div>
             </div>
-            <span class="mod-knob-title">Dry Thru</span>
+            <span class="mod-param-title">Mix</span>
           </div>
         </div>
 
@@ -76,11 +83,19 @@
         <div class="mod-plugin-brand"><h1>{{brand}}</h1></div>
         <div class="mod-plugin-name"><h1>{{label}}</h1></div>
         <div id="footswitches">
-          <div class="mod-footswitch" mod-role="input-control-port" mod-port-symbol="on">
+          <div
+            class="mod-footswitch"
+            mod-role="input-control-port"
+            mod-port-symbol="on"
+          >
             <div class="mod-light"></div>
             <span class="mod-knob-title">On</span>
           </div>
-          <div class="mod-footswitch" mod-role="input-control-port" mod-port-symbol="trigger">
+          <div
+            class="mod-footswitch"
+            mod-role="input-control-port"
+            mod-port-symbol="trigger"
+          >
             <div class="mod-light"></div>
             <span class="mod-knob-title">Trigger</span>
           </div>

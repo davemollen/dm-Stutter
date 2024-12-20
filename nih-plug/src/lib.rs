@@ -85,7 +85,7 @@ impl Plugin for DmStutter {
     let on = self.params.on.value() && self.stutter.has_note_length_values();
     let trigger = self.params.trigger.value();
     let auto = self.params.auto.value();
-    let dry_thru = self.params.dry_thru.value();
+    let mix = self.params.mix.value() as i32;
     let pulse = if self.params.sync.value() {
       let bpm = context.transport().tempo.unwrap_or(120.) as f32;
       self.get_synced_pulse_time(bpm)
@@ -123,7 +123,7 @@ impl Plugin for DmStutter {
         on,
         trigger,
         auto,
-        dry_thru,
+        mix,
         pulse,
         duration,
         chance,

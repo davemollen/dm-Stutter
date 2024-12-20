@@ -10,9 +10,12 @@ use param_trigger::ParamTrigger;
 #[path = "./editor/components/param_slider.rs"]
 mod param_slider;
 use param_slider::ParamSlider;
+#[path = "./editor/components/param_radio_button.rs"]
+mod param_radio_button;
+use param_radio_button::ParamRadioButton;
 mod ui_data;
 use nih_plug::params::Param;
-use nih_plug::prelude::Editor;
+use nih_plug::prelude::{Editor, Enum};
 use nih_plug_vizia::vizia::{
   binding::LensExt,
   layout::Units::Auto,
@@ -26,7 +29,7 @@ use nih_plug_vizia::{create_vizia_editor, ViziaState, ViziaTheming};
 use std::sync::Arc;
 use ui_data::{ParamChangeEvent, UiData};
 
-use crate::stutter_parameters::StutterParameters;
+use crate::stutter_parameters::{Mix, StutterParameters};
 
 const STYLE: &str = include_str!("./editor/style.css");
 
@@ -56,24 +59,6 @@ pub(crate) fn create(
           HStack::new(cx, |cx| {
             ParamCheckbox::new(
               cx,
-              params.on.name(),
-              UiData::params,
-              params.on.as_ptr(),
-              |params| &params.on,
-              |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
-            );
-
-            ParamTrigger::new(
-              cx,
-              params.trigger.name(),
-              UiData::params,
-              params.trigger.as_ptr(),
-              |params| &params.trigger,
-              |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
-            );
-
-            ParamCheckbox::new(
-              cx,
               params.auto.name(),
               UiData::params,
               params.auto.as_ptr(),
@@ -90,17 +75,19 @@ pub(crate) fn create(
               |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
             );
 
-            ParamCheckbox::new(
+            ParamRadioButton::new(
               cx,
-              params.dry_thru.name(),
+              params.mix.name(),
               UiData::params,
-              params.dry_thru.as_ptr(),
-              |params| &params.dry_thru,
+              params.mix.as_ptr(),
+              |params| &params.mix,
               |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
+              Mix::variants()
             );
           })
           .size(Auto)
-          .col_between(Pixels(16.0))
+          .child_top(Stretch(1.0))
+          .col_between(Pixels(24.0))
           .child_bottom(Pixels(8.0));
 
           HStack::new(cx, |cx| {
@@ -155,6 +142,26 @@ pub(crate) fn create(
           .size(Auto);
 
           HStack::new(cx, |cx| {
+            ParamCheckbox::new(
+              cx,
+              params.on.name(),
+              UiData::params,
+              params.on.as_ptr(),
+              |params| &params.on,
+              |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
+            );
+
+            ParamTrigger::new(
+              cx,
+              params.trigger.name(),
+              UiData::params,
+              params.trigger.as_ptr(),
+              |params| &params.trigger,
+              |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
+            );
+          }).col_between(Pixels(16.0)).size(Auto);
+
+          HStack::new(cx, |cx| {
             Label::new(cx, "Stutter")
               .font_size(22.0)
               .font_weight(FontWeightKeyword::Bold)
@@ -167,6 +174,7 @@ pub(crate) fn create(
               .child_bottom(Pixels(5.0))
               .width(Pixels(112.0));
           })
+          .top(Pixels(32.0))
           .size(Auto);
         })
         .height(Auto)

@@ -18,7 +18,7 @@ fn stutter_bench(c: &mut Criterion) {
   c.bench_function("stutter", |b| {
     b.iter(|| {
       for signal in &signal_stream {
-        stutter.process(*signal, true, true, false, true, 200., 0.5, 1., true);
+        stutter.process(*signal, true, true, false, 0, 200., 0.5, 1., true);
       }
     })
   });

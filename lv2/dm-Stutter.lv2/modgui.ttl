@@ -32,8 +32,8 @@
             lv2:name "Sync" ;
         ] , [
             lv2:index 4 ;
-            lv2:symbol "dry_thru" ;
-            lv2:name "Dry Thru" ;
+            lv2:symbol "mix" ;
+            lv2:name "Mix" ;
         ] , [
             lv2:index 5 ;
             lv2:symbol "pulse" ;

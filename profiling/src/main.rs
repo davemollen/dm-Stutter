@@ -9,6 +9,6 @@ fn main() {
 
   loop {
     let input = (generate_signal(), generate_signal());
-    stutter.process(input, true, true, false, true, 200., 0.5, 1., true);
+    stutter.process(input, true, true, false, 0, 200., 0.5, 1., true);
   }
 }
