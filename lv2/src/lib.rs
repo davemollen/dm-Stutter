@@ -116,10 +116,10 @@ impl Plugin for DmStutter {
   type AudioFeatures = ();
 
   // Create a new instance of the plugin; Trivial in this case.
-  fn new(_plugin_info: &PluginInfo, features: &mut Features<'static>) -> Option<Self> {
+  fn new(plugin_info: &PluginInfo, features: &mut Features<'static>) -> Option<Self> {
     Some(Self {
       bpm: 120.,
-      stutter: Stutter::new(_plugin_info.sample_rate() as f32),
+      stutter: Stutter::new(plugin_info.sample_rate() as f32),
       urids: features.map.populate_collection()?,
     })
   }

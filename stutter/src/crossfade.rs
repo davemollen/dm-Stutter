@@ -22,7 +22,7 @@ impl Crossfade {
   pub fn process(&mut self, input: f32, ramp_time: f32) -> (f32, f32) {
     let difference = input - self.z;
 
-    if difference.is_equal_to(0.) {
+    if difference.abs() <= f32::EPSILON {
       (input, 1. - input)
     } else {
       let ramp = self.ramp(input, self.mstosamps(ramp_time), difference);
