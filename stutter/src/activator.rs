@@ -39,10 +39,10 @@ impl Activator {
 
     match mix {
       0 => wet_signal
-      .multiply_with(activity_fade_a)
-      .add(dry_signal.multiply_with(activity_fade_b)),
+        .multiply_with(activity_fade_a)
+        .add(dry_signal.multiply_with(activity_fade_b)),
       1 => wet_signal.multiply_with(activity_fade_a).add(dry_signal),
-      _ => wet_signal.multiply_with(activity_fade_a)
+      _ => wet_signal.multiply_with(activity_fade_a),
     }
   }
 }

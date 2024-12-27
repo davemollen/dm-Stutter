@@ -10,7 +10,7 @@ impl ManualTrigger {
   pub fn process(&mut self, next: bool, is_momentary_trigger: bool) -> bool {
     let output = if is_momentary_trigger {
       next && !self.prev
-    } else { 
+    } else {
       next != self.prev
     };
     self.prev = next;

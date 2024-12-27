@@ -9,7 +9,7 @@ impl TimeFractionGenerator {
     Self {
       fraction: 1.,
       probability: Vec::with_capacity(15),
-      has_values: true
+      has_values: true,
     }
   }
 
@@ -21,17 +21,12 @@ impl TimeFractionGenerator {
         (*acc).1 = value;
         Some(*acc)
       });
-    
+
     let total = match accumulated_probability.clone().last() {
-      Some((total, _)) => {
-        total
-      },
-      None => {
-        0.
-      }
+      Some((total, _)) => total,
+      None => 0.,
     };
     self.has_values = total > 0.;
-    
 
     self.probability = accumulated_probability
       .map(|(chance, value)| (chance / total, value))

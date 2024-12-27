@@ -1,9 +1,15 @@
 use nih_plug::prelude::{Param, ParamPtr};
 use nih_plug_vizia::vizia::{
-  binding::Lens, layout::Units::Auto, modifiers::{StyleModifiers, TextModifiers}, prelude::{
+  binding::Lens,
+  layout::Units::Auto,
+  modifiers::{StyleModifiers, TextModifiers},
+  prelude::{
     Context, EmitContext, LayoutModifiers, LensExt,
     Units::{Pixels, Stretch},
-  }, style::FontWeightKeyword, view::Handle, views::{Button, Element, Label, VStack}
+  },
+  style::FontWeightKeyword,
+  view::Handle,
+  views::{Button, Element, Label, VStack},
 };
 use std::any::Any;
 

@@ -82,7 +82,7 @@ pub(crate) fn create(
               params.mix.as_ptr(),
               |params| &params.mix,
               |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
-              Mix::variants()
+              Mix::variants(),
             );
           })
           .size(Auto)
@@ -159,7 +159,9 @@ pub(crate) fn create(
               |params| &params.trigger,
               |param_ptr, val| ParamChangeEvent::SetParam(param_ptr, val),
             );
-          }).col_between(Pixels(16.0)).size(Auto);
+          })
+          .col_between(Pixels(16.0))
+          .size(Auto);
 
           HStack::new(cx, |cx| {
             Label::new(cx, "Stutter")
