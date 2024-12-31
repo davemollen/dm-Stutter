@@ -127,7 +127,7 @@ impl Plugin for DmStutter {
   // Process a chunk of audio. The audio ports are dereferenced to slices, which the plugin
   // iterates over.
   fn run(&mut self, ports: &mut Ports, _features: &mut (), _sample_count: u32) {
-    let on = *ports.on == 1. && self.stutter.has_note_length_values();
+    let on = *ports.on == 1.;
     let trigger = *ports.trigger == 1.;
     let auto = *ports.auto == 1.;
     let mix = *ports.mix as i32 - 1;
