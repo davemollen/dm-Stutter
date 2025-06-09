@@ -25,7 +25,7 @@ use nih_plug_vizia::vizia::{
   style::FontWeightKeyword,
   views::{Element, HStack, Label, VStack},
 };
-use nih_plug_vizia::{create_vizia_editor, ViziaState, ViziaTheming};
+use nih_plug_vizia::{create_vizia_editor, vizia_assets, ViziaState, ViziaTheming};
 use std::sync::Arc;
 use ui_data::{ParamChangeEvent, UiData};
 
@@ -46,7 +46,9 @@ pub(crate) fn create(
     editor_state,
     ViziaTheming::Custom,
     move |cx, gui_context| {
-      let _ = cx.add_stylesheet(STYLE);
+      vizia_assets::register_roboto(cx);
+      vizia_assets::register_roboto_bold(cx);
+      cx.add_stylesheet(STYLE).ok();
 
       UiData {
         params: params.clone(),
