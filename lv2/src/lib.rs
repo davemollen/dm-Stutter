@@ -18,34 +18,34 @@ pub struct Features<'a> {
 #[derive(PortCollection)]
 struct Ports {
   control: InputPort<AtomPort>,
-  on: InputPort<Control>,
-  trigger: InputPort<Control>,
-  auto: InputPort<Control>,
-  sync: InputPort<Control>,
-  mix: InputPort<Control>,
-  pulse: InputPort<Control>,
-  tempo_factor: InputPort<Control>,
-  duration: InputPort<Control>,
-  chance: InputPort<Control>,
-  half_notes: InputPort<Control>,
-  seven_sixteenth_notes: InputPort<Control>,
-  six_sixteenth_notes: InputPort<Control>,
-  half_triplet_notes: InputPort<Control>,
-  five_sixteenth_notes: InputPort<Control>,
-  quarter_notes: InputPort<Control>,
-  three_sixteenth_notes: InputPort<Control>,
-  quarter_triplet_notes: InputPort<Control>,
-  eighth_notes: InputPort<Control>,
-  eighth_triplet_notes: InputPort<Control>,
-  sixteenth_notes: InputPort<Control>,
-  sixteenth_triplet_notes: InputPort<Control>,
-  thirty_second_notes: InputPort<Control>,
-  thirty_second_triplet_notes: InputPort<Control>,
-  sixty_fourth_notes: InputPort<Control>,
-  input_left: InputPort<Audio>,
-  input_right: InputPort<Audio>,
-  output_left: OutputPort<Audio>,
-  output_right: OutputPort<Audio>,
+  on: InputPort<InPlaceControl>,
+  trigger: InputPort<InPlaceControl>,
+  auto: InputPort<InPlaceControl>,
+  sync: InputPort<InPlaceControl>,
+  mix: InputPort<InPlaceControl>,
+  pulse: InputPort<InPlaceControl>,
+  tempo_factor: InputPort<InPlaceControl>,
+  duration: InputPort<InPlaceControl>,
+  chance: InputPort<InPlaceControl>,
+  half_notes: InputPort<InPlaceControl>,
+  seven_sixteenth_notes: InputPort<InPlaceControl>,
+  six_sixteenth_notes: InputPort<InPlaceControl>,
+  half_triplet_notes: InputPort<InPlaceControl>,
+  five_sixteenth_notes: InputPort<InPlaceControl>,
+  quarter_notes: InputPort<InPlaceControl>,
+  three_sixteenth_notes: InputPort<InPlaceControl>,
+  quarter_triplet_notes: InputPort<InPlaceControl>,
+  eighth_notes: InputPort<InPlaceControl>,
+  eighth_triplet_notes: InputPort<InPlaceControl>,
+  sixteenth_notes: InputPort<InPlaceControl>,
+  sixteenth_triplet_notes: InputPort<InPlaceControl>,
+  thirty_second_notes: InputPort<InPlaceControl>,
+  thirty_second_triplet_notes: InputPort<InPlaceControl>,
+  sixty_fourth_notes: InputPort<InPlaceControl>,
+  input_left: InputPort<InPlaceAudio>,
+  input_right: InputPort<InPlaceAudio>,
+  output_left: OutputPort<InPlaceAudio>,
+  output_right: OutputPort<InPlaceAudio>,
 }
 
 #[uri("https://github.com/davemollen/dm-Stutter")]
@@ -57,26 +57,22 @@ struct DmStutter {
 
 impl DmStutter {
   fn get_synced_pulse_time(&self, ports: &mut Ports) -> f32 {
-    60000. / self.bpm * Self::map_tempo_factor(*ports.tempo_factor)
+    60000. / self.bpm * Self::map_tempo_factor(ports.tempo_factor.get())
   }
 
   fn set_bpm(&mut self, ports: &mut Ports) {
-    let sequence_header_reader = match ports.control.read(self.urids.atom.sequence) {
-      Ok(sequence_header_reader) => sequence_header_reader,
-      Err(_) => return,
-    };
-    let sequence_iter = match sequence_header_reader.with_unit(self.urids.unit.beat) {
-      Ok(sequence_iter) => sequence_iter,
-      Err(_) => return,
+    let control_sequence = match ports
+      .control
+      .read(self.urids.atom.sequence, self.urids.unit.beat)
+    {
+      Some(sequence_iter) => sequence_iter,
+      None => return,
     };
 
-    for (_, atom) in sequence_iter {
-      let (object_header, object_reader) = match atom
-        .read(self.urids.atom.object)
-        .or_else(|_| atom.read(self.urids.atom.blank))
-      {
-        Ok(pair) => pair,
-        Err(_) => continue,
+    for (_, atom) in control_sequence {
+      let (object_header, object_reader) = match atom.read(self.urids.atom.object, ()) {
+        Some(x) => x,
+        None => return,
       };
 
       if object_header.otype != self.urids.time.position_class {
@@ -88,8 +84,8 @@ impl DmStutter {
           continue;
         }
 
-        if let Ok(bpm) = property.read(self.urids.atom.float) {
-          self.bpm = *bpm;
+        if let Some(bpm) = property.read(self.urids.atom.float, ()) {
+          self.bpm = bpm;
         }
       }
     }
@@ -127,49 +123,46 @@ impl Plugin for DmStutter {
   // Process a chunk of audio. The audio ports are dereferenced to slices, which the plugin
   // iterates over.
   fn run(&mut self, ports: &mut Ports, _features: &mut (), _sample_count: u32) {
-    let on = *ports.on == 1.;
-    let trigger = *ports.trigger == 1.;
-    let auto = *ports.auto == 1.;
-    let mix = *ports.mix as i32 - 1;
+    let on = ports.on.get() == 1.;
+    let trigger = ports.trigger.get() == 1.;
+    let auto = ports.auto.get() == 1.;
+    let mix = ports.mix.get() as i32 - 1;
 
-    let pulse = if *ports.sync == 1. {
+    let pulse = if ports.sync.get() == 1. {
       self.set_bpm(ports);
       self.get_synced_pulse_time(ports)
     } else {
-      *ports.pulse
+      ports.pulse.get()
     };
-    let duration = *ports.duration;
-    let chance = *ports.chance;
+    let duration = ports.duration.get();
+    let chance = ports.chance.get();
 
     self.stutter.set_probability(
-      *ports.half_notes,
-      *ports.seven_sixteenth_notes,
-      *ports.six_sixteenth_notes,
-      *ports.half_triplet_notes,
-      *ports.five_sixteenth_notes,
-      *ports.quarter_notes,
-      *ports.three_sixteenth_notes,
-      *ports.quarter_triplet_notes,
-      *ports.eighth_notes,
-      *ports.eighth_triplet_notes,
-      *ports.sixteenth_notes,
-      *ports.sixteenth_triplet_notes,
-      *ports.thirty_second_notes,
-      *ports.thirty_second_triplet_notes,
-      *ports.sixty_fourth_notes,
+      ports.half_notes.get(),
+      ports.seven_sixteenth_notes.get(),
+      ports.six_sixteenth_notes.get(),
+      ports.half_triplet_notes.get(),
+      ports.five_sixteenth_notes.get(),
+      ports.quarter_notes.get(),
+      ports.three_sixteenth_notes.get(),
+      ports.quarter_triplet_notes.get(),
+      ports.eighth_notes.get(),
+      ports.eighth_triplet_notes.get(),
+      ports.sixteenth_notes.get(),
+      ports.sixteenth_triplet_notes.get(),
+      ports.thirty_second_notes.get(),
+      ports.thirty_second_triplet_notes.get(),
+      ports.sixty_fourth_notes.get(),
     );
 
     let input_channels = ports.input_left.iter().zip(ports.input_right.iter());
-    let output_channels = ports
-      .output_left
-      .iter_mut()
-      .zip(ports.output_right.iter_mut());
+    let output_channels = ports.output_left.iter().zip(ports.output_right.iter());
 
     for ((input_left, input_right), (output_left, output_right)) in
       input_channels.zip(output_channels)
     {
-      (*output_left, *output_right) = self.stutter.process(
-        (*input_left, *input_right),
+      let output = self.stutter.process(
+        (input_left.get(), input_right.get()),
         on,
         trigger,
         auto,
@@ -179,6 +172,8 @@ impl Plugin for DmStutter {
         chance,
         true,
       );
+      output_left.set(output.0);
+      output_right.set(output.1);
     }
   }
 }

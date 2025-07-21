@@ -24,7 +24,7 @@
 	rdfs:comment """
 A stereo stutter effect.
 """ ;
-	lv2:requiredFeature urid:map , lv2:inPlaceBroken ;
+	lv2:requiredFeature urid:map ;
 	lv2:optionalFeature lv2:hardRTCapable ;
 	lv2:port [
 		a lv2:InputPort, atom:AtomPort ;
