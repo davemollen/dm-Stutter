@@ -1,6 +1,6 @@
 target
 .DS_Store
-*.svg
-*libdm_stutter.so
-*libdm_stutter.dylib
-*libdm_stutter.dll
+flamegraph.svg
+lv2/**/*.so
+lv2/**/*.dylib
+lv2/**/*.dll
