@@ -38,7 +38,7 @@ impl Default for DmStutter {
 }
 
 impl Plugin for DmStutter {
-  const NAME: &'static str = "dm-Stutter";
+  const NAME: &'static str = "Stutter";
   const VENDOR: &'static str = "DM";
   const URL: &'static str = "https://github.com/davemollen/dm-Stutter";
   const EMAIL: &'static str = "davemollen@gmail.com";
