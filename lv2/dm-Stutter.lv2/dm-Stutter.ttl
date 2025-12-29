@@ -253,24 +253,32 @@ A stereo stutter effect.
 		lv2:default 0.0 ;
 		lv2:minimum 0.0 ;
 		lv2:maximum 1.0 
-	], [
+	] , [
 		a lv2:AudioPort, lv2:InputPort ;
 		lv2:index 25 ;
 		lv2:symbol "input_left" ;
 		lv2:name "Input L"
-	], [
+	] , [
 		a lv2:AudioPort, lv2:InputPort ;
 		lv2:index 26 ;
 		lv2:symbol "input_right" ;
 		lv2:name "Input R"
-	], [
+	] , [
 		a lv2:AudioPort, lv2:OutputPort ;
 		lv2:index 27 ;
 		lv2:symbol "output_left" ;
 		lv2:name "Output L"
-	], [
+	] , [
 		a lv2:AudioPort, lv2:OutputPort ;
 		lv2:index 28 ;
 		lv2:symbol "output_right" ;
 		lv2:name "Output R"
+	] , [
+		a lv2:CVPort, lv2:OutputPort, mod:CVPort ;
+		lv2:index 29 ;
+		lv2:symbol "cv_gate_output" ;
+		lv2:name "CV Gate Out" ;
+		lv2:default 0.0 ;
+		lv2:minimum 0.0 ;
+		lv2:maximum 10.0 
 	] .

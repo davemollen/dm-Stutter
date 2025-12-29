@@ -94,7 +94,7 @@ impl Stutter {
     duration: f32,
     chance: f32,
     is_momentary_trigger: bool,
-  ) -> (f32, f32) {
+  ) -> (f32, f32, bool) {
     let manual_trigger = self
       .manual_trigger
       .process(manual_trigger, is_momentary_trigger);
@@ -118,7 +118,7 @@ impl Stutter {
       .process(input, trigger_a, delay_time, delay_fade_a, delay_fade_b)
       .add(self.delay[1].process(input, trigger_b, delay_time, delay_fade_b, delay_fade_a));
 
-    self.activator.process(
+    let stutter_output = self.activator.process(
       input,
       delay_out,
       on,
@@ -127,7 +127,8 @@ impl Stutter {
       trigger,
       manual_trigger,
       mix,
-    )
+    );
+    (stutter_output.0, stutter_output.1, trigger)
   }
 
   fn get_triggers(&mut self, auto_trigger: bool, reset: bool) -> (bool, (bool, bool)) {
