@@ -96,7 +96,7 @@ impl Stutter {
     duration: f32,
     chance: f32,
     is_momentary_trigger: bool,
-  ) -> (f32, f32, bool) {
+  ) -> (f32, f32, bool, bool) {
     let manual_trigger = self
       .manual_trigger
       .process(manual_trigger, is_momentary_trigger);
@@ -137,6 +137,7 @@ impl Stutter {
     (
       stutter_output.0,
       stutter_output.1,
+      trigger,
       trigger || repeat_trigger,
     )
   }

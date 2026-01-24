@@ -118,7 +118,7 @@ impl Plugin for DmStutter {
       let left_channel = channel_iterator.next().unwrap();
       let right_channel = channel_iterator.next().unwrap();
 
-      (*left_channel, *right_channel, _) = self.stutter.process(
+      (*left_channel, *right_channel, _, _) = self.stutter.process(
         (*left_channel, *right_channel),
         on,
         trigger,
