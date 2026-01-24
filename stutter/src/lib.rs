@@ -24,6 +24,7 @@ pub struct Stutter {
   toggle_trigger: ToggleTrigger,
   duration: f32,
   phasor: Phasor,
+  repeat_phasor: Phasor,
   flip_flop: f32,
   delay_crossfade: Crossfade,
   delay: [Delay; 2],
@@ -39,6 +40,7 @@ impl Stutter {
       toggle_trigger: ToggleTrigger::new(),
       duration: 0.,
       phasor: Phasor::new(sample_rate),
+      repeat_phasor: Phasor::new(sample_rate),
       flip_flop: 0.,
       delay_crossfade: Crossfade::new(sample_rate),
       delay: [Delay::new(sample_rate), Delay::new(sample_rate)],
@@ -106,6 +108,10 @@ impl Stutter {
 
     let time_fraction = self.time_fraction_generator.process(trigger);
     let delay_time = pulse * time_fraction;
+    if trigger {
+      self.repeat_phasor.reset();
+    }
+    let repeat_trigger = self.repeat_phasor.process(delay_time);
 
     self.duration = self
       .duration_generator
@@ -128,7 +134,11 @@ impl Stutter {
       manual_trigger,
       mix,
     );
-    (stutter_output.0, stutter_output.1, trigger)
+    (
+      stutter_output.0,
+      stutter_output.1,
+      trigger || repeat_trigger,
+    )
   }
 
   fn get_triggers(&mut self, auto_trigger: bool, reset: bool) -> (bool, (bool, bool)) {

@@ -46,7 +46,7 @@ struct Ports {
   input_right: InputPort<InPlaceAudio>,
   output_left: OutputPort<InPlaceAudio>,
   output_right: OutputPort<InPlaceAudio>,
-  cv_gate_output: OutputPort<InPlaceCV>,
+  repeat_trigger_cv_output: OutputPort<InPlaceCV>,
 }
 
 #[uri("https://github.com/davemollen/dm-Stutter")]
@@ -158,10 +158,12 @@ impl Plugin for DmStutter {
 
     let input_channels = ports.input_left.iter().zip(ports.input_right.iter());
     let output_channels = ports.output_left.iter().zip(ports.output_right.iter());
-    let cv_gate_output = ports.cv_gate_output.iter();
+    let repeat_trigger_cv_output = ports.repeat_trigger_cv_output.iter();
 
-    for (((input_left, input_right), (output_left, output_right)), cv_gate_output) in
-      input_channels.zip(output_channels).zip(cv_gate_output)
+    for (((input_left, input_right), (output_left, output_right)), repeat_trigger_cv_output) in
+      input_channels
+        .zip(output_channels)
+        .zip(repeat_trigger_cv_output)
     {
       let stutter_output = self.stutter.process(
         (input_left.get(), input_right.get()),
@@ -176,7 +178,7 @@ impl Plugin for DmStutter {
       );
       output_left.set(stutter_output.0);
       output_right.set(stutter_output.1);
-      cv_gate_output.set(if stutter_output.2 { 10. } else { 0. })
+      repeat_trigger_cv_output.set(if stutter_output.2 { 10. } else { 0. })
     }
   }
 }

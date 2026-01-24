@@ -276,8 +276,8 @@ A stereo stutter effect.
 	] , [
 		a lv2:CVPort, lv2:OutputPort, mod:CVPort ;
 		lv2:index 29 ;
-		lv2:symbol "cv_gate_output" ;
-		lv2:name "CV Gate Out" ;
+		lv2:symbol "repeat_trigger_cv_output" ;
+		lv2:name "Repeat Trigger CV Output" ;
 		lv2:default 0.0 ;
 		lv2:minimum 0.0 ;
 		lv2:maximum 10.0 
