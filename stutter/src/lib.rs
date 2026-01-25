@@ -4,6 +4,7 @@ mod delay;
 mod duration_generator;
 mod manual_trigger;
 mod phasor;
+mod repeat_trigger;
 mod stereo_delay_line;
 mod time_fraction_generator;
 mod toggle_trigger;
@@ -12,9 +13,10 @@ mod shared {
   pub mod tuple_ext;
 }
 use {
-  activator::Activator, crossfade::Crossfade, delay::Delay, duration_generator::DurationGenerator,
-  manual_trigger::ManualTrigger, phasor::Phasor, shared::tuple_ext::TupleExt,
-  time_fraction_generator::TimeFractionGenerator, toggle_trigger::ToggleTrigger,
+  crate::repeat_trigger::RepeatTrigger, activator::Activator, crossfade::Crossfade, delay::Delay,
+  duration_generator::DurationGenerator, manual_trigger::ManualTrigger, phasor::Phasor,
+  shared::tuple_ext::TupleExt, time_fraction_generator::TimeFractionGenerator,
+  toggle_trigger::ToggleTrigger,
 };
 
 pub struct Stutter {
@@ -24,8 +26,8 @@ pub struct Stutter {
   toggle_trigger: ToggleTrigger,
   duration: f32,
   phasor: Phasor,
-  repeat_phasor: Phasor,
-  flip_flop: f32,
+  repeat_trigger: RepeatTrigger,
+  flip_flop: bool,
   delay_crossfade: Crossfade,
   delay: [Delay; 2],
   activator: Activator,
@@ -33,6 +35,8 @@ pub struct Stutter {
 
 impl Stutter {
   pub fn new(sample_rate: f32) -> Self {
+    let delay_length = (sample_rate * 12.) as usize;
+
     Self {
       time_fraction_generator: TimeFractionGenerator::new(),
       duration_generator: DurationGenerator::new(),
@@ -40,10 +44,13 @@ impl Stutter {
       toggle_trigger: ToggleTrigger::new(),
       duration: 0.,
       phasor: Phasor::new(sample_rate),
-      repeat_phasor: Phasor::new(sample_rate),
-      flip_flop: 0.,
+      repeat_trigger: RepeatTrigger::new(sample_rate, delay_length),
+      flip_flop: false,
       delay_crossfade: Crossfade::new(sample_rate),
-      delay: [Delay::new(sample_rate), Delay::new(sample_rate)],
+      delay: [
+        Delay::new(sample_rate, delay_length),
+        Delay::new(sample_rate, delay_length),
+      ],
       activator: Activator::new(sample_rate),
     }
   }
@@ -108,10 +115,6 @@ impl Stutter {
 
     let time_fraction = self.time_fraction_generator.process(trigger);
     let delay_time = pulse * time_fraction;
-    if trigger {
-      self.repeat_phasor.reset();
-    }
-    let repeat_trigger = self.repeat_phasor.process(delay_time);
 
     self.duration = self
       .duration_generator
@@ -123,6 +126,11 @@ impl Stutter {
     let delay_out = self.delay[0]
       .process(input, trigger_a, delay_time, delay_fade_a, delay_fade_b)
       .add(self.delay[1].process(input, trigger_b, delay_time, delay_fade_b, delay_fade_a));
+
+    let repeat_trigger =
+      self
+        .repeat_trigger
+        .process(&self.delay, trigger, self.flip_flop, delay_time);
 
     let stutter_output = self.activator.process(
       input,
@@ -147,13 +155,13 @@ impl Stutter {
 
     (
       trigger,
-      match (trigger, self.flip_flop == 1.) {
+      match (trigger, self.flip_flop) {
         (true, false) => {
-          self.flip_flop = 1.;
+          self.flip_flop = true;
           (true, false)
         }
         (true, true) => {
-          self.flip_flop = 0.;
+          self.flip_flop = false;
           (false, true)
         }
         _ => (false, false),

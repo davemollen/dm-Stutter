@@ -9,10 +9,10 @@ pub struct Delay {
 }
 
 impl Delay {
-  pub fn new(sample_rate: f32) -> Self {
+  pub fn new(sample_rate: f32, length: usize) -> Self {
     Self {
       delay_time: 1.,
-      delay_line: StereoDelayLine::new((sample_rate * 12.) as usize, sample_rate),
+      delay_line: StereoDelayLine::new(length, sample_rate),
     }
   }
 
@@ -38,5 +38,9 @@ impl Delay {
       .write(input.multiply_with(fade_b).add(delay_out));
 
     delay_out
+  }
+
+  pub fn get_write_index(&self) -> usize {
+    self.delay_line.get_write_index()
   }
 }

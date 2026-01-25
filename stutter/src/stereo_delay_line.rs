@@ -44,6 +44,10 @@ impl StereoDelayLine {
     self.write_pointer = self.write_pointer + 1 & self.wrap;
   }
 
+  pub fn get_write_index(&self) -> usize {
+    self.write_pointer
+  }
+
   fn step_interp(&self, time: f32) -> (f32, f32) {
     let read_pointer =
       (self.write_pointer + self.buffer.len()) as f32 - (self.mstosamps(time) - 0.5).max(1.);

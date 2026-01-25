@@ -1,5 +1,3 @@
-use crate::shared::float_ext::FloatExt;
-
 pub struct Crossfade {
   prev: f32,
   index: usize,
@@ -19,7 +17,8 @@ impl Crossfade {
     }
   }
 
-  pub fn process(&mut self, input: f32, ramp_time: f32) -> (f32, f32) {
+  pub fn process(&mut self, flip_flop: bool, ramp_time: f32) -> (f32, f32) {
+    let input = if flip_flop { 1. } else { 0. };
     let difference = input - self.z;
 
     if difference.abs() <= f32::EPSILON {
@@ -58,19 +57,19 @@ mod tests {
     let ramp_time = 8.0;
     let mut smoother = Crossfade::new(1000.);
 
-    assert_eq!(smoother.process(1., ramp_time), (0.125, 1. - 0.125));
-    assert_eq!(smoother.process(1., ramp_time), (0.25, 1. - 0.25));
-    assert_eq!(smoother.process(1., ramp_time), (0.375, 1. - 0.375));
-    assert_eq!(smoother.process(1., ramp_time), (0.5, 1. - 0.5));
-    assert_eq!(smoother.process(1., ramp_time), (0.625, 1. - 0.625));
-    assert_eq!(smoother.process(1., ramp_time), (0.75, 1. - 0.75));
-    assert_eq!(smoother.process(1., ramp_time), (0.875, 1. - 0.875));
-    assert_eq!(smoother.process(1., ramp_time), (1.0, 1. - 1.0));
-    assert_eq!(smoother.process(1., ramp_time), (1.0, 1. - 1.0));
-    assert_eq!(smoother.process(0., ramp_time), (0.875, 1. - 0.875));
-    assert_eq!(smoother.process(0., ramp_time), (0.75, 1. - 0.75));
-    assert_eq!(smoother.process(0., ramp_time), (0.625, 1. - 0.625));
-    assert_eq!(smoother.process(0., ramp_time), (0.5, 1. - 0.5));
-    assert_eq!(smoother.process(1., ramp_time), (0.5625, 1. - 0.5625));
+    assert_eq!(smoother.process(true, ramp_time), (0.125, 1. - 0.125));
+    assert_eq!(smoother.process(true, ramp_time), (0.25, 1. - 0.25));
+    assert_eq!(smoother.process(true, ramp_time), (0.375, 1. - 0.375));
+    assert_eq!(smoother.process(true, ramp_time), (0.5, 1. - 0.5));
+    assert_eq!(smoother.process(true, ramp_time), (0.625, 1. - 0.625));
+    assert_eq!(smoother.process(true, ramp_time), (0.75, 1. - 0.75));
+    assert_eq!(smoother.process(true, ramp_time), (0.875, 1. - 0.875));
+    assert_eq!(smoother.process(true, ramp_time), (1.0, 1. - 1.0));
+    assert_eq!(smoother.process(true, ramp_time), (1.0, 1. - 1.0));
+    assert_eq!(smoother.process(false, ramp_time), (0.875, 1. - 0.875));
+    assert_eq!(smoother.process(false, ramp_time), (0.75, 1. - 0.75));
+    assert_eq!(smoother.process(false, ramp_time), (0.625, 1. - 0.625));
+    assert_eq!(smoother.process(false, ramp_time), (0.5, 1. - 0.5));
+    assert_eq!(smoother.process(true, ramp_time), (0.5625, 1. - 0.5625));
   }
 }

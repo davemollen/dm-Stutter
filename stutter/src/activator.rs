@@ -33,9 +33,7 @@ impl Activator {
       }
     }
 
-    let (activity_fade_a, activity_fade_b) = self
-      .crossfade
-      .process(if on && self.is_active { 1. } else { 0. }, 20.);
+    let (activity_fade_a, activity_fade_b) = self.crossfade.process(on && self.is_active, 20.);
 
     match mix {
       0 => wet_signal
