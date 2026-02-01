@@ -127,8 +127,9 @@ impl Stutter {
       .process(input, trigger_a, delay_time, delay_fade_a, delay_fade_b)
       .add(self.delay[1].process(input, trigger_b, delay_time, delay_fade_b, delay_fade_a));
 
-    let repeat_trigger =
-      self
+    let trigger_cv_output = on && trigger;
+    let repeat_trigger_cv_output = on
+      && self
         .repeat_trigger
         .process(&self.delay, trigger, self.flip_flop, delay_time);
 
@@ -145,8 +146,8 @@ impl Stutter {
     (
       stutter_output.0,
       stutter_output.1,
-      trigger,
-      trigger || repeat_trigger,
+      trigger_cv_output,
+      trigger_cv_output || repeat_trigger_cv_output,
     )
   }
 
