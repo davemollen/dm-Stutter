@@ -40,47 +40,46 @@ A stereo stutter effect.
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 1 ;
 		lv2:symbol "on" ;
-		pg:group <https://github.com/davemollen/dm-Stutter#group_stutter> ;
 		lv2:name "On" ;
 		lv2:portProperty lv2:integer, lv2:toggled;
 		lv2:default 0 ;
 		lv2:minimum 0 ;
 		lv2:maximum 1 ;
+		pg:group <https://github.com/davemollen/dm-Stutter#group_stutter> ;
 	], [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 2 ;
 		lv2:symbol "trigger" ;
-		pg:group <https://github.com/davemollen/dm-Stutter#group_stutter> ;
 		lv2:name "Trigger" ;
 		lv2:portProperty lv2:integer, lv2:toggled, pprops:trigger;
 		lv2:default 0 ;
 		lv2:minimum 0 ;
 		lv2:maximum 1 ;
+		pg:group <https://github.com/davemollen/dm-Stutter#group_stutter> ;
 	], [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 3 ;
 		lv2:symbol "auto" ;
-		pg:group <https://github.com/davemollen/dm-Stutter#group_stutter> ;
 		lv2:name "Auto" ;
 		lv2:portProperty lv2:integer, lv2:toggled;
 		lv2:default 1 ;
 		lv2:minimum 0 ;
 		lv2:maximum 1 ;
+		pg:group <https://github.com/davemollen/dm-Stutter#group_auto_trigger> ;
 	], [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 4 ;
 		lv2:symbol "sync" ;
-		pg:group <https://github.com/davemollen/dm-Stutter#group_stutter> ;
 		lv2:name "Sync" ;
 		lv2:portProperty lv2:integer, lv2:toggled;
 		lv2:default 1 ;
 		lv2:minimum 0 ;
 		lv2:maximum 1 ;
+		pg:group <https://github.com/davemollen/dm-Stutter#group_sync> ;
 	], [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 5 ;
 		lv2:symbol "mix" ;
-		pg:group <https://github.com/davemollen/dm-Stutter#group_stutter> ;
 		lv2:name "Mix" ;
 		lv2:portProperty lv2:integer;
 		lv2:portProperty lv2:enumeration ;
@@ -90,22 +89,22 @@ A stereo stutter effect.
 		lv2:scalePoint [rdfs:label "Dry or wet"; rdf:value 1];
 		lv2:scalePoint [rdfs:label "Dry and wet"; rdf:value 2];
 		lv2:scalePoint [rdfs:label "Wet only"; rdf:value 3];
+		pg:group <https://github.com/davemollen/dm-Stutter#group_stutter> ;
 	], [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 6 ;
 		lv2:symbol "pulse" ;
-		pg:group <https://github.com/davemollen/dm-Stutter#group_timing> ;
 		lv2:name "Pulse" ;
 		lv2:portProperty pprops:logarithmic, mod:tempoRelatedDynamicScalePoints;
 		lv2:default 500.0 ;
 		lv2:minimum 10.0 ;
 		lv2:maximum 3000.0 ;
-		units:unit units:ms
+		units:unit units:ms ;
+		pg:group <https://github.com/davemollen/dm-Stutter#group_sync> ;
 	], [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 7 ;
 		lv2:symbol "tempo_factor" ;
-		pg:group <https://github.com/davemollen/dm-Stutter#group_timing> ;
 		lv2:name "Tempo factor" ;
 		lv2:default 2 ;
         lv2:minimum 0 ;
@@ -126,160 +125,161 @@ A stereo stutter effect.
         ] , [
             rdfs:label "4 x" ;
             rdf:value 4
-        ]
+        ] ;
+		pg:group <https://github.com/davemollen/dm-Stutter#group_sync> ;
 	], [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 8 ;
 		lv2:symbol "duration" ;
-		pg:group <https://github.com/davemollen/dm-Stutter#group_timing> ;
 		lv2:name "Duration" ;
 		lv2:default 0.5 ;
 		lv2:minimum 0.0 ;
-		lv2:maximum 1.0 
+		lv2:maximum 1.0 ;
+		pg:group <https://github.com/davemollen/dm-Stutter#group_auto_trigger> ;
 	] , [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 9 ;
 		lv2:symbol "chance" ;
-		pg:group <https://github.com/davemollen/dm-Stutter#group_timing> ;
 		lv2:name "Chance" ;
 		lv2:default 0.5 ;
 		lv2:minimum 0.0 ;
-		lv2:maximum 1.0 
+		lv2:maximum 1.0 ;
+		pg:group <https://github.com/davemollen/dm-Stutter#group_auto_trigger> ;
 	] , [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 10 ;
 		lv2:symbol "half_notes" ;
-		pg:group <https://github.com/davemollen/dm-Stutter#group_long_notes> ;
 		lv2:name "1/2" ;
 		lv2:default 0.0 ;
 		lv2:minimum 0.0 ;
-		lv2:maximum 1.0 
+		lv2:maximum 1.0 ;
+		pg:group <https://github.com/davemollen/dm-Stutter#group_note_probability> ;
 	] , [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 11 ;
 		lv2:symbol "seven_sixteenth_notes" ;
-		pg:group <https://github.com/davemollen/dm-Stutter#group_long_notes> ;
 		lv2:name "7/16" ;
 		lv2:default 0.0 ;
 		lv2:minimum 0.0 ;
-		lv2:maximum 1.0 
+		lv2:maximum 1.0 ;
+		pg:group <https://github.com/davemollen/dm-Stutter#group_note_probability> ;
 	] , [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 12 ;
 		lv2:symbol "six_sixteenth_notes" ;
-		pg:group <https://github.com/davemollen/dm-Stutter#group_long_notes> ;
 		lv2:name "3/8" ;
 		lv2:default 0.25 ;
 		lv2:minimum 0.0 ;
-		lv2:maximum 1.0 
+		lv2:maximum 1.0 ;
+		pg:group <https://github.com/davemollen/dm-Stutter#group_note_probability> ;
 	] , [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 13 ;
 		lv2:symbol "half_triplet_notes" ;
-		pg:group <https://github.com/davemollen/dm-Stutter#group_long_notes> ;
 		lv2:name "1/2 triplet" ;
 		lv2:default 0.0 ;
 		lv2:minimum 0.0 ;
-		lv2:maximum 1.0 
+		lv2:maximum 1.0 ;
+		pg:group <https://github.com/davemollen/dm-Stutter#group_note_probability> ;
 	] , [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 14 ;
 		lv2:symbol "five_sixteenth_notes" ;
-		pg:group <https://github.com/davemollen/dm-Stutter#group_long_notes> ;
 		lv2:name "5/16" ;
 		lv2:default 0.0 ;
 		lv2:minimum 0.0 ;
-		lv2:maximum 1.0 
+		lv2:maximum 1.0 ;
+		pg:group <https://github.com/davemollen/dm-Stutter#group_note_probability> ;
 	] , [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 15 ;
 		lv2:symbol "quarter_notes" ;
-		pg:group <https://github.com/davemollen/dm-Stutter#group_long_notes> ;
 		lv2:name "1/4" ;
 		lv2:default 0.25 ;
 		lv2:minimum 0.0 ;
-		lv2:maximum 1.0 
+		lv2:maximum 1.0 ;
+		pg:group <https://github.com/davemollen/dm-Stutter#group_note_probability> ;
 	] , [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 16 ;
 		lv2:symbol "three_sixteenth_notes" ;
-		pg:group <https://github.com/davemollen/dm-Stutter#group_long_notes> ;
 		lv2:name "3/16" ;
 		lv2:default 0.0 ;
 		lv2:minimum 0.0 ;
-		lv2:maximum 1.0 
+		lv2:maximum 1.0 ;
+		pg:group <https://github.com/davemollen/dm-Stutter#group_note_probability> ;
 	] , [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 17 ;
 		lv2:symbol "quarter_triplet_notes" ;
-		pg:group <https://github.com/davemollen/dm-Stutter#group_long_notes> ;
 		lv2:name "1/4 triplet" ;
 		lv2:default 0.0 ;
 		lv2:minimum 0.0 ;
-		lv2:maximum 1.0 
+		lv2:maximum 1.0 ;
+		pg:group <https://github.com/davemollen/dm-Stutter#group_note_probability> ;
 	] , [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 18 ;
 		lv2:symbol "eighth_notes" ;
-		pg:group <https://github.com/davemollen/dm-Stutter#group_short_notes> ;
 		lv2:name "1/8" ;
 		lv2:default 0.25 ;
 		lv2:minimum 0.0 ;
-		lv2:maximum 1.0 
+		lv2:maximum 1.0 ;
+		pg:group <https://github.com/davemollen/dm-Stutter#group_note_probability> ;
 	] , [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 19 ;
 		lv2:symbol "eighth_triplet_notes" ;
-		pg:group <https://github.com/davemollen/dm-Stutter#group_short_notes> ;
 		lv2:name "1/8 triplet" ;
 		lv2:default 0.0 ;
 		lv2:minimum 0.0 ;
-		lv2:maximum 1.0 
+		lv2:maximum 1.0 ;
+		pg:group <https://github.com/davemollen/dm-Stutter#group_note_probability> ;
 	] , [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 20 ;
 		lv2:symbol "sixteenth_notes" ;
-		pg:group <https://github.com/davemollen/dm-Stutter#group_short_notes> ;
 		lv2:name "1/16" ;
 		lv2:default 0.0 ;
 		lv2:minimum 0.0 ;
-		lv2:maximum 1.0 
+		lv2:maximum 1.0 ;
+		pg:group <https://github.com/davemollen/dm-Stutter#group_note_probability> ;
 	] , [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 21 ;
 		lv2:symbol "sixteenth_triplet_notes" ;
-		pg:group <https://github.com/davemollen/dm-Stutter#group_short_notes> ;
 		lv2:name "1/16 triplet" ;
 		lv2:default 0.0 ;
 		lv2:minimum 0.0 ;
-		lv2:maximum 1.0 
+		lv2:maximum 1.0 ;
+		pg:group <https://github.com/davemollen/dm-Stutter#group_note_probability> ;
 	] , [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 22 ;
 		lv2:symbol "thirty_second_notes" ;
-		pg:group <https://github.com/davemollen/dm-Stutter#group_short_notes> ;
 		lv2:name "1/32" ;
 		lv2:default 0.25 ;
 		lv2:minimum 0.0 ;
-		lv2:maximum 1.0 
+		lv2:maximum 1.0 ;
+		pg:group <https://github.com/davemollen/dm-Stutter#group_note_probability> ;
 	] , [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 23 ;
 		lv2:symbol "thirty_second_triplet_notes" ;
-		pg:group <https://github.com/davemollen/dm-Stutter#group_short_notes> ;
 		lv2:name "1/32 triplet" ;
 		lv2:default 0.0 ;
 		lv2:minimum 0.0 ;
-		lv2:maximum 1.0 
+		lv2:maximum 1.0 ;
+		pg:group <https://github.com/davemollen/dm-Stutter#group_note_probability> ;
 	] , [
 		a lv2:InputPort, lv2:ControlPort ;
 		lv2:index 24 ;
 		lv2:symbol "sixty_fourth_notes" ;
-		pg:group <https://github.com/davemollen/dm-Stutter#group_short_notes> ;
 		lv2:name "1/64" ;
 		lv2:default 0.0 ;
 		lv2:minimum 0.0 ;
-		lv2:maximum 1.0 
+		lv2:maximum 1.0 ;
+		pg:group <https://github.com/davemollen/dm-Stutter#group_note_probability> ;
 	] , [
 		a lv2:AudioPort, lv2:InputPort ;
 		lv2:index 25 ;
@@ -318,27 +318,27 @@ A stereo stutter effect.
 		lv2:maximum 10.0 
 	] .
 
-# Port groups (MOD OS 1.14 settings panel), added 2026-10
+# Port groups
 <https://github.com/davemollen/dm-Stutter#group_stutter>
 	a pg:InputGroup ;
 	lv2:symbol "stutter" ;
 	lv2:name "Stutter" ;
 	lv2:index 0 .
 
-<https://github.com/davemollen/dm-Stutter#group_timing>
+<https://github.com/davemollen/dm-Stutter#group_auto_trigger>
 	a pg:InputGroup ;
-	lv2:symbol "timing" ;
-	lv2:name "Timing" ;
+	lv2:symbol "auto_trigger" ;
+	lv2:name "Auto trigger" ;
 	lv2:index 1 .
 
-<https://github.com/davemollen/dm-Stutter#group_long_notes>
+<https://github.com/davemollen/dm-Stutter#group_sync>
 	a pg:InputGroup ;
-	lv2:symbol "long_notes" ;
-	lv2:name "Long Notes" ;
+	lv2:symbol "sync" ;
+	lv2:name "Sync" ;
 	lv2:index 2 .
 
-<https://github.com/davemollen/dm-Stutter#group_short_notes>
+<https://github.com/davemollen/dm-Stutter#group_note_probability>
 	a pg:InputGroup ;
-	lv2:symbol "short_notes" ;
-	lv2:name "Short Notes" ;
+	lv2:symbol "note_probability" ;
+	lv2:name "Note probability" ;
 	lv2:index 3 .
