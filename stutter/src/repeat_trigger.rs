@@ -15,6 +15,10 @@ impl RepeatTrigger {
     }
   }
 
+  pub fn reset(&mut self) {
+    self.next_write_index_trigger = 0.;
+  }
+
   pub fn process(
     &mut self,
     delay: &[Delay; 2],

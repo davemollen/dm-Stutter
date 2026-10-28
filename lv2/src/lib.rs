@@ -122,6 +122,11 @@ impl Plugin for DmStutter {
     })
   }
 
+  /// Reset the internal state of the plugin.
+  fn activate(&mut self, _features: &mut Self::InitFeatures) {
+    self.stutter.reset();
+  }
+
   // Process a chunk of audio. The audio ports are dereferenced to slices, which the plugin
   // iterates over.
   fn run(&mut self, ports: &mut Ports, _features: &mut Self::AudioFeatures, _sample_count: u32) {

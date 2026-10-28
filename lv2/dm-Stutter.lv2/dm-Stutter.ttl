@@ -22,13 +22,13 @@
 	] ;
 	mod:brand "DM" ;
 	mod:label "Stutter" ;
+	lv2:minorVersion 1 ;
+	lv2:microVersion 2 ;
 	rdfs:comment """
 A stereo stutter effect.
 """ ;
 	lv2:requiredFeature urid:map ;
 	lv2:optionalFeature lv2:hardRTCapable ;
-	lv2:minorVersion 0 ;
-	lv2:microVersion 2 ;
 	lv2:port [
 		a lv2:InputPort, atom:AtomPort ;
 		atom:bufferType atom:Sequence ;

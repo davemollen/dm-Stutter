@@ -7,6 +7,10 @@ impl ToggleTrigger {
     Self { prev_on: false }
   }
 
+  pub fn reset(&mut self) {
+    self.prev_on = false;
+  }
+
   pub fn process(&mut self, next_on: bool) -> bool {
     let output = !self.prev_on && next_on;
     self.prev_on = next_on;

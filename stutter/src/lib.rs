@@ -55,6 +55,19 @@ impl Stutter {
     }
   }
 
+  pub fn reset(&mut self) {
+    self.manual_trigger.reset();
+    self.toggle_trigger.reset();
+    for delay in self.delay.iter_mut() {
+      delay.reset();
+    }
+    self.phasor.reset();
+    self.repeat_trigger.reset();
+    self.flip_flop = false;
+    self.delay_crossfade.reset();
+    self.activator.reset();
+  }
+
   pub fn set_probability(
     &mut self,
     half_notes: f32,

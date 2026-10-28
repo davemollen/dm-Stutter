@@ -13,6 +13,11 @@ impl Activator {
     }
   }
 
+  pub fn reset(&mut self) {
+    self.is_active = false;
+    self.crossfade.reset();
+  }
+
   pub fn process(
     &mut self,
     dry_signal: (f32, f32),

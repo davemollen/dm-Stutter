@@ -17,6 +17,12 @@ impl Crossfade {
     }
   }
 
+  pub fn reset(&mut self) {
+    self.prev = 0.;
+    self.index = 0;
+    self.z = 0.;
+  }
+
   pub fn process(&mut self, flip_flop: bool, ramp_time: f32) -> (f32, f32) {
     let input = if flip_flop { 1. } else { 0. };
     let difference = input - self.z;
