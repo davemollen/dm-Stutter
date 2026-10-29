@@ -1,4 +1,5 @@
 mod activator;
+mod bypass;
 mod crossfade;
 mod delay;
 mod duration_generator;
@@ -10,8 +11,10 @@ mod time_fraction_generator;
 mod toggle_trigger;
 mod shared {
   pub mod float_ext;
+  pub mod macros;
   pub mod tuple_ext;
 }
+pub use bypass::Bypass;
 use {
   crate::repeat_trigger::RepeatTrigger, activator::Activator, crossfade::Crossfade, delay::Delay,
   duration_generator::DurationGenerator, manual_trigger::ManualTrigger, phasor::Phasor,

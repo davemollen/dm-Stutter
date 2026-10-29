@@ -1,7 +1,7 @@
 extern crate lv2;
 extern crate stutter;
 use lv2::prelude::*;
-use stutter::Stutter;
+use stutter::{Bypass, Stutter};
 
 #[derive(URIDCollection)]
 struct URIDs {
@@ -48,11 +48,13 @@ struct Ports {
   output_right: OutputPort<InPlaceAudio>,
   trigger_cv_output: OutputPort<InPlaceCV>,
   repeat_trigger_cv_output: OutputPort<InPlaceCV>,
+  enabled: InputPort<InPlaceControl>,
 }
 
 #[uri("https://github.com/davemollen/dm-Stutter")]
 struct DmStutter {
   stutter: Stutter,
+  bypass: Bypass,
   urids: URIDs,
   bpm: f32,
 }
@@ -115,21 +117,37 @@ impl Plugin for DmStutter {
 
   // Create a new instance of the plugin; Trivial in this case.
   fn new(plugin_info: &PluginInfo, features: &mut Self::InitFeatures) -> Option<Self> {
+    let sample_rate = plugin_info.sample_rate() as f32;
+
     Some(Self {
-      bpm: 120.,
-      stutter: Stutter::new(plugin_info.sample_rate() as f32),
+      stutter: Stutter::new(sample_rate),
+      bypass: Bypass::new(sample_rate),
       urids: features.map.populate_collection()?,
+      bpm: 120.,
     })
   }
 
   /// Reset the internal state of the plugin.
   fn activate(&mut self, _features: &mut Self::InitFeatures) {
     self.stutter.reset();
+    self.bypass.reset();
   }
 
   // Process a chunk of audio. The audio ports are dereferenced to slices, which the plugin
   // iterates over.
-  fn run(&mut self, ports: &mut Ports, _features: &mut Self::AudioFeatures, _sample_count: u32) {
+  fn run(&mut self, ports: &mut Ports, _features: &mut Self::AudioFeatures, sample_count: u32) {
+    self.bypass.set_enabled(ports.enabled.get() == 0., || {
+      self.stutter.reset();
+    });
+
+    if self.bypass.is_done_activating() {
+      ports.output_left.copy_from(&ports.input_left, sample_count);
+      ports
+        .output_right
+        .copy_from(&ports.input_right, sample_count);
+      return;
+    }
+
     let on = ports.on.get() == 1.;
     let trigger = ports.trigger.get() == 1.;
     let auto = ports.auto.get() == 1.;
@@ -175,17 +193,11 @@ impl Plugin for DmStutter {
       .zip(trigger_cv_output)
       .zip(repeat_trigger_cv_output)
     {
-      let stutter_output = self.stutter.process(
-        (input_left.get(), input_right.get()),
-        on,
-        trigger,
-        auto,
-        mix,
-        pulse,
-        duration,
-        chance,
-        true,
-      );
+      let dry = (input_left.get(), input_right.get());
+      let fx = self
+        .stutter
+        .process(dry, on, trigger, auto, mix, pulse, duration, chance, true);
+      let stutter_output = self.bypass.process(dry, fx);
       output_left.set(stutter_output.0);
       output_right.set(stutter_output.1);
       trigger_cv_output.set(if stutter_output.2 { 10. } else { 0. });

@@ -307,7 +307,7 @@ A stereo stutter effect.
 		lv2:name "Trigger CV Output" ;
 		lv2:default 0.0 ;
 		lv2:minimum 0.0 ;
-		lv2:maximum 10.0 
+		lv2:maximum 10.0 ;
 	] , [
 		a lv2:CVPort, lv2:OutputPort, mod:CVPort ;
 		lv2:index 30 ;
@@ -315,7 +315,17 @@ A stereo stutter effect.
 		lv2:name "Repeat Trigger CV Output" ;
 		lv2:default 0.0 ;
 		lv2:minimum 0.0 ;
-		lv2:maximum 10.0 
+		lv2:maximum 10.0 ;
+	] , [
+		a lv2:InputPort, lv2:ControlPort ;
+		lv2:index 31 ;
+		lv2:symbol "enabled" ;
+		lv2:name "Enabled" ;
+		lv2:designation lv2:enabled ;
+		lv2:portProperty lv2:integer, lv2:toggled ;
+		lv2:default 1 ;
+		lv2:minimum 0 ;
+		lv2:maximum 1 ;
 	] .
 
 # Port groups
