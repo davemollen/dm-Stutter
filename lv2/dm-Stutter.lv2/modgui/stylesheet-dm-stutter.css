@@ -70,9 +70,15 @@
     margin-bottom: 40px;
     display: flex;
     flex-direction: row;
-    gap: 32px;
+    gap: 18px;
     flex: 1;
     justify-content: center;
+}
+
+.mod-pedal-boxy{{{cns}}} .standby {
+    width: 13px;
+    height: auto;
+    margin-top: -2px;
 }
 
 /* = PLUGIN'S AUTHOR
